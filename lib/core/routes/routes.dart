@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medlink/core/routes/page_routes_name.dart';
+import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../di.dart';
 import '../../feature/Selection/select_screen.dart';
@@ -15,20 +18,31 @@ import '../../feature/auth/patient/sign_in/presentation/manager/cubit/login_cubi
 import '../../feature/auth/patient/sign_in/presentation/pages/sign_in_screen.dart';
 import '../../feature/auth/patient/sign_up/presentation/manager/cubit/patient_register_cubit.dart';
 import '../../feature/auth/patient/sign_up/presentation/pages/sign_up_screen.dart';
+import '../../feature/doctor/clinic/presentation/cubit/clinic_cubit.dart'
+    show ClinicCubit;
+import '../../feature/doctor/clinic/presentation/pages/clinic_list_page_fixed.dart';
+import '../../feature/doctor/profile/presentation/pages/doctor_profile_page.dart';
+import '../../feature/doctor/profile/presentation/cubit/doctor_profile_cubit.dart';
+import '../../feature/doctor/profile/edit_profile_page.dart';
+import '../../feature/doctor/profile/data/models/doctor_profile_model.dart';
+
 import '../../feature/onboarding/ui/on_boarding_screen.dart';
-import '../../feature/splash/doctor_home.dart';
+import '../../feature/doctor/doctor_dashboard/doctor_home.dart';
 import '../../feature/splash/home_patient.dart';
- import '../../feature/splash/toggle_screen.dart';
+import '../../feature/splash/toggle_screen.dart';
 
 class Routes {
   static Route onGeneratedRoute(RouteSettings settings) {
     switch (settings.name) {
       case PageRouteNames.initial:
         return _createRoute(
-              (context) => MultiBlocProvider(
+          (context) => MultiBlocProvider(
             providers: [
-              BlocProvider(create: (context) => sl<AuthCubit>()..checkAuthStatus()),
-              BlocProvider(create: (context) => sl<AuthDoctorCubit>()..checkAuthStatus), // إضافة AuthDoctorCubit
+              BlocProvider(
+                  create: (context) => sl<AuthCubit>()..checkAuthStatus()),
+              BlocProvider(
+                  create: (context) => sl<AuthDoctorCubit>()
+                    ..checkAuthStatus), // إضافة AuthDoctorCubit
             ],
             child: const ToggleScreen(),
           ),
@@ -37,13 +51,13 @@ class Routes {
 
       case PageRouteNames.onboarding:
         return _createRoute(
-              (context) => const OnboardingScreen(),
+          (context) => const OnboardingScreen(),
           settings,
         );
 
       case PageRouteNames.sign_in_patient:
         return _createRoute(
-              (context) => BlocProvider(
+          (context) => BlocProvider(
             create: (context) => sl<LoginCubit>(),
             child: const SignInPatient(),
           ),
@@ -52,16 +66,16 @@ class Routes {
 
       case PageRouteNames.sign_up_patient:
         return _createRoute(
-              (context) => BlocProvider(
+          (context) => BlocProvider(
             create: (context) => sl<PatientRegistrationCubit>(),
-            child: SignUpPatient(),
+            child: const SignUpPatient(),
           ),
           settings,
         );
 
       case PageRouteNames.sign_in_doctor:
         return _createRoute(
-              (context) => BlocProvider(
+          (context) => BlocProvider(
             create: (context) => sl<LoginDoctorCubit>(),
             child: const SignInDoctor(),
           ),
@@ -70,7 +84,7 @@ class Routes {
 
       case PageRouteNames.sign_up_doctor:
         return _createRoute(
-              (context) => MultiBlocProvider(
+          (context) => MultiBlocProvider(
             providers: [
               BlocProvider(
                 create: (context) => sl<DoctorRegistrationCubit>(),
@@ -79,20 +93,20 @@ class Routes {
                 create: (context) => sl<SpecialitiesCubit>(),
               ),
             ],
-            child: SignUpDoctor(),
+            child: const SignUpDoctor(),
           ),
           settings,
         );
 
       case PageRouteNames.SelectScreen:
         return _createRoute(
-              (context) => const SelectScreen(),
+          (context) => const SelectScreen(),
           settings,
         );
 
       case PageRouteNames.patienthome:
         return _createRoute(
-              (context) => BlocProvider(
+          (context) => BlocProvider(
             create: (context) => sl<AuthCubit>(),
             child: const HomePatient(),
           ),
@@ -101,25 +115,50 @@ class Routes {
 
       case PageRouteNames.doctorhome:
         return _createRoute(
-              (context) => BlocProvider(
+          (context) => BlocProvider(
             create: (context) => sl<AuthDoctorCubit>(),
             child: const DoctorHome(),
           ),
           settings,
         );
 
+      case PageRouteNames.clinicList:
+        return _createRoute(
+          (context) => BlocProvider(
+            create: (context) => sl<ClinicCubit>(),
+            child: const ClinicListPage(),
+          ),
+          settings,
+        );
+
+      case PageRouteNames.doctorProfile:
+        return _createRoute(
+          (context) => BlocProvider(
+            create: (context) => sl<DoctorProfileCubit>(),
+            child: const DoctorProfilePage(),
+          ),
+          settings,
+        );
+
+      case PageRouteNames.editProfile:
+        final profile = settings.arguments as DoctorProfileModel;
+        return _createRoute(
+          (context) => EditProfilePage(initialProfile: profile),
+          settings,
+        );
+
       default:
         return _createRoute(
-              (context) => const UnknownRouteScreen(),
+          (context) => const UnknownRouteScreen(),
           settings,
         );
     }
   }
 
   static Route _createRoute(
-      Widget Function(BuildContext) builder,
-      RouteSettings settings,
-      ) {
+    Widget Function(BuildContext) builder,
+    RouteSettings settings,
+  ) {
     return MaterialPageRoute(
       builder: builder,
       settings: settings,
@@ -156,7 +195,7 @@ class UnknownRouteScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
                 PageRouteNames.initial,
-                    (route) => false,
+                (route) => false,
               ),
               child: const Text('Go to Home'),
             ),

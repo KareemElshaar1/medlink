@@ -25,6 +25,8 @@ class AppTextFormField extends StatefulWidget {
   final Function(String)? onChanged;
   final bool readOnly;
   final VoidCallback? onTap;
+  final int? maxLines;
+  final int? minLines;
 
   const AppTextFormField({
     super.key,
@@ -48,6 +50,8 @@ class AppTextFormField extends StatefulWidget {
     this.onChanged,
     this.readOnly = false,
     this.onTap,
+    this.maxLines = 1,
+    this.minLines = 1,
   });
 
   @override
@@ -64,14 +68,15 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       obscureText: widget.isObscureText ? !isPasswordVisible : false,
       readOnly: widget.readOnly,
       onTap: widget.onTap,
+      maxLines: widget.maxLines,
+      minLines: widget.minLines,
       decoration: InputDecoration(
         isDense: true,
         contentPadding: widget.contentPadding ??
             EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
         focusedBorder:
-        widget.focusedBorder ?? _buildBorder(ColorsManager.mainBlue),
-        enabledBorder:
-        widget.enabledBorder ?? _buildBorder(Color(0xff1565C0)),
+            widget.focusedBorder ?? _buildBorder(ColorsManager.mainBlue),
+        enabledBorder: widget.enabledBorder ?? _buildBorder(Color(0xff1565C0)),
         errorBorder: widget.errorBorder ?? _buildBorder(Colors.red),
         focusedErrorBorder: _buildBorder(Colors.red),
         hintStyle: widget.hintStyle ??
@@ -86,20 +91,26 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.isObscureText
             ? IconButton(
-          icon: Icon(
-            isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-            color: Colors.grey,
-            size: 20.sp,
-          ),
-          onPressed: () {
-            setState(() {
-              isPasswordVisible = !isPasswordVisible;
-            });
-          },
-        )
+                icon: Icon(
+                  isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.grey,
+                  size: 20.sp,
+                ),
+                onPressed: () {
+                  setState(() {
+                    isPasswordVisible = !isPasswordVisible;
+                  });
+                },
+              )
             : widget.suffixIcon,
         fillColor: widget.backgroundColor ?? ColorsManager.moreLightGray,
         filled: true,
+        errorStyle: TextStyle(
+          color: Colors.red,
+          fontSize: 12.sp,
+          height: 1,
+        ),
+        errorMaxLines: 1,
       ),
       style: widget.inputTextStyle ??
           TextStyles.font24BlackBold.copyWith(fontSize: 14.sp),

@@ -15,7 +15,8 @@ class AppTextButton extends StatefulWidget {
   final String buttonText;
   final TextStyle? textStyle;
   final TextStyle? disabledTextStyle;
-  final VoidCallback? onPressed; // Changed to VoidCallback to match how it's used in LoginButton
+  final VoidCallback?
+      onPressed; // Changed to VoidCallback to match how it's used in LoginButton
   final Widget? leadingIcon;
   final Widget? trailingIcon;
   final bool showLoading; // Parameter to control loading visibility
@@ -72,7 +73,8 @@ class _AppTextButtonState extends State<AppTextButton> {
   @override
   Widget build(BuildContext context) {
     final bool isButtonDisabled = widget.onPressed == null;
-    final bool isShowingLoading = (widget.isLoading || _internalLoading) && widget.showLoading;
+    final bool isShowingLoading =
+        (widget.isLoading || _internalLoading) && widget.showLoading;
 
     return SizedBox(
       width: widget.buttonWidth?.w ?? double.infinity,
@@ -83,19 +85,21 @@ class _AppTextButtonState extends State<AppTextButton> {
           decoration: BoxDecoration(
             gradient: widget.useGradient && !isButtonDisabled
                 ? LinearGradient(
-              colors: widget.gradientColors ??
-                  [
-                    const Color(0xff4FC3F7),
-                    const Color(0xff298DB9),
-                    const Color(0xff0C75A4)
-                  ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )
+                    colors: widget.gradientColors ??
+                        [
+                          const Color(0xff4FC3F7),
+                          const Color(0xff298DB9),
+                          const Color(0xff0C75A4)
+                        ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
                 : null,
             color: isButtonDisabled
                 ? widget.disabledBackgroundColor ?? ColorsManager.lighterGray
-                : widget.useGradient ? null : widget.backgroundColor ?? ColorsManager.mainBlue,
+                : widget.useGradient
+                    ? null
+                    : widget.backgroundColor ?? ColorsManager.mainBlue,
             borderRadius: BorderRadius.circular(widget.borderRadius?.r ?? 16.r),
           ),
           padding: EdgeInsets.symmetric(
@@ -105,38 +109,38 @@ class _AppTextButtonState extends State<AppTextButton> {
           child: Center(
             child: isShowingLoading
                 ? const CircularProgressIndicator(
-              color: Colors.white,
-            )
+                    color: Colors.white,
+                  )
                 : Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (widget.leadingIcon != null) ...[
-                  widget.leadingIcon!,
-                  SizedBox(width: 8.w),
-                ],
-                Text(
-                  widget.buttonText,
-                  style: isButtonDisabled
-                      ? (widget.disabledTextStyle ??
-                      TextStyle(
-                        fontSize: 16.sp,
-                        color: Colors.grey[400],
-                        fontWeight: FontWeight.w600,
-                      ))
-                      : (widget.textStyle ??
-                      TextStyle(
-                        fontSize: 16.sp,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      )),
-                ),
-                if (widget.trailingIcon != null) ...[
-                  SizedBox(width: 8.w),
-                  widget.trailingIcon!,
-                ],
-              ],
-            ),
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (widget.leadingIcon != null) ...[
+                        widget.leadingIcon!,
+                        SizedBox(width: 8.w),
+                      ],
+                      Text(
+                        widget.buttonText,
+                        style: isButtonDisabled
+                            ? (widget.disabledTextStyle ??
+                                TextStyle(
+                                  fontSize: 16.sp,
+                                  color: Colors.grey[400],
+                                  fontWeight: FontWeight.w600,
+                                ))
+                            : (widget.textStyle ??
+                                TextStyle(
+                                  fontSize: 16.sp,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                      ),
+                      if (widget.trailingIcon != null) ...[
+                        SizedBox(width: 8.w),
+                        widget.trailingIcon!,
+                      ],
+                    ],
+                  ),
           ),
         ),
       ),

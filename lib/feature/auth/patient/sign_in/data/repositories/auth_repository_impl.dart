@@ -31,9 +31,9 @@ class AuthRepositoryImpl implements AuthRepository {
       errors: response.errors,
       data: response.data != null
           ? LoginData(
-        email: response.data!.email,
-        token: response.data!.token,
-      )
+              email: response.data!.email,
+              token: response.data!.token,
+            )
           : null,
     );
   }
@@ -69,6 +69,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> logout() async {
     await SharedPrefHelper.removeData(_tokenKey);
     await SharedPrefHelper.removeData(_emailKey);
+    await SharedPrefHelper.removeData("is_patient");
     // Keep remember me preference
   }
 

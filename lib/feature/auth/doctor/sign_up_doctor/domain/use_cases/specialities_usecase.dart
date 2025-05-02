@@ -1,5 +1,5 @@
 // lib/domain/usecases/specialities_usecase.dart
- import '../entities/speciality_entity.dart';
+import '../entities/speciality_entity.dart';
 import '../repositories/specialities_repository.dart';
 
 abstract class SpecialitiesUseCase {

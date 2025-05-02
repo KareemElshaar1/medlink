@@ -1,0 +1,7 @@
+flutter_native_splash:
+  color: "#ffffff"  # يمكنك تغييره حسب اللون المناسب
+  image: assets/images/لوجو التخرج 1.png # مسار الصورة الجديدة
+  android_12:
+    image: assets/images/لوجو التخرج 1.png # صورة متوافقة مع Android 12
+    icon_background_color: "#ffffff"
+  fullscreen: true

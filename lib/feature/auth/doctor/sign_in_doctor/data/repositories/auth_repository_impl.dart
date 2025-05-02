@@ -31,9 +31,9 @@ class AuthRepositoryDoctorImpl implements AuthRepositoryDoctor {
       errors: response.errors,
       data: response.data != null
           ? LoginDataDoctor(
-        email: response.data!.email,
-        token: response.data!.token,
-      )
+              email: response.data!.email,
+              token: response.data!.token,
+            )
           : null,
     );
   }
@@ -69,6 +69,7 @@ class AuthRepositoryDoctorImpl implements AuthRepositoryDoctor {
   Future<void> logout() async {
     await SharedPrefHelper.removeData(_tokenKey);
     await SharedPrefHelper.removeData(_emailKey);
+    await SharedPrefHelper.removeData("is_doctor");
     // Keep remember me preference
   }
 

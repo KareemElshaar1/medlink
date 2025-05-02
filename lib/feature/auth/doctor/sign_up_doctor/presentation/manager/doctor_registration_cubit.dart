@@ -29,7 +29,8 @@ class DoctorRegistrationError extends DoctorRegistrationState {
 class DoctorRegistrationCubit extends Cubit<DoctorRegistrationState> {
   final RegisterDoctorUseCase registerDoctorUseCase;
 
-  DoctorRegistrationCubit(this.registerDoctorUseCase) : super(DoctorRegistrationInitial());
+  DoctorRegistrationCubit(this.registerDoctorUseCase)
+      : super(DoctorRegistrationInitial());
 
   Future<void> registerDoctor({
     required String firstName,

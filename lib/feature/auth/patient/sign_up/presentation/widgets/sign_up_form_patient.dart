@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-
 import '../../../../../../core/widgets/app_text_button.dart';
 import '../../../../../../core/widgets/custom_text_field.dart';
 import '../../../../doctor/sign_up_doctor/presentation/pages/sign_up_screen.dart';
@@ -146,10 +145,9 @@ class SignUpForm extends StatelessWidget {
       hintText: "Select Birth Date",
       readOnly: true,
       controller: TextEditingController(
-        text:
-            viewModel.selectedBirthDate != null
-                ? "${viewModel.selectedBirthDate!.year}-${viewModel.selectedBirthDate!.month.toString().padLeft(2, '0')}-${viewModel.selectedBirthDate!.day.toString().padLeft(2, '0')}"
-                : "",
+        text: viewModel.selectedBirthDate != null
+            ? "${viewModel.selectedBirthDate!.year}-${viewModel.selectedBirthDate!.month.toString().padLeft(2, '0')}-${viewModel.selectedBirthDate!.day.toString().padLeft(2, '0')}"
+            : "",
       ),
       prefixIcon: const Icon(Icons.calendar_today_rounded, color: Colors.blue),
       onTap: () => viewModel.selectDate(context),

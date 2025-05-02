@@ -9,14 +9,14 @@ class DoctorRepositoryImpl implements DoctorRepository {
 
   @override
   Future<bool> registerDoctor(
-      String firstName,
-      String lastName,
-      String email,
-      String phone,
-      String password,
-      String confirmPassword,
-      int specialityId,
-      ) {
+    String firstName,
+    String lastName,
+    String email,
+    String phone,
+    String password,
+    String confirmPassword,
+    int specialityId,
+  ) {
     return remoteDataSource.registerDoctor(
       firstName,
       lastName,

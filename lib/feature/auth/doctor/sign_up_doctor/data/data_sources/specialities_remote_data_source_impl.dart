@@ -11,7 +11,7 @@ class SpecialitiesRemoteDataSourceImpl implements SpecialitiesRemoteDataSource {
   @override
   Future<List<Speciality>> getSpecialities() async {
     try {
-      final response = await dio.get('/api/Specialities');
+      final response = await dio.get('http://medlink.runasp.net/api/Specialities');
 
       if (response.statusCode == 200 && response.data['isSuccess'] == true && response.data['data'] != null) {
         return (response.data['data'] as List)

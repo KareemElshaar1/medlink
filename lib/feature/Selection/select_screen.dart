@@ -1,158 +1,164 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
-import 'package:medlink/feature/Selection/widgets/role_selection_button.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:medlink/core/theme/app_colors.dart';
 
 import '../../core/routes/page_routes_name.dart';
 
 class SelectScreen extends StatelessWidget {
-  const SelectScreen({Key? key}) : super(key: key);
+  const SelectScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, designSize: const Size(360, 690));
-
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: [
-              Colors.blue.shade100,
-              Colors.blue.shade200,
-              Colors.teal.shade100,
+              AppColors.primaryColor.withOpacity(0.1),
+              Colors.white,
             ],
           ),
         ),
         child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Improved Header
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "MedLink",
-                      style: TextStyle(
-                        fontSize: 40.sp,
-                        fontWeight: FontWeight.w800,
-                        color: const Color(0xFF2D3E50),
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    Gap(8.h),
-                    Text(
-                      "Choose Your Healthcare Path",
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        color: Colors.blueGrey.shade700,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Main content - buttons
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Doctor Button with enhanced styling
-                        RoleSelectionButton(
-                          title: "Doctor",
-                          subtitle: "Healthcare Professional Access",
-                          primaryColor: const Color(0xFF1E88E5),
-                          shadowColor: Colors.blue.shade300,
-                          iconData: Icons.medical_services_rounded,
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Doctor login selected"),
-                                backgroundColor: Colors.blue,
-                              ),
-                            );
-                            Navigator.of(context).pushNamed(PageRouteNames.sign_in_doctor);
-                          },
-                        ),
-
-                        Gap(24.h),
-
-                        // Patient Button with enhanced styling
-                        RoleSelectionButton(
-                          title: "Patient",
-                          subtitle: "Personal Health Portal",
-                          primaryColor: const Color(0xFF26A69A),
-                          shadowColor: Colors.teal.shade200,
-                          iconData: Icons.person_rounded,
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Patient login selected"),
-                                backgroundColor: Colors.teal,
-                              ),
-                            );
-                            Navigator.of(context).pushNamed(PageRouteNames.sign_in_patient);
-                          },
-                        ),
-                      ],
-                    ),
+          child: Column(
+            children: [
+              SizedBox(height: 40.h),
+              FadeInDown(
+                duration: const Duration(milliseconds: 800),
+                child: Text(
+                  'Welcome to MedLink',
+                  style: TextStyle(
+                    fontSize: 28.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
                   ),
                 ),
-
-                // Improved Footer
-                Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.red.shade300,
-                          Colors.red.shade400,
-                        ],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.red.shade200.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: TextButton(
-                      onPressed: () {
-                        // Emergency/guest access logic
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Connecting to Emergency Services"),
-                            backgroundColor: Colors.red,
+              ),
+              SizedBox(height: 10.h),
+              FadeInDown(
+                duration: const Duration(milliseconds: 800),
+                delay: const Duration(milliseconds: 200),
+                child: Text(
+                  'Choose your role to continue',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ),
+              SizedBox(height: 60.h),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: FadeInLeft(
+                          duration: const Duration(milliseconds: 800),
+                          delay: const Duration(milliseconds: 400),
+                          child: SelectionCard(
+                            title: 'Doctor',
+                            subtitle: 'Manage your clinics and appointments',
+                            icon: Icons.medical_services_rounded,
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(PageRouteNames.sign_in_doctor);
+                            },
                           ),
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                        foregroundColor: Colors.white,
-                      ),
-                      child: Text(
-                        "Emergency? Get Immediate Assistance",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14.sp,
-                          letterSpacing: 0.5,
                         ),
                       ),
-                    ),
+                      SizedBox(width: 20.w),
+                      Expanded(
+                        child: FadeInRight(
+                          duration: const Duration(milliseconds: 800),
+                          delay: const Duration(milliseconds: 400),
+                          child: SelectionCard(
+                            title: 'Patient',
+                            subtitle:
+                                'Book appointments and manage your health',
+                            icon: Icons.person_rounded,
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(PageRouteNames.sign_in_patient);
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              SizedBox(height: 40.h),
+            ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class SelectionCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const SelectionCard({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16.r),
+      child: Container(
+        padding: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 50.sp,
+              color: AppColors.primaryColor,
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryColor,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
         ),
       ),
     );

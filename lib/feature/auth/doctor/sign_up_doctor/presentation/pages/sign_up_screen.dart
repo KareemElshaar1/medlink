@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:medlink/core/extensions/padding.dart';
 
+import '../../../../../../core/routes/page_routes_name.dart';
 import '../../../../../../core/widgets/app_text_button.dart';
 import '../../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../../core/widgets/buildHeader.dart';
@@ -50,14 +51,14 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
       _formKey.currentState!.save();
 
       context.read<DoctorRegistrationCubit>().registerDoctor(
-        firstName: firstNameController.text,
-        lastName: lastNameController.text,
-        email: emailController.text,
-        phone: phoneNumber ?? "",
-        password: passwordController.text,
-        confirmPassword: confirmPasswordController.text,
-        specialityId: selectedSpeciality?.id ?? 0,
-      );
+            firstName: firstNameController.text,
+            lastName: lastNameController.text,
+            email: emailController.text,
+            phone: phoneNumber ?? "",
+            password: passwordController.text,
+            confirmPassword: confirmPasswordController.text,
+            specialityId: selectedSpeciality?.id ?? 0,
+          );
     }
   }
 
@@ -262,13 +263,11 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
                             Gap(30.h),
 
                             // Sign Up Button
-                            BlocBuilder<
-                                DoctorRegistrationCubit,
-                                DoctorRegistrationState
-                            >(
+                            BlocBuilder<DoctorRegistrationCubit,
+                                DoctorRegistrationState>(
                               builder: (context, state) {
                                 final isLoading =
-                                state is DoctorRegistrationLoading;
+                                    state is DoctorRegistrationLoading;
 
                                 return AppTextButton(
                                   buttonText: "Sign Up",
@@ -297,7 +296,8 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
 
                       Gap(40.h), // Extra bottom space
                     ],
-                  ).setHorizontalPadding(context, enableScreenUtil: true, horizontalPadding),
+                  ).setHorizontalPadding(
+                      context, enableScreenUtil: true, horizontalPadding),
                 ),
               ],
             ),
@@ -519,15 +519,16 @@ class _PasswordFieldState extends State<PasswordField> {
             color: Colors.blue,
             size: 20.sp,
           ),
-          validator: widget.validator ?? (value) {
-            if (value == null || value.isEmpty) {
-              return 'Password cannot be empty';
-            }
-            if (value.length < 6) {
-              return 'Password must be at least 6 characters';
-            }
-            return null;
-          },
+          validator: widget.validator ??
+              (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Password cannot be empty';
+                }
+                if (value.length < 6) {
+                  return 'Password must be at least 6 characters';
+                }
+                return null;
+              },
         ),
       ],
     );
@@ -679,7 +680,7 @@ class SignUpAlternatives extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/sign_in_doctor');
+                Navigator.of(context).pushNamed(PageRouteNames.sign_in_doctor);
               },
               style: TextButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
@@ -729,7 +730,7 @@ class SignUpAlternatives extends StatelessWidget {
         child: Center(
           child: Image.asset(
             icon,
-            width: size * 0.48,  // 24/50 = 0.48
+            width: size * 0.48, // 24/50 = 0.48
             height: size * 0.48,
           ),
         ),

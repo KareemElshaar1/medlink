@@ -225,7 +225,8 @@ class _SignInScreenState extends State<SignInPatient>
             );
           } else if (state is LoginSuccess) {
             // Navigate to home page
-            Navigator.of(context).pushReplacementNamed(PageRouteNames.patienthome);
+            Navigator.of(context)
+                .pushReplacementNamed(PageRouteNames.patienthome);
           }
         }
       },
@@ -265,10 +266,10 @@ class _SignInScreenState extends State<SignInPatient>
 
                         // Trigger login using the LoginCubit
                         context.read<LoginCubit>().login(
-                          email,
-                          password,
-                          isRememberMeSelected ?? false,
-                        );
+                              email,
+                              password,
+                              isRememberMeSelected ?? false,
+                            );
                       }
                     },
                   ),

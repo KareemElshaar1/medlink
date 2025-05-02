@@ -9,14 +9,14 @@ class DoctorRemoteDataSourceImpl implements DoctorRemoteDataSource {
 
   @override
   Future<bool> registerDoctor(
-      String firstName,
-      String lastName,
-      String email,
-      String phone,
-      String password,
-      String confirmPassword,
-      int specialityId,
-      ) async {
+    String firstName,
+    String lastName,
+    String email,
+    String phone,
+    String password,
+    String confirmPassword,
+    int specialityId,
+  ) async {
     try {
       final userData = {
         "firstName": firstName,

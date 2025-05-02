@@ -4,6 +4,7 @@ import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'core/interceptors/auth_interceptor.dart';
 
 import 'feature/auth/doctor/sign_in_doctor/data/data_sources/auth_remote_data_source.dart';
 import 'feature/auth/doctor/sign_in_doctor/data/data_sources/auth_remote_data_source_impl.dart';
@@ -41,7 +42,20 @@ import 'feature/auth/patient/sign_up/data/repositories/patient_repository_impl.d
 import 'feature/auth/patient/sign_up/domain/repositories/patient_repository.dart';
 import 'feature/auth/patient/sign_up/domain/use_cases/patient_usecase.dart';
 import 'feature/auth/patient/sign_up/presentation/manager/cubit/patient_register_cubit.dart';
-
+import 'feature/doctor/clinic/data/datasources/clinic_remote_data_source.dart';
+import 'feature/doctor/clinic/data/repositories/clinic_repository_impl.dart';
+import 'feature/doctor/clinic/domain/repositories/clinic_repository.dart';
+import 'feature/doctor/clinic/domain/use_cases/add_clinic_usecase.dart'
+    show AddClinicUseCase;
+import 'feature/doctor/clinic/domain/use_cases/get_cities_usecase.dart'
+    show GetCitiesUseCase;
+import 'feature/doctor/clinic/domain/use_cases/get_clinics_usecase.dart'
+    show GetClinicsUseCase;
+import 'feature/doctor/clinic/domain/use_cases/get_governates_usecase.dart';
+import 'feature/doctor/clinic/domain/use_cases/get_specialities_usecase.dart';
+import 'feature/doctor/clinic/presentation/cubit/clinic_cubit.dart';
+import 'feature/doctor/profile/data/repositories/doctor_profile_repository.dart';
+import 'feature/doctor/profile/presentation/cubit/doctor_profile_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -60,6 +74,9 @@ Future<void> init() async {
         },
       ),
     );
+
+    // Add auth interceptor
+    dio.interceptors.add(AuthInterceptor());
 
     // Add pretty logger
     dio.interceptors.add(
@@ -90,26 +107,27 @@ Future<void> init() async {
   });
 
   // Secure Storage
-  sl.registerLazySingleton<FlutterSecureStorage>(() => const FlutterSecureStorage());
+  sl.registerLazySingleton<FlutterSecureStorage>(
+      () => const FlutterSecureStorage());
 
   // Auth Data Sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
-        () => AuthRemoteDataSourceImpl(sl()),
+    () => AuthRemoteDataSourceImpl(sl()),
   );
 
   // Auth Repository
   sl.registerLazySingleton<AuthRepository>(
-        () => AuthRepositoryImpl(sl(), sl()),
+    () => AuthRepositoryImpl(sl(), sl()),
   );
 
   // Auth Data Sources
   sl.registerLazySingleton<AuthRemoteDataSourceDoctor>(
-        () => AuthRemoteDataSourceDoctorImpl(sl()),
+    () => AuthRemoteDataSourceDoctorImpl(sl()),
   );
 
   // Auth Repository
   sl.registerLazySingleton<AuthRepositoryDoctor>(
-        () => AuthRepositoryDoctorImpl(sl(), sl()),
+    () => AuthRepositoryDoctorImpl(sl(), sl()),
   );
 
   // Auth Use Cases
@@ -125,51 +143,49 @@ Future<void> init() async {
   sl.registerFactory(() => LoginCubit(sl(), sl()));
   sl.registerFactory(() => AuthCubit(sl(), sl()));
 
-
   sl.registerFactory(() => LoginDoctorCubit(sl(), sl()));
   sl.registerFactory(() => AuthDoctorCubit(sl(), sl()));
 
-
   // Data sources
   sl.registerLazySingleton<SpecialitiesRemoteDataSource>(
-        () => SpecialitiesRemoteDataSourceImpl(sl()),
+    () => SpecialitiesRemoteDataSourceImpl(sl()),
   );
   sl.registerLazySingleton<DoctorRemoteDataSource>(
-        () => DoctorRemoteDataSourceImpl(sl()),
+    () => DoctorRemoteDataSourceImpl(sl()),
   );
 
   // Repositories
   sl.registerLazySingleton<SpecialitiesRepository>(
-        () => SpecialitiesRepositoryImpl(sl()),
+    () => SpecialitiesRepositoryImpl(sl()),
   );
   sl.registerLazySingleton<DoctorRepository>(
-        () => DoctorRepositoryImpl(sl()),
+    () => DoctorRepositoryImpl(sl()),
   );
 
   // Use cases
   sl.registerLazySingleton<GetSpecialitiesUseCase>(
-        () => GetSpecialitiesUseCase(sl()),
+    () => GetSpecialitiesUseCase(sl()),
   );
   sl.registerLazySingleton<RegisterDoctorUseCase>(
-        () => RegisterDoctorUseCase(sl()),
+    () => RegisterDoctorUseCase(sl()),
   );
 
   // Cubits
   sl.registerFactory<SpecialitiesCubit>(
-        () => SpecialitiesCubit(sl()),
+    () => SpecialitiesCubit(sl()),
   );
   sl.registerFactory<DoctorRegistrationCubit>(
-        () => DoctorRegistrationCubit(sl()),
+    () => DoctorRegistrationCubit(sl()),
   );
   // patient
   // Data Sources
   sl.registerLazySingleton<patientRemoteDataSource>(
-        () => PatientRemoteDataSourceImpl(sl()),
+    () => PatientRemoteDataSourceImpl(sl()),
   );
 
   // Repositories
   sl.registerLazySingleton<PatientRepository>(
-        () => PatientRepositoryImpl(sl()),
+    () => PatientRepositoryImpl(sl()),
   );
 
   // Use Cases
@@ -177,4 +193,41 @@ Future<void> init() async {
 
   // Cubits
   sl.registerFactory(() => PatientRegistrationCubit(sl()));
+
+  // Clinic Data Sources
+  sl.registerLazySingleton<ClinicRemoteDataSource>(
+    () => ClinicRemoteDataSourceImpl(sl()),
+  );
+
+  // Clinic Repository
+  sl.registerLazySingleton<ClinicRepository>(
+    () => ClinicRepositoryImpl(sl()),
+  );
+
+  // Clinic Use Cases
+  sl.registerLazySingleton(() => AddClinicUseCase(sl()));
+  sl.registerLazySingleton(() => GetGovernatesUseCase(sl()));
+  sl.registerLazySingleton(() => GetCitiesUseCase(sl()));
+  sl.registerLazySingleton(() => GetSpecialitieUseCase(sl()));
+  sl.registerLazySingleton(() => GetClinicsUseCase(sl()));
+
+  // Clinic Cubit
+  sl.registerFactory(
+    () => ClinicCubit(
+      addClinicUseCase: sl(),
+      getGovernatesUseCase: sl(),
+      getCitiesUseCase: sl(),
+      getSpecialitiesUseCase: sl(),
+      getClinicsUseCase: sl(),
+    ),
+  );
+
+  // Doctor Profile
+  sl.registerLazySingleton<DoctorProfileRepository>(
+    () => DoctorProfileRepositoryImpl(sl()),
+  );
+
+  sl.registerFactory<DoctorProfileCubit>(
+    () => DoctorProfileCubit(sl()),
+  );
 }
