@@ -1,5 +1,5 @@
 import '../repositories/clinic_repository.dart';
-import '../models/clinic_model.dart';
+import '../../data/models/clinic_model.dart';
 
 class GetClinicsUseCase {
   final ClinicRepository repository;

@@ -1,4 +1,4 @@
-import '../models/clinic_model.dart';
+import '../../data/models/clinic_model.dart';
 import '../repositories/clinic_repository.dart';
 
 class AddClinicUseCase {

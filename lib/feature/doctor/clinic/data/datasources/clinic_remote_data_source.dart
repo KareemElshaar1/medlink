@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import '../../domain/models/clinic_model.dart';
-import '../../domain/models/governate_model.dart';
-import '../../domain/models/city_model.dart';
-import '../../domain/models/speciality_model.dart';
+import '../models/clinic_model.dart';
+import '../models/governate_model.dart';
+import '../models/city_model.dart';
+import '../models/speciality_model.dart';
 
 abstract class ClinicRemoteDataSource {
   Future<bool> addClinic(ClinicModel clinic);
@@ -10,6 +10,7 @@ abstract class ClinicRemoteDataSource {
   Future<List<CityModel>> getCities(int governateId);
   Future<List<SpecialityModel>> getSpecialities();
   Future<List<ClinicModel>> getClinics();
+  Future<bool> deleteClinic(int id);
 }
 
 class ClinicRemoteDataSourceImpl implements ClinicRemoteDataSource {
@@ -104,6 +105,20 @@ class ClinicRemoteDataSourceImpl implements ClinicRemoteDataSource {
       return data.map((json) => ClinicModel.fromJson(json)).toList();
     } catch (e) {
       throw Exception('Failed to get clinics: $e');
+    }
+  }
+
+  @override
+  Future<bool> deleteClinic(int id) async {
+    try {
+      final response = await dio.delete(
+        '/api/Doctors/DeleteClinic',
+        queryParameters: {'Id': id},
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      throw Exception('Failed to delete clinic: $e');
     }
   }
 }

@@ -43,7 +43,7 @@ class LoginForm extends StatelessWidget {
       child: Column(
         children: [
           // Login Title with Animation
-            LoginTitle(),
+          LoginTitle(),
           Gap(20.h),
 
           // Form Fields

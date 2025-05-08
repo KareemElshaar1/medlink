@@ -1,12 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/models/clinic_model.dart';
+import '../../data/models/clinic_model.dart';
 import '../../domain/use_cases/add_clinic_usecase.dart';
 import '../../domain/use_cases/get_cities_usecase.dart';
 import '../../domain/use_cases/get_clinics_usecase.dart';
 import '../../domain/use_cases/get_governates_usecase.dart';
 import '../../domain/use_cases/get_specialities_usecase.dart';
+import '../../domain/repositories/clinic_repository.dart';
 import 'clinic_state.dart';
 
 // Cubit
@@ -17,6 +18,7 @@ class ClinicCubit extends Cubit<ClinicState> {
   final GetCitiesUseCase getCitiesUseCase;
   final GetSpecialitieUseCase getSpecialitiesUseCase;
   final GetClinicsUseCase getClinicsUseCase;
+  final ClinicRepository clinicRepository;
 
   ClinicCubit({
     required this.addClinicUseCase,
@@ -24,6 +26,7 @@ class ClinicCubit extends Cubit<ClinicState> {
     required this.getCitiesUseCase,
     required this.getSpecialitiesUseCase,
     required this.getClinicsUseCase,
+    required this.clinicRepository,
   }) : super(ClinicInitial());
 
   Future<void> addClinic(ClinicModel clinic) async {
@@ -36,6 +39,21 @@ class ClinicCubit extends Cubit<ClinicState> {
         getClinics();
       } else {
         emit(const ClinicError('Failed to add clinic'));
+      }
+    } catch (e) {
+      emit(ClinicError(e.toString()));
+    }
+  }
+
+  Future<void> deleteClinic(int id) async {
+    try {
+      emit(ClinicLoading());
+      final success = await clinicRepository.deleteClinic(id);
+      if (success) {
+        // Refresh the clinics list after deleting a clinic
+        getClinics();
+      } else {
+        emit(const ClinicError('Failed to delete clinic'));
       }
     } catch (e) {
       emit(ClinicError(e.toString()));

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../domain/models/clinic_model.dart';
-import '../constants/clinic_constants.dart';
+import '../../data/models/clinic_model.dart';
+import '../../../../../../core/theme/app_colors.dart';
 
 class ClinicCard extends StatelessWidget {
   final ClinicModel clinic;
@@ -24,11 +24,11 @@ class ClinicCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            ClinicColors.cardGradientStart,
-            ClinicColors.cardGradientEnd,
+            Colors.white,
+            AppColors.backgroundColor,
           ],
         ),
-        borderRadius: BorderRadius.circular(ClinicDimensions.cardBorderRadius),
+        borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -40,8 +40,7 @@ class ClinicCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius:
-              BorderRadius.circular(ClinicDimensions.cardBorderRadius),
+          borderRadius: BorderRadius.circular(20.r),
           onTap: onEdit,
           child: Padding(
             padding: EdgeInsets.all(16.r),
@@ -52,19 +51,19 @@ class ClinicCard extends StatelessWidget {
                 SizedBox(height: 16.h),
                 _buildInfoRow(
                   icon: Icons.phone,
-                  label: ClinicStrings.phoneLabel,
+                  label: 'Phone',
                   value: clinic.phone,
                 ),
                 SizedBox(height: 8.h),
                 _buildInfoRow(
                   icon: Icons.attach_money,
-                  label: ClinicStrings.priceLabel,
+                  label: 'Price',
                   value: '${clinic.price} EGP',
                 ),
                 SizedBox(height: 8.h),
                 _buildInfoRow(
                   icon: Icons.location_on,
-                  label: ClinicStrings.locationLabel,
+                  label: 'Location',
                   value: clinic.location,
                 ),
               ],
@@ -83,22 +82,21 @@ class ClinicCard extends StatelessWidget {
           child: Text(
             clinic.name,
             style: TextStyle(
-              fontSize: ClinicDimensions.cardTitleFontSize.sp,
+              fontSize: 20.sp,
               fontWeight: FontWeight.bold,
-              color: ClinicColors.darkBlue,
+              color: Colors.black,
             ),
           ),
         ),
         PopupMenuButton<String>(
           icon: Icon(
             Icons.more_vert,
-            color: ClinicColors.darkBlue,
+            color: Colors.black,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(ClinicDimensions.menuBorderRadius),
+            borderRadius: BorderRadius.circular(10.r),
           ),
-          elevation: ClinicDimensions.menuElevation,
+          elevation: 0,
           onSelected: (value) {
             if (value == 'edit') {
               onEdit();
@@ -111,9 +109,9 @@ class ClinicCard extends StatelessWidget {
               value: 'edit',
               child: Row(
                 children: [
-                  Icon(Icons.edit, size: ClinicDimensions.menuIconSize),
+                  Icon(Icons.edit, size: 20.sp),
                   SizedBox(width: 8.w),
-                  Text(ClinicStrings.editAction),
+                  Text('Edit'),
                 ],
               ),
             ),
@@ -121,9 +119,9 @@ class ClinicCard extends StatelessWidget {
               value: 'delete',
               child: Row(
                 children: [
-                  Icon(Icons.delete, size: ClinicDimensions.menuIconSize),
+                  Icon(Icons.delete, size: 20.sp),
                   SizedBox(width: 8.w),
-                  Text(ClinicStrings.deleteAction),
+                  Text('Delete'),
                 ],
               ),
             ),
@@ -143,14 +141,13 @@ class ClinicCard extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(8.r),
           decoration: BoxDecoration(
-            color: ClinicColors.iconBackground.withOpacity(0.1),
-            borderRadius:
-                BorderRadius.circular(ClinicDimensions.iconBorderRadius),
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10.r),
           ),
           child: Icon(
             icon,
-            size: ClinicDimensions.smallIconSize.sp,
-            color: ClinicColors.iconBackground,
+            size: 20.sp,
+            color: Colors.black,
           ),
         ),
         SizedBox(width: 12.w),
@@ -161,15 +158,15 @@ class ClinicCard extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: ClinicDimensions.smallFontSize.sp,
+                  fontSize: 16.sp,
                   color: Colors.grey[600],
                 ),
               ),
               Text(
                 value,
                 style: TextStyle(
-                  fontSize: ClinicDimensions.bodyFontSize.sp,
-                  color: ClinicColors.darkBlue,
+                  fontSize: 18.sp,
+                  color: Colors.black,
                   fontWeight: FontWeight.w500,
                 ),
               ),

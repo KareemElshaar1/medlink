@@ -188,14 +188,16 @@ class _SignInScreenState extends State<SignInPatient>
 
     if (rememberMe) {
       final email = await authRepository.getEmail();
-      if (email != null && email.isNotEmpty) {
+      if (email != null && email.isNotEmpty && mounted) {
         _emailController.text = email;
       }
     }
 
-    setState(() {
-      isRememberMeSelected = rememberMe;
-    });
+    if (mounted) {
+      setState(() {
+        isRememberMeSelected = rememberMe;
+      });
+    }
   }
 
   @override

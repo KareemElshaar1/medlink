@@ -11,4 +11,7 @@ class PageRouteNames {
   static const String clinicList = '/clinic_list';
   static const String doctorProfile = '/doctor_profile';
   static const String editProfile = '/edit_profile';
+  static const String scheduleList = '/schedule_list';
+  static const String createSchedule = '/create_schedule';
+  static const String editSchedule = '/edit_schedule';
 }

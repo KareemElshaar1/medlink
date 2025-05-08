@@ -10,9 +10,10 @@ import '../models/login_request.dart';
 class AuthRepositoryDoctorImpl implements AuthRepositoryDoctor {
   final AuthRemoteDataSourceDoctor remoteDataSource;
   final FlutterSecureStorage secureStorage;
-  static const String _tokenKey = 'auth_token';
-  static const String _emailKey = 'user_email';
-  static const String _rememberMeKey = 'remember_me';
+  static const String _tokenKey = 'doctor_auth_token';
+  static const String _emailKey = 'doctor_user_email';
+  static const String _rememberMeKey = 'doctor_remember_me';
+  static const String _userTypeKey = 'is_doctor';
 
   AuthRepositoryDoctorImpl(this.remoteDataSource, this.secureStorage);
 
@@ -81,5 +82,18 @@ class AuthRepositoryDoctorImpl implements AuthRepositoryDoctor {
   @override
   Future<String?> getEmail() async {
     return await SharedPrefHelper.getSecuredString(_emailKey);
+  }
+
+  @override
+  Future<void> clearCache() async {
+    // Clear all auth-related data
+    await SharedPrefHelper.removeData(_tokenKey);
+    await SharedPrefHelper.removeData(_emailKey);
+    await SharedPrefHelper.removeData(_rememberMeKey);
+    await SharedPrefHelper.removeData("is_doctor");
+
+    // Clear secure storage
+    await secureStorage.delete(key: _tokenKey);
+    await secureStorage.delete(key: _emailKey);
   }
 }

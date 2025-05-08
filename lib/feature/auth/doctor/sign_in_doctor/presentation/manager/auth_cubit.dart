@@ -8,7 +8,8 @@ class AuthDoctorCubit extends Cubit<AuthDoctorState> {
   final CheckAuthStatusDoctorUseCase checkAuthStatusUseCase;
   final AuthRepositoryDoctor authRepository;
 
-  AuthDoctorCubit(this.checkAuthStatusUseCase, this.authRepository) : super(AuthDoctorInitial());
+  AuthDoctorCubit(this.checkAuthStatusUseCase, this.authRepository)
+      : super(AuthDoctorInitial());
 
   Future<void> checkAuthStatus() async {
     emit(AuthDoctorLoading());
@@ -26,10 +27,13 @@ class AuthDoctorCubit extends Cubit<AuthDoctorState> {
   Future<void> logout() async {
     emit(AuthDoctorLoading());
 
+    // Delete token and other auth data
     await authRepository.logout();
 
+    // Clear any cached data
+    await authRepository.clearCache();
+
+    // Emit unauthenticated state
     emit(AuthDoctorUnauthenticated());
   }
 }
-
-

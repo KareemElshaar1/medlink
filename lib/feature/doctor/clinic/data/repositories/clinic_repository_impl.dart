@@ -1,8 +1,8 @@
 import '../../domain/repositories/clinic_repository.dart';
-import '../../domain/models/clinic_model.dart';
-import '../../domain/models/governate_model.dart';
-import '../../domain/models/city_model.dart';
-import '../../domain/models/speciality_model.dart';
+import '../models/clinic_model.dart';
+import '../models/governate_model.dart';
+import '../models/city_model.dart';
+import '../models/speciality_model.dart';
 import '../datasources/clinic_remote_data_source.dart';
 
 class ClinicRepositoryImpl implements ClinicRepository {
@@ -52,6 +52,15 @@ class ClinicRepositoryImpl implements ClinicRepository {
       return await remoteDataSource.getClinics();
     } catch (e) {
       throw Exception('Failed to get clinics: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<bool> deleteClinic(int id) async {
+    try {
+      return await remoteDataSource.deleteClinic(id);
+    } catch (e) {
+      throw Exception('Failed to delete clinic: ${e.toString()}');
     }
   }
 }

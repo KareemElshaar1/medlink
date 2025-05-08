@@ -10,9 +10,10 @@ import '../models/login_request.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final FlutterSecureStorage secureStorage;
-  static const String _tokenKey = 'auth_token';
-  static const String _emailKey = 'user_email';
-  static const String _rememberMeKey = 'remember_me';
+  static const String _tokenKey = 'patient_auth_token';
+  static const String _emailKey = 'patient_user_email';
+  static const String _rememberMeKey = 'patient_remember_me';
+  static const String _userTypeKey = 'is_patient';
 
   AuthRepositoryImpl(this.remoteDataSource, this.secureStorage);
 
@@ -69,7 +70,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> logout() async {
     await SharedPrefHelper.removeData(_tokenKey);
     await SharedPrefHelper.removeData(_emailKey);
-    await SharedPrefHelper.removeData("is_patient");
+    await SharedPrefHelper.removeData(_userTypeKey);
     // Keep remember me preference
   }
 
@@ -81,5 +82,18 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<String?> getEmail() async {
     return await SharedPrefHelper.getSecuredString(_emailKey);
+  }
+
+  @override
+  Future<void> clearCache() async {
+    // Clear all auth-related data
+    await SharedPrefHelper.removeData(_tokenKey);
+    await SharedPrefHelper.removeData(_emailKey);
+    await SharedPrefHelper.removeData(_rememberMeKey);
+    await SharedPrefHelper.removeData(_userTypeKey);
+
+    // Clear secure storage
+    await secureStorage.delete(key: _tokenKey);
+    await secureStorage.delete(key: _emailKey);
   }
 }

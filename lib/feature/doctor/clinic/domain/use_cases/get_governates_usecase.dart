@@ -1,4 +1,4 @@
-import '../models/governate_model.dart';
+import '../../data/models/governate_model.dart';
 import '../repositories/clinic_repository.dart';
 
 class GetGovernatesUseCase {

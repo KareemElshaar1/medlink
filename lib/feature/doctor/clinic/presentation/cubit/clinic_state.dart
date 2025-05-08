@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/models/city_model.dart';
-import '../../domain/models/clinic_model.dart';
-import '../../domain/models/governate_model.dart';
-import '../../domain/models/speciality_model.dart';
+import '../../data/models/city_model.dart';
+import '../../data/models/clinic_model.dart';
+import '../../data/models/governate_model.dart';
+import '../../data/models/speciality_model.dart';
 
 abstract class ClinicEvent extends Equatable {
   const ClinicEvent();
@@ -19,6 +19,15 @@ class AddClinic extends ClinicEvent {
 
   @override
   List<Object?> get props => [clinic];
+}
+
+class DeleteClinic extends ClinicEvent {
+  final int id;
+
+  const DeleteClinic(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }
 
 class GetGovernatesEvent extends ClinicEvent {}

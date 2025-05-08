@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medlink/core/routes/page_routes_name.dart';
-import 'package:medlink/core/utils/app_text_style.dart';
 import 'package:medlink/core/theme/app_colors.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -17,34 +16,14 @@ import 'package:medlink/feature/auth/doctor/sign_in_doctor/presentation/manager/
 import 'package:medlink/feature/doctor/profile/data/repositories/doctor_profile_repository.dart';
 import 'package:medlink/feature/doctor/profile/data/models/doctor_profile_model.dart';
 import 'package:medlink/feature/doctor/profile/data/services/doctor_profile_storage.dart';
-
-class DrawerItem {
-  final String title;
-  final IconData icon;
-  final String route;
-  final Color color;
-  final List<DrawerSubItem>? subItems;
-
-  DrawerItem({
-    required this.title,
-    required this.icon,
-    required this.route,
-    required this.color,
-    this.subItems,
-  });
-}
-
-class DrawerSubItem {
-  final String title;
-  final String route;
-  final IconData icon;
-
-  DrawerSubItem({
-    required this.title,
-    required this.route,
-    required this.icon,
-  });
-}
+import 'package:medlink/feature/doctor/doctor_dashboard/widgets/drawer_header_widget.dart';
+import 'package:medlink/feature/doctor/doctor_dashboard/widgets/drawer_item_widget.dart';
+import 'package:medlink/feature/doctor/doctor_dashboard/widgets/welcome_card_widget.dart';
+import 'package:medlink/feature/doctor/doctor_dashboard/widgets/stats_section_widget.dart';
+import 'package:medlink/feature/doctor/doctor_dashboard/widgets/appointments_section_widget.dart';
+import 'package:medlink/feature/doctor/doctor_dashboard/widgets/recent_patients_section_widget.dart';
+import 'package:medlink/feature/doctor/doctor_dashboard/widgets/loading_state_widget.dart';
+import 'package:medlink/feature/doctor/doctor_dashboard/models/drawer_item_model.dart';
 
 class DoctorHome extends StatefulWidget {
   const DoctorHome({super.key});
@@ -72,25 +51,8 @@ class _DoctorHomeState extends State<DoctorHome> {
     DrawerItem(
       title: 'My Schedule',
       icon: Icons.calendar_month_rounded,
-      route: '/appointments',
+      route: PageRouteNames.scheduleList,
       color: Colors.purple,
-      subItems: [
-        DrawerSubItem(
-          title: 'Today\'s Schedule',
-          route: '/appointments/today',
-          icon: Icons.today_rounded,
-        ),
-        DrawerSubItem(
-          title: 'Upcoming',
-          route: '/appointments/upcoming',
-          icon: Icons.upcoming_rounded,
-        ),
-        DrawerSubItem(
-          title: 'Past Appointments',
-          route: '/appointments/past',
-          icon: Icons.history_rounded,
-        ),
-      ],
     ),
     DrawerItem(
       title: 'Patient Records',
@@ -268,8 +230,8 @@ class _DoctorHomeState extends State<DoctorHome> {
     return BlocListener<AuthDoctorCubit, AuthDoctorState>(
       listener: (context, state) {
         if (state is AuthDoctorUnauthenticated) {
-          Navigator.of(context)
-              .pushReplacementNamed(PageRouteNames.sign_in_doctor);
+          //   Navigator.of(context)
+          //       .pushReplacementNamed(PageRouteNames.sign_in_doctor);
         }
       },
       child: Scaffold(
@@ -288,7 +250,9 @@ class _DoctorHomeState extends State<DoctorHome> {
                 ],
               ),
             ),
-            child: _isLoading ? _buildLoadingState() : _buildDashboardContent(),
+            child: _isLoading
+                ? const LoadingStateWidget()
+                : _buildDashboardContent(),
           ),
         ),
       ),
@@ -550,7 +514,10 @@ class _DoctorHomeState extends State<DoctorHome> {
       child: Builder(
         builder: (context) => Column(
           children: [
-            _buildDrawerHeader(),
+            DrawerHeaderWidget(
+              isLoading: _isLoading,
+              doctorProfile: _doctorProfile,
+            ),
             Expanded(
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
@@ -558,235 +525,30 @@ class _DoctorHomeState extends State<DoctorHome> {
                 itemCount: _drawerItems.length,
                 itemBuilder: (context, index) {
                   final item = _drawerItems[index];
-                  return _buildDrawerItem(item, index);
+                  return DrawerItemWidget(
+                    item: item,
+                    isSelected: _selectedIndex == index,
+                    isExpanded: _expandedItems[index] ?? false,
+                    onTap: () {
+                      if (item.subItems != null) {
+                        setState(() {
+                          _expandedItems[index] =
+                              !(_expandedItems[index] ?? false);
+                        });
+                      } else {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                        Navigator.pop(context);
+                        _handleNavigation(item);
+                      }
+                    },
+                  );
                 },
               ),
             ),
             _buildLogoutButton(),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDrawerHeader() {
-    final String fullName = _isLoading
-        ? 'Loading...'
-        : _doctorProfile != null
-            ? '${_doctorProfile!.firstName} ${_doctorProfile!.lastName}'
-            : 'Not Available';
-
-    final String profilePicUrl = _doctorProfile?.profilePic != null
-        ? 'http://medlink.runasp.net${_doctorProfile!.profilePic}'
-        : '';
-
-    return Container(
-      height: 220.h,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primaryColor,
-            AppColors.secondaryColor,
-          ],
-        ),
-      ),
-      child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(4.r),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 20,
-                    spreadRadius: 5,
-                  ),
-                ],
-              ),
-              child: CircleAvatar(
-                radius: 45.r,
-                backgroundColor: Colors.white,
-                child: _isLoading
-                    ? CircularProgressIndicator(
-                        color: AppColors.primaryColor,
-                        strokeWidth: 3,
-                      )
-                    : profilePicUrl.isNotEmpty
-                        ? ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl: profilePicUrl,
-                              fit: BoxFit.cover,
-                              width: 90.r,
-                              height: 90.r,
-                              placeholder: (context, url) =>
-                                  CircularProgressIndicator(
-                                color: AppColors.primaryColor,
-                                strokeWidth: 3,
-                              ),
-                              errorWidget: (context, url, error) => Icon(
-                                Icons.person_rounded,
-                                size: 50.sp,
-                                color: AppColors.primaryColor,
-                              ),
-                            ),
-                          )
-                        : Icon(
-                            Icons.person_rounded,
-                            size: 50.sp,
-                            color: AppColors.primaryColor,
-                          ),
-              ),
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              fullName,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDrawerItem(DrawerItem item, int index) {
-    final isSelected = _selectedIndex == index;
-    final isExpanded = _expandedItems[index] ?? false;
-
-    return Column(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? Colors.blueAccent.withOpacity(0.1)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(15.r),
-          ),
-          child: InkWell(
-            onTap: () {
-              if (item.subItems != null) {
-                setState(() {
-                  _expandedItems[index] = !isExpanded;
-                });
-              } else {
-                setState(() {
-                  _selectedIndex = index;
-                });
-                Navigator.pop(context);
-                _handleNavigation(item);
-              }
-            },
-            borderRadius: BorderRadius.circular(15.r),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.h),
-              child: Row(
-                children: [
-                  SizedBox(width: 16.w),
-                  Container(
-                    padding: EdgeInsets.all(8.r),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? item.color.withOpacity(0.2)
-                          : Colors.grey.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      item.icon,
-                      color: isSelected ? item.color : Colors.grey,
-                      size: 20.sp,
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Text(
-                      item.title,
-                      style: TextStyle(
-                        color: isSelected ? item.color : Colors.black87,
-                        fontSize: 16.sp,
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                  if (item.subItems != null)
-                    Icon(
-                      isExpanded
-                          ? Icons.expand_less_rounded
-                          : Icons.expand_more_rounded,
-                      color: isSelected ? item.color : Colors.grey,
-                    )
-                  else if (isSelected)
-                    Container(
-                      height: 24.h,
-                      width: 4.w,
-                      decoration: BoxDecoration(
-                        color: item.color,
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                    ),
-                  SizedBox(width: 16.w),
-                ],
-              ),
-            ),
-          ),
-        ),
-        if (isExpanded && item.subItems != null)
-          ...item.subItems!
-              .map((subItem) => _buildSubItem(subItem, item.color)),
-      ],
-    );
-  }
-
-  Widget _buildSubItem(DrawerSubItem subItem, Color parentColor) {
-    return Container(
-      margin: EdgeInsets.only(left: 32.w, right: 16.w, top: 4.h, bottom: 4.h),
-      decoration: BoxDecoration(
-        color: parentColor.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: InkWell(
-        onTap: () {
-          Navigator.pop(context);
-          _showComingSoonSnackBar(subItem.title);
-        },
-        borderRadius: BorderRadius.circular(12.r),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.h),
-          child: Row(
-            children: [
-              SizedBox(width: 16.w),
-              Icon(
-                subItem.icon,
-                color: parentColor,
-                size: 18.sp,
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Text(
-                  subItem.title,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 14.sp,
-                  ),
-                ),
-              ),
-              SizedBox(width: 16.w),
-            ],
-          ),
         ),
       ),
     );
@@ -798,15 +560,14 @@ class _DoctorHomeState extends State<DoctorHome> {
         break;
       case PageRouteNames.clinicList:
         try {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) => GetIt.I<ClinicCubit>(),
-                child: const ClinicListPage(),
-              ),
-            ),
-          );
+          Navigator.pushNamed(context, PageRouteNames.clinicList);
+        } catch (e) {
+          _showErrorSnackBar('Navigation failed: ${e.toString()}');
+        }
+        break;
+      case PageRouteNames.scheduleList:
+        try {
+          Navigator.pushNamed(context, PageRouteNames.scheduleList);
         } catch (e) {
           _showErrorSnackBar('Navigation failed: ${e.toString()}');
         }
@@ -896,119 +657,31 @@ class _DoctorHomeState extends State<DoctorHome> {
       margin: EdgeInsets.all(16.r),
       child: ElevatedButton.icon(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              title: Text(
-                'Logout',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              content: Text(
-                'Are you sure you want to logout?',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: AppColors.greyColor,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    context.read<AuthDoctorCubit>().logout();
-                    Navigator.of(
-                      context,
-                    ).pushReplacementNamed(PageRouteNames.sign_in_doctor);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
-                  child: Text(
-                    'Logout',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
+          context.read<AuthDoctorCubit>().logout();
+          Navigator.of(context)
+              .pushReplacementNamed(PageRouteNames.SelectScreen);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red.withOpacity(0.1),
           foregroundColor: Colors.red,
           elevation: 0,
-          padding: EdgeInsets.symmetric(vertical: 12.h),
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(15.r),
+            side: BorderSide(color: Colors.red.withOpacity(0.3)),
           ),
         ),
-        icon: Icon(Icons.logout_rounded, size: 20.sp),
-        label: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.w),
-          child: Text(
-            'Logout',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-            ),
+        icon: Icon(
+          Icons.logout_rounded,
+          size: 20.sp,
+        ),
+        label: Text(
+          'Logout',
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(16.r),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primaryColor.withOpacity(0.2),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: CircularProgressIndicator(
-              color: AppColors.primaryColor,
-              strokeWidth: 3,
-            ),
-          ),
-          SizedBox(height: 24.h),
-          Text(
-            'Loading Dashboard...',
-            style: TextStyle(
-              color: AppColors.textColor,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -1022,445 +695,16 @@ class _DoctorHomeState extends State<DoctorHome> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildWelcomeCard(),
+            //  WelcomeCardWidget(doctorProfile: _doctorProfile),
             SizedBox(height: 24.h),
-            _buildStatsSection(),
+            const StatsSectionWidget(),
             SizedBox(height: 24.h),
-            _buildAppointmentsSection(),
+            const AppointmentsSectionWidget(),
             SizedBox(height: 24.h),
-            _buildRecentPatientsSection(),
+            const RecentPatientsSectionWidget(),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildWelcomeCard() {
-    final String fullName = _doctorProfile != null
-        ? '${_doctorProfile!.firstName} ${_doctorProfile!.lastName}'
-        : 'Loading...';
-
-    return Container(
-      padding: EdgeInsets.all(20.r),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.primaryColor,
-            AppColors.secondaryColor,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          stops: const [0.3, 1.0],
-        ),
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryColor.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Text(
-                    '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.sp,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  'Welcome Back,',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 16.sp,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  fullName,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(16.r),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.medical_services_rounded,
-              size: 40.sp,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatsSection() {
-    return Container(
-      padding: EdgeInsets.all(20.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.greyColor.withOpacity(0.1),
-            blurRadius: 20,
-            spreadRadius: 0,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Your Statistics',
-            style: TextStyle(
-              color: AppColors.textColor,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 20.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildStatCard(
-                icon: Icons.calendar_today_rounded,
-                iconColor: Colors.blue,
-                iconBgColor: Colors.blue.withOpacity(0.1),
-                value: '0',
-                label: 'Today\'s\nAppointments',
-              ),
-              _buildStatCard(
-                icon: Icons.people_alt_rounded,
-                iconColor: Colors.purple,
-                iconBgColor: Colors.purple.withOpacity(0.1),
-                value: '0',
-                label: 'Total\nPatients',
-              ),
-              _buildStatCard(
-                icon: Icons.star_rounded,
-                iconColor: Colors.amber,
-                iconBgColor: Colors.amber.withOpacity(0.1),
-                value: '0.0',
-                label: 'Rating',
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatCard({
-    required IconData icon,
-    required Color iconColor,
-    required Color iconBgColor,
-    required String value,
-    required String label,
-  }) {
-    return Container(
-      width: 100.w,
-      padding: EdgeInsets.all(12.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: AppColors.greyColor.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(10.r),
-            decoration: BoxDecoration(
-              color: iconBgColor,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              size: 20.sp,
-              color: iconColor,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            value,
-            style: TextStyle(
-              color: AppColors.textColor,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            label,
-            style: TextStyle(
-              color: AppColors.greyColor,
-              fontSize: 12.sp,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAppointmentsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Today\'s Appointments',
-                style: TextStyle(
-                  color: AppColors.textColor,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextButton.icon(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.arrow_forward_rounded,
-                  size: 18.sp,
-                  color: AppColors.primaryColor,
-                ),
-                label: Text(
-                  'View All',
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 16.h),
-        Container(
-          width: double.infinity,
-          margin: EdgeInsets.symmetric(horizontal: 16.w),
-          padding: EdgeInsets.all(20.r),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.r),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.greyColor.withOpacity(0.1),
-                blurRadius: 20,
-                spreadRadius: 0,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.all(20.r),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.calendar_today_rounded,
-                  size: 32.sp,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Text(
-                'No appointments scheduled',
-                style: TextStyle(
-                  color: AppColors.textColor,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 10.h),
-              Text(
-                'You have no appointments for today',
-                style: TextStyle(
-                  color: AppColors.greyColor,
-                  fontSize: 14.sp,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 16.h),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
-                  child: Text(
-                    'Create Appointment',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRecentPatientsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Recent Patients',
-                style: TextStyle(
-                  color: AppColors.textColor,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextButton.icon(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.arrow_forward_rounded,
-                  size: 18.sp,
-                  color: AppColors.primaryColor,
-                ),
-                label: Text(
-                  'View All',
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 16.h),
-        Container(
-          width: double.infinity,
-          margin: EdgeInsets.symmetric(horizontal: 16.w),
-          padding: EdgeInsets.all(20.r),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.r),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.greyColor.withOpacity(0.1),
-                blurRadius: 20,
-                spreadRadius: 0,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.all(20.r),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.people_alt_rounded,
-                  size: 32.sp,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Text(
-                'No recent patients',
-                style: TextStyle(
-                  color: AppColors.textColor,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 10.h),
-              Text(
-                'Your recent patients will appear here',
-                style: TextStyle(
-                  color: AppColors.greyColor,
-                  fontSize: 14.sp,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 16.h),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: AppColors.primaryColor),
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
-                  child: Text(
-                    'View All Patients',
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

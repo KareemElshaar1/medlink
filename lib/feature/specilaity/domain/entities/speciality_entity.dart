@@ -1,4 +1,3 @@
-// lib/domain/entities/speciality.dart
 class Speciality {
   final int id;
   final String name;

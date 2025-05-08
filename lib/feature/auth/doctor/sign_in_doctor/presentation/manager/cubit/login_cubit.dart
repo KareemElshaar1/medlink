@@ -5,8 +5,6 @@ import '../../../domain/use_cases/login_usecase.dart';
 import '../../../domain/use_cases/save_auth_data_usecase.dart';
 import 'login_state.dart';
 
-
-
 // class LoginCubit extends Cubit<LoginState> {
 //   final LoginUseCase loginUseCase;
 //   final SaveAuthDataUseCase saveAuthDataUseCase;
@@ -34,7 +32,8 @@ class LoginDoctorCubit extends Cubit<LoginDoctorState> {
   final LoginUseCaseDoctor loginUseCase;
   final SaveAuthDataDoctorUseCase saveAuthDataUseCase;
 
-  LoginDoctorCubit(this.loginUseCase, this.saveAuthDataUseCase) : super(LoginInitial());
+  LoginDoctorCubit(this.loginUseCase, this.saveAuthDataUseCase)
+      : super(LoginInitial());
 
   Future<void> login(String email, String password, bool rememberMe) async {
     emit(LoginLoading());

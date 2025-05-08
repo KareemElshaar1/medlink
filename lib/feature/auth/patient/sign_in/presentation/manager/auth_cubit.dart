@@ -8,7 +8,8 @@ class AuthCubit extends Cubit<AuthState> {
   final CheckAuthStatusUseCase checkAuthStatusUseCase;
   final AuthRepository authRepository;
 
-  AuthCubit(this.checkAuthStatusUseCase, this.authRepository) : super(AuthInitial());
+  AuthCubit(this.checkAuthStatusUseCase, this.authRepository)
+      : super(AuthInitial());
 
   Future<void> checkAuthStatus() async {
     emit(AuthLoading());
@@ -26,10 +27,13 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> logout() async {
     emit(AuthLoading());
 
+    // Delete token and other auth data
     await authRepository.logout();
 
+    // Clear any cached data
+    await authRepository.clearCache();
+
+    // Emit unauthenticated state
     emit(AuthUnauthenticated());
   }
 }
-
-

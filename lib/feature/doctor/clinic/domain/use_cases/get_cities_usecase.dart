@@ -1,4 +1,4 @@
-import '../models/city_model.dart';
+import '../../data/models/city_model.dart';
 import '../repositories/clinic_repository.dart';
 
 class GetCitiesUseCase {

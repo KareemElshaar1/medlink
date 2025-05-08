@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medlink/core/routes/page_routes_name.dart';
-import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../di.dart';
 import '../../feature/Selection/select_screen.dart';
 import '../../feature/auth/doctor/sign_in_doctor/presentation/manager/auth_cubit.dart';
 import '../../feature/auth/doctor/sign_in_doctor/presentation/manager/cubit/login_cubit.dart';
 import '../../feature/auth/doctor/sign_in_doctor/presentation/pages/sign_in_screen.dart';
 import '../../feature/auth/doctor/sign_up_doctor/presentation/manager/doctor_registration_cubit.dart';
-import '../../feature/auth/doctor/sign_up_doctor/presentation/manager/specialities/specialities_cubit.dart';
 import '../../feature/auth/doctor/sign_up_doctor/presentation/pages/sign_up_screen.dart';
 import '../../feature/auth/patient/sign_in/presentation/manager/auth_cubit.dart';
 import '../../feature/auth/patient/sign_in/presentation/manager/cubit/login_cubit.dart';
 import '../../feature/auth/patient/sign_in/presentation/pages/sign_in_screen.dart';
 import '../../feature/auth/patient/sign_up/presentation/manager/cubit/patient_register_cubit.dart';
 import '../../feature/auth/patient/sign_up/presentation/pages/sign_up_screen.dart';
-import '../../feature/doctor/clinic/presentation/cubit/clinic_cubit.dart'
-    show ClinicCubit;
+import '../../feature/doctor/clinic/presentation/cubit/clinic_cubit.dart';
 import '../../feature/doctor/clinic/presentation/pages/clinic_list_page_fixed.dart';
 import '../../feature/doctor/profile/presentation/pages/doctor_profile_page.dart';
 import '../../feature/doctor/profile/presentation/cubit/doctor_profile_cubit.dart';
 import '../../feature/doctor/profile/edit_profile_page.dart';
 import '../../feature/doctor/profile/data/models/doctor_profile_model.dart';
-
+import '../../feature/doctor/schedule/presentation/screens/schedule_list_screen.dart';
+import '../../feature/doctor/schedule/presentation/screens/create_schedule_screen.dart';
+import '../../feature/doctor/schedule/presentation/screens/edit_schedule_screen.dart';
+import '../../feature/doctor/schedule/presentation/cubit/schedule_cubit.dart';
+import '../../feature/doctor/schedule/data/models/schedule_model.dart';
 import '../../feature/onboarding/ui/on_boarding_screen.dart';
 import '../../feature/doctor/doctor_dashboard/doctor_home.dart';
-import '../../feature/splash/home_patient.dart';
+import '../../feature/specilaity/manger/cubit/specialities_cubit.dart';
+import '../../patient/home_patient.dart';
 import '../../feature/splash/toggle_screen.dart';
 
 class Routes {
@@ -39,10 +39,11 @@ class Routes {
           (context) => MultiBlocProvider(
             providers: [
               BlocProvider(
-                  create: (context) => sl<AuthCubit>()..checkAuthStatus()),
+                  create: (context) =>
+                      GetIt.instance<AuthCubit>()..checkAuthStatus()),
               BlocProvider(
-                  create: (context) => sl<AuthDoctorCubit>()
-                    ..checkAuthStatus), // إضافة AuthDoctorCubit
+                  create: (context) =>
+                      GetIt.instance<AuthDoctorCubit>()..checkAuthStatus()),
             ],
             child: const ToggleScreen(),
           ),
@@ -58,7 +59,7 @@ class Routes {
       case PageRouteNames.sign_in_patient:
         return _createRoute(
           (context) => BlocProvider(
-            create: (context) => sl<LoginCubit>(),
+            create: (context) => GetIt.instance<LoginCubit>(),
             child: const SignInPatient(),
           ),
           settings,
@@ -67,7 +68,7 @@ class Routes {
       case PageRouteNames.sign_up_patient:
         return _createRoute(
           (context) => BlocProvider(
-            create: (context) => sl<PatientRegistrationCubit>(),
+            create: (context) => GetIt.instance<PatientRegistrationCubit>(),
             child: const SignUpPatient(),
           ),
           settings,
@@ -76,7 +77,7 @@ class Routes {
       case PageRouteNames.sign_in_doctor:
         return _createRoute(
           (context) => BlocProvider(
-            create: (context) => sl<LoginDoctorCubit>(),
+            create: (context) => GetIt.instance<LoginDoctorCubit>(),
             child: const SignInDoctor(),
           ),
           settings,
@@ -87,11 +88,10 @@ class Routes {
           (context) => MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (context) => sl<DoctorRegistrationCubit>(),
-              ),
+                  create: (context) =>
+                      GetIt.instance<DoctorRegistrationCubit>()),
               BlocProvider(
-                create: (context) => sl<SpecialitiesCubit>(),
-              ),
+                  create: (context) => GetIt.instance<SpecialitiesCubit>()),
             ],
             child: const SignUpDoctor(),
           ),
@@ -107,7 +107,7 @@ class Routes {
       case PageRouteNames.patienthome:
         return _createRoute(
           (context) => BlocProvider(
-            create: (context) => sl<AuthCubit>(),
+            create: (context) => GetIt.instance<AuthCubit>(),
             child: const HomePatient(),
           ),
           settings,
@@ -116,7 +116,7 @@ class Routes {
       case PageRouteNames.doctorhome:
         return _createRoute(
           (context) => BlocProvider(
-            create: (context) => sl<AuthDoctorCubit>(),
+            create: (context) => GetIt.instance<AuthDoctorCubit>(),
             child: const DoctorHome(),
           ),
           settings,
@@ -125,7 +125,7 @@ class Routes {
       case PageRouteNames.clinicList:
         return _createRoute(
           (context) => BlocProvider(
-            create: (context) => sl<ClinicCubit>(),
+            create: (context) => GetIt.instance<ClinicCubit>(),
             child: const ClinicListPage(),
           ),
           settings,
@@ -134,7 +134,7 @@ class Routes {
       case PageRouteNames.doctorProfile:
         return _createRoute(
           (context) => BlocProvider(
-            create: (context) => sl<DoctorProfileCubit>(),
+            create: (context) => GetIt.instance<DoctorProfileCubit>(),
             child: const DoctorProfilePage(),
           ),
           settings,
@@ -144,6 +144,34 @@ class Routes {
         final profile = settings.arguments as DoctorProfileModel;
         return _createRoute(
           (context) => EditProfilePage(initialProfile: profile),
+          settings,
+        );
+
+      case PageRouteNames.scheduleList:
+        return _createRoute(
+          (context) => BlocProvider.value(
+            value: GetIt.instance<ScheduleCubit>(),
+            child: const ScheduleListScreen(),
+          ),
+          settings,
+        );
+
+      case PageRouteNames.createSchedule:
+        return _createRoute(
+          (context) => BlocProvider.value(
+            value: GetIt.instance<ScheduleCubit>(),
+            child: const CreateScheduleScreen(),
+          ),
+          settings,
+        );
+
+      case PageRouteNames.editSchedule:
+        final schedule = settings.arguments as ScheduleModel;
+        return _createRoute(
+          (context) => BlocProvider.value(
+            value: GetIt.instance<ScheduleCubit>(),
+            child: EditScheduleScreen(schedule: schedule),
+          ),
           settings,
         );
 

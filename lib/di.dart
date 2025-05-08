@@ -17,16 +17,14 @@ import 'feature/auth/doctor/sign_in_doctor/presentation/manager/auth_cubit.dart'
 import 'feature/auth/doctor/sign_in_doctor/presentation/manager/cubit/login_cubit.dart';
 import 'feature/auth/doctor/sign_up_doctor/data/data_sources/doctor_remote_data_source.dart';
 import 'feature/auth/doctor/sign_up_doctor/data/data_sources/doctor_remote_data_source_impl.dart';
-import 'feature/auth/doctor/sign_up_doctor/data/data_sources/specialities_remote_data_source.dart';
-import 'feature/auth/doctor/sign_up_doctor/data/data_sources/specialities_remote_data_source_impl.dart';
+import 'feature/specilaity/manger/cubit/specialities_cubit.dart';
+import 'feature/specilaity/data/datasource/specialities_remote_data_source.dart';
+import 'feature/specilaity/data/datasource/specialities_remote_data_source_impl.dart';
 import 'feature/auth/doctor/sign_up_doctor/data/repositories/doctor_repository_impl.dart';
-import 'feature/auth/doctor/sign_up_doctor/data/repositories/specialities_repository_impl.dart';
 import 'feature/auth/doctor/sign_up_doctor/domain/repositories/doctor_repository.dart';
-import 'feature/auth/doctor/sign_up_doctor/domain/repositories/specialities_repository.dart';
+import 'feature/specilaity/domain/repositories/specialities_repository.dart';
 import 'feature/auth/doctor/sign_up_doctor/domain/use_cases/doctor_register_usecase.dart';
-import 'feature/auth/doctor/sign_up_doctor/domain/use_cases/specialities_usecase.dart';
 import 'feature/auth/doctor/sign_up_doctor/presentation/manager/doctor_registration_cubit.dart';
-import 'feature/auth/doctor/sign_up_doctor/presentation/manager/specialities/specialities_cubit.dart';
 import 'feature/auth/patient/sign_in/data/data_sources/auth_remote_data_source.dart';
 import 'feature/auth/patient/sign_in/data/data_sources/auth_remote_data_source_impl.dart';
 import 'feature/auth/patient/sign_in/data/repositories/auth_repository_impl.dart';
@@ -56,9 +54,25 @@ import 'feature/doctor/clinic/domain/use_cases/get_specialities_usecase.dart';
 import 'feature/doctor/clinic/presentation/cubit/clinic_cubit.dart';
 import 'feature/doctor/profile/data/repositories/doctor_profile_repository.dart';
 import 'feature/doctor/profile/presentation/cubit/doctor_profile_cubit.dart';
+import 'feature/doctor/schedule/data/data_sources/schedule_remote_data_source.dart';
+import 'feature/doctor/schedule/data/data_sources/schedule_remote_data_source_impl.dart';
+import 'feature/doctor/schedule/data/repositories/schedule_repository_impl.dart';
+import 'feature/doctor/schedule/domain/repositories/schedule_repository.dart';
+import 'feature/doctor/schedule/domain/use_cases/get_clinics_usecase.dart';
+import 'feature/doctor/schedule/domain/use_cases/create_schedule_usecase.dart';
+import 'feature/doctor/schedule/domain/use_cases/get_schedule_usecase.dart';
+import 'feature/doctor/schedule/domain/use_cases/delete_schedule_usecase.dart';
+import 'feature/doctor/schedule/domain/use_cases/edit_schedule_usecase.dart';
+import 'feature/doctor/schedule/presentation/cubit/schedule_cubit.dart';
+import 'feature/specilaity/data/repositories/specialities_repository_impl.dart';
+import 'feature/specilaity/domain/use_cases/specialities_usecase.dart';
+import 'patient/recommendation_doctor/data/data_sources/recommendation_doctor_remote_data_source.dart';
+import 'patient/recommendation_doctor/data/repositories/recommendation_doctor_repository_impl.dart';
+import 'patient/recommendation_doctor/domain/repositories/recommendation_doctor_repository.dart';
+import 'patient/recommendation_doctor/domain/use_cases/get_recommendation_doctors_usecase.dart';
+import 'patient/recommendation_doctor/presentation/cubit/recommendation_doctor_cubit.dart';
 
 final sl = GetIt.instance;
-
 Future<void> init() async {
   // Dio client
   sl.registerLazySingleton<Dio>(() {
@@ -219,6 +233,7 @@ Future<void> init() async {
       getCitiesUseCase: sl(),
       getSpecialitiesUseCase: sl(),
       getClinicsUseCase: sl(),
+      clinicRepository: sl(),
     ),
   );
 
@@ -229,5 +244,50 @@ Future<void> init() async {
 
   sl.registerFactory<DoctorProfileCubit>(
     () => DoctorProfileCubit(sl()),
+  );
+
+  // Schedule Data Source
+  sl.registerLazySingleton<ScheduleRemoteDataSource>(
+    () => ScheduleRemoteDataSourceImpl(sl()),
+  );
+
+  // Schedule Repository
+  sl.registerLazySingleton<ScheduleRepository>(
+    () => ScheduleRepositoryImpl(sl()),
+  );
+
+  // Schedule Use Cases
+  sl.registerLazySingleton(() => GetScheduleClinicsUseCase(sl()));
+  sl.registerLazySingleton(() => CreateScheduleUseCase(sl()));
+  sl.registerLazySingleton(() => GetScheduleUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteScheduleUseCase(sl()));
+  sl.registerLazySingleton(() => EditScheduleUseCase(sl()));
+
+  // Schedule Cubit
+  sl.registerFactory(
+    () => ScheduleCubit(
+      getClinicsUseCase: sl(),
+      createScheduleUseCase: sl(),
+      getScheduleUseCase: sl(),
+      deleteScheduleUseCase: sl(),
+      editScheduleUseCase: sl(),
+    ),
+  );
+
+  // Recommendation Doctor
+  sl.registerLazySingleton<RecommendationDoctorRemoteDataSource>(
+    () => RecommendationDoctorRemoteDataSourceImpl(sl()),
+  );
+
+  sl.registerLazySingleton<RecommendationDoctorRepository>(
+    () => RecommendationDoctorRepositoryImpl(sl()),
+  );
+
+  sl.registerLazySingleton(() => GetRecommendationDoctorsUseCase(sl()));
+
+  sl.registerFactory(
+    () => RecommendationDoctorCubit(
+      getRecommendationDoctorsUseCase: sl(),
+    ),
   );
 }

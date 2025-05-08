@@ -188,14 +188,16 @@ class _SignInScreenState extends State<SignInDoctor>
 
     if (rememberMe) {
       final email = await authRepository.getEmail();
-      if (email != null && email.isNotEmpty) {
+      if (email != null && email.isNotEmpty && mounted) {
         _emailController.text = email;
       }
     }
 
-    setState(() {
-      isRememberMeSelected = rememberMe;
-    });
+    if (mounted) {
+      setState(() {
+        isRememberMeSelected = rememberMe;
+      });
+    }
   }
 
   @override
@@ -225,7 +227,8 @@ class _SignInScreenState extends State<SignInDoctor>
             );
           } else if (state is LoginSuccess) {
             // Navigate to home page
-            Navigator.of(context).pushReplacementNamed(PageRouteNames.doctorhome);
+            Navigator.of(context)
+                .pushReplacementNamed(PageRouteNames.doctorhome);
           }
         }
       },
@@ -266,10 +269,10 @@ class _SignInScreenState extends State<SignInDoctor>
 
                         // Trigger login using the LoginCubit
                         context.read<LoginDoctorCubit>().login(
-                          email,
-                          password,
-                          isRememberMeSelected ?? false,
-                        );
+                              email,
+                              password,
+                              isRememberMeSelected ?? false,
+                            );
                       }
                     },
                   ),

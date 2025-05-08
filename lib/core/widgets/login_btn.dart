@@ -5,7 +5,6 @@ import '../utils/app_strings.dart';
 import '../utils/color_manger.dart';
 import 'app_text_button.dart';
 
-
 class LoginButton extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onPressed;

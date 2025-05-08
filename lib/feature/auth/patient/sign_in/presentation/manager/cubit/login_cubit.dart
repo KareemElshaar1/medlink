@@ -32,7 +32,8 @@ class LoginCubit extends Cubit<LoginState> {
   final LoginUseCase loginUseCase;
   final SaveAuthDataUseCase saveAuthDataUseCase;
 
-  LoginCubit(this.loginUseCase, this.saveAuthDataUseCase) : super(LoginInitial());
+  LoginCubit(this.loginUseCase, this.saveAuthDataUseCase)
+      : super(LoginInitial());
 
   Future<void> login(String email, String password, bool rememberMe) async {
     emit(LoginLoading());

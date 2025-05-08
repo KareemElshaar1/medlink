@@ -4,10 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../../../core/widgets/app_text_button.dart';
-import '../../domain/models/city_model.dart';
-import '../../domain/models/clinic_model.dart';
-import '../../domain/models/governate_model.dart';
-import '../../domain/models/speciality_model.dart';
+import '../../../../../../core/theme/app_colors.dart';
+import '../../data/models/city_model.dart';
+import '../../data/models/clinic_model.dart';
+import '../../data/models/governate_model.dart';
+import '../../data/models/speciality_model.dart';
 import '../cubit/clinic_cubit.dart';
 import '../cubit/clinic_state.dart';
 
@@ -29,14 +30,14 @@ class _ClinicManagementPageState extends State<ClinicManagementPage>
   late AnimationController _animationController;
 
   // Enhanced color palette
-  final Color _primaryColor = const Color(0xFF2196F3);
-  final Color _secondaryColor = const Color(0xFF64B5F6);
-  final Color _accentColor = const Color(0xFF1976D2);
-  final Color _backgroundColor = const Color(0xFFF5F9FF);
+  final Color _primaryColor = AppColors.primaryColor;
+  final Color _secondaryColor = AppColors.secondaryColor;
+  final Color _accentColor = AppColors.accentColor;
+  final Color _backgroundColor = AppColors.backgroundColor;
   final Color _cardColor = Colors.white;
-  final Color _textColor = const Color(0xFF2C3E50);
-  final Color _errorColor = const Color(0xFFE74C3C);
-  final Color _successColor = const Color(0xFF2ECC71);
+  final Color _textColor = AppColors.textColor;
+  final Color _errorColor = AppColors.errorColor;
+  final Color _successColor = AppColors.successColor;
 
   GovernateModel? _selectedGovernate;
   CityModel? _selectedCity;

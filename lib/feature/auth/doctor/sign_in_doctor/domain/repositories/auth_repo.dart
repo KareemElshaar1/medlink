@@ -9,4 +9,5 @@ abstract class AuthRepositoryDoctor {
   Future<String?> getToken();
   Future<String?> getEmail();
   Future<bool> getRememberMePreference();
+  Future<void> clearCache();
 }

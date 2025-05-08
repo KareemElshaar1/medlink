@@ -9,9 +9,9 @@ import '../../../../../../core/routes/page_routes_name.dart';
 import '../../../../../../core/widgets/app_text_button.dart';
 import '../../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../../core/widgets/buildHeader.dart';
-import '../../domain/entities/speciality_entity.dart';
+import '../../../../../specilaity/manger/cubit/specialities_cubit.dart';
+import '../../../../../specilaity/domain/entities/speciality_entity.dart';
 import '../manager/doctor_registration_cubit.dart';
-import '../manager/specialities/specialities_cubit.dart';
 
 class SignUpDoctor extends StatefulWidget {
   const SignUpDoctor({super.key});

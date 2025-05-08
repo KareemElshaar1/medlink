@@ -1,4 +1,4 @@
-import '../models/speciality_model.dart';
+import '../../data/models/speciality_model.dart';
 import '../repositories/clinic_repository.dart';
 
 class GetSpecialitieUseCase {
