@@ -30,6 +30,7 @@ import '../../feature/doctor/doctor_dashboard/doctor_home.dart';
 import '../../feature/specilaity/manger/cubit/specialities_cubit.dart';
 import '../../patient/home_patient.dart';
 import '../../feature/splash/toggle_screen.dart';
+import '../../feature/auth/doctor/sign_up_doctor/presentation/pages/confirm_doctor_code_screen.dart';
 
 class Routes {
   static Route onGeneratedRoute(RouteSettings settings) {
@@ -94,6 +95,17 @@ class Routes {
                   create: (context) => GetIt.instance<SpecialitiesCubit>()),
             ],
             child: const SignUpDoctor(),
+          ),
+          settings,
+        );
+
+      case PageRouteNames.confirm_doctor_code:
+        final args = settings.arguments as Map<String, dynamic>;
+        return _createRoute(
+          (context) => ConfirmDoctorCodeScreen(
+            correctCode: args['code'] as String,
+            cubit: args['cubit'] as DoctorRegistrationCubit,
+            registrationData: args['registrationData'] as Map<String, dynamic>,
           ),
           settings,
         );

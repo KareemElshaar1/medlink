@@ -28,13 +28,13 @@ class _ClinicListPageState extends State<ClinicListPage>
   late AnimationController _animationController;
 
   // Color palette
-  final Color _primaryColor = AppColors.primaryColor;
-  final Color _secondaryColor = AppColors.secondaryColor;
-  final Color _accentColor = AppColors.accentColor;
-  final Color _backgroundColor = AppColors.backgroundColor;
-  final Color _textColor = AppColors.textColor;
-  final Color _errorColor = AppColors.errorColor;
-  final Color _successColor = AppColors.successColor;
+  final Color _primaryColor = AppColors.primary;
+  final Color _secondaryColor = AppColors.secondary;
+  final Color _accentColor = AppColors.primaryLight;
+  final Color _backgroundColor = AppColors.background;
+  final Color _textColor = AppColors.text;
+  final Color _errorColor = AppColors.error;
+  final Color _successColor = AppColors.success;
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _ClinicListPageState extends State<ClinicListPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(
           ClinicStrings.appBarTitle,
@@ -60,7 +60,7 @@ class _ClinicListPageState extends State<ClinicListPage>
           ),
         ),
         elevation: 0,
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -104,7 +104,7 @@ class _ClinicListPageState extends State<ClinicListPage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(color: AppColors.primaryColor),
+                    CircularProgressIndicator(color: AppColors.primary),
                     SizedBox(height: 16.h),
                     Text(
                       'Loading clinics...',
@@ -125,7 +125,7 @@ class _ClinicListPageState extends State<ClinicListPage>
               }
 
               return RefreshIndicator(
-                color: AppColors.primaryColor,
+                color: AppColors.primary,
                 backgroundColor: Colors.white,
                 onRefresh: () async {
                   context.read<ClinicCubit>().getClinics();
@@ -162,7 +162,7 @@ class _ClinicListPageState extends State<ClinicListPage>
             fontSize: 16.sp,
           ),
         ),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 4,
         shape: RoundedRectangleBorder(
@@ -222,12 +222,12 @@ class _ClinicListPageState extends State<ClinicListPage>
                 Container(
                   padding: EdgeInsets.all(8.r),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
+                    color: AppColors.primary,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.local_hospital_rounded,
-                    color: AppColors.primaryColor,
+                    color: AppColors.primary,
                     size: 24.sp,
                   ),
                 ),

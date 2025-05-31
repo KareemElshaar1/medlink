@@ -25,7 +25,7 @@ class ClinicCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             Colors.white,
-            AppColors.backgroundColor,
+            AppColors.background,
           ],
         ),
         borderRadius: BorderRadius.circular(20.r),
@@ -147,7 +147,7 @@ class ClinicCard extends StatelessWidget {
           child: Icon(
             icon,
             size: 20.sp,
-            color: Colors.black,
+            color: AppColors.grey,
           ),
         ),
         SizedBox(width: 12.w),
@@ -159,14 +159,14 @@ class ClinicCard extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 16.sp,
-                  color: Colors.grey[600],
+                  color: AppColors.text,
                 ),
               ),
               Text(
                 value,
                 style: TextStyle(
                   fontSize: 18.sp,
-                  color: Colors.black,
+                  color: AppColors.text,
                   fontWeight: FontWeight.w500,
                 ),
               ),

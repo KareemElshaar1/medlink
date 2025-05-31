@@ -14,4 +14,5 @@ class PageRouteNames {
   static const String scheduleList = '/schedule_list';
   static const String createSchedule = '/create_schedule';
   static const String editSchedule = '/edit_schedule';
+  static const String confirm_doctor_code = '/confirm_doctor_code';
 }

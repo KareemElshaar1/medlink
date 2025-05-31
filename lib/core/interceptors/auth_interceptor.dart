@@ -2,17 +2,37 @@ import 'package:dio/dio.dart';
 import '../helper/shared_pref_helper.dart';
 
 class AuthInterceptor extends Interceptor {
-  static const String _tokenKey = 'patient_auth_token';
+  static const String _patientTokenKey = 'patient_auth_token';
+  static const String _doctorTokenKey = 'doctor_auth_token';
 
   @override
   void onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    final token = await SharedPrefHelper.getSecuredString(_tokenKey);
-    print('AuthInterceptor: Token = $token'); // Debug log
+    // Try to get both tokens
+    final patientToken =
+        await SharedPrefHelper.getSecuredString(_patientTokenKey);
+    final doctorToken =
+        await SharedPrefHelper.getSecuredString(_doctorTokenKey);
 
-    if (token.isNotEmpty) {
+    print('AuthInterceptor: Patient Token = $patientToken'); // Debug log
+    print('AuthInterceptor: Doctor Token = $doctorToken'); // Debug log
+
+    // Determine which token to use based on the request URL or headers
+    String? token;
+    if (options.path.contains('/doctor/') ||
+        options.path.contains('/doctors/')) {
+      token = doctorToken;
+    } else if (options.path.contains('/patient/') ||
+        options.path.contains('/patients/')) {
+      token = patientToken;
+    } else {
+      // If path doesn't indicate user type, try both tokens
+      token = doctorToken.isNotEmpty ? doctorToken : patientToken;
+    }
+
+    if (token?.isNotEmpty ?? false) {
       // Add token to all requests
       options.headers['Authorization'] = 'Bearer $token';
     }

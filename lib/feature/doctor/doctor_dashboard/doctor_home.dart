@@ -245,8 +245,8 @@ class _DoctorHomeState extends State<DoctorHome> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  AppColors.backgroundColor,
-                  AppColors.secondaryColor.withOpacity(0.05),
+                  AppColors.background,
+                  AppColors.secondary.withOpacity(0.05),
                 ],
               ),
             ),
@@ -278,8 +278,8 @@ class _DoctorHomeState extends State<DoctorHome> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColors.primaryColor,
-              AppColors.secondaryColor,
+              AppColors.primary,
+              AppColors.secondary,
             ],
           ),
           borderRadius: BorderRadius.only(
@@ -288,7 +288,7 @@ class _DoctorHomeState extends State<DoctorHome> {
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primaryColor.withOpacity(0.3),
+              color: AppColors.primary.withOpacity(0.3),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -641,7 +641,7 @@ class _DoctorHomeState extends State<DoctorHome> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: AppColors.primary,
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(

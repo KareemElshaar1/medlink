@@ -71,6 +71,15 @@ import 'patient/recommendation_doctor/data/repositories/recommendation_doctor_re
 import 'patient/recommendation_doctor/domain/repositories/recommendation_doctor_repository.dart';
 import 'patient/recommendation_doctor/domain/use_cases/get_recommendation_doctors_usecase.dart';
 import 'patient/recommendation_doctor/presentation/cubit/recommendation_doctor_cubit.dart';
+import 'feature/doctors_by_specialty/data/datasources/doctors_by_specialty_remote_data_source.dart';
+import 'feature/doctors_by_specialty/presentation/cubit/doctors_by_specialty_cubit.dart';
+import 'feature/take_appointment/data/datasources/doctor_schedule_remote_data_source.dart';
+import 'feature/take_appointment/data/repositories/doctor_schedule_repository_impl.dart';
+import 'feature/take_appointment/domain/repositories/doctor_schedule_repository.dart';
+import 'feature/take_appointment/domain/use_cases/get_doctor_schedule_usecase.dart';
+import 'feature/take_appointment/presentation/cubit/doctor_schedule_cubit.dart';
+import 'feature/take_appointment/domain/use_cases/book_appointment_usecase.dart';
+import 'feature/take_appointment/presentation/cubit/book_appointment_cubit.dart';
 
 final sl = GetIt.instance;
 Future<void> init() async {
@@ -289,5 +298,34 @@ Future<void> init() async {
     () => RecommendationDoctorCubit(
       getRecommendationDoctorsUseCase: sl(),
     ),
+  );
+
+  // Doctors By Specialty
+  sl.registerLazySingleton<DoctorsBySpecialtyRemoteDataSource>(
+    () => DoctorsBySpecialtyRemoteDataSourceImpl(sl()),
+  );
+
+  sl.registerFactory<DoctorsBySpecialtyCubit>(
+    () => DoctorsBySpecialtyCubit(sl()),
+  );
+
+  // Register Doctor Schedule Data Source
+  sl.registerLazySingleton<DoctorScheduleRemoteDataSource>(
+    () => DoctorScheduleRemoteDataSourceImpl(dio: sl()),
+  );
+
+  sl.registerLazySingleton<DoctorScheduleRepository>(
+    () => DoctorScheduleRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  sl.registerLazySingleton(() => GetDoctorScheduleUseCase(repository: sl()));
+  sl.registerLazySingleton(() => BookAppointmentUseCase(repository: sl()));
+
+  sl.registerFactory(
+    () => DoctorScheduleCubit(getDoctorScheduleUseCase: sl()),
+  );
+
+  sl.registerFactory(
+    () => BookAppointmentCubit(bookAppointmentUseCase: sl()),
   );
 }

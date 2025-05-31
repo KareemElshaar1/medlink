@@ -95,7 +95,7 @@ class _ToggleScreenState extends State<ToggleScreen> {
           ),
         ],
         child: Center(
-          child: CircularProgressIndicator(color: AppColors.primaryColor),
+          child: CircularProgressIndicator(color: AppColors.primary),
         ),
       ),
     );

@@ -1,7 +1,7 @@
 // lib/presentation/cubits/doctor_registration_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-
+import 'package:medlink/core/helper/shared_pref_helper.dart';
 import '../../domain/use_cases/doctor_register_usecase.dart';
 
 // States
@@ -28,6 +28,7 @@ class DoctorRegistrationError extends DoctorRegistrationState {
 // Cubit
 class DoctorRegistrationCubit extends Cubit<DoctorRegistrationState> {
   final RegisterDoctorUseCase registerDoctorUseCase;
+  static const String _doctorTokenKey = 'doctor_auth_token';
 
   DoctorRegistrationCubit(this.registerDoctorUseCase)
       : super(DoctorRegistrationInitial());
@@ -60,6 +61,25 @@ class DoctorRegistrationCubit extends Cubit<DoctorRegistrationState> {
       }
     } catch (e) {
       emit(DoctorRegistrationError(e.toString()));
+    }
+  }
+
+  Future<void> sendVerificationToken() async {
+    try {
+      emit(DoctorRegistrationLoading());
+      // TODO: Implement the API call to send verification token
+      // This should be implemented based on your backend API
+      await Future.delayed(const Duration(seconds: 1)); // Simulate API call
+
+      // Save the token to secure storage
+      // Replace this with your actual token from the API response
+      const String token = 'your_verification_token_here';
+      await SharedPrefHelper.setSecuredString(_doctorTokenKey, token);
+
+      emit(DoctorRegistrationSuccess());
+    } catch (e) {
+      emit(DoctorRegistrationError(e.toString()));
+      rethrow;
     }
   }
 }

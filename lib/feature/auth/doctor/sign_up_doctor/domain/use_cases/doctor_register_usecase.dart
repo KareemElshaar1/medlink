@@ -3,14 +3,14 @@ import '../repositories/doctor_repository.dart';
 
 abstract class DoctorRegisterUseCase {
   Future<bool> registerDoctor(
-      String firstName,
-      String lastName,
-      String email,
-      String phone,
-      String password,
-      String confirmPassword,
-      int specialityId,
-      );
+    String firstName,
+    String lastName,
+    String email,
+    String phone,
+    String password,
+    String confirmPassword,
+    int specialityId,
+  );
 }
 
 class RegisterDoctorUseCase implements DoctorRegisterUseCase {
@@ -20,14 +20,14 @@ class RegisterDoctorUseCase implements DoctorRegisterUseCase {
 
   @override
   Future<bool> registerDoctor(
-      String firstName,
-      String lastName,
-      String email,
-      String phone,
-      String password,
-      String confirmPassword,
-      int specialityId,
-      ) {
+    String firstName,
+    String lastName,
+    String email,
+    String phone,
+    String password,
+    String confirmPassword,
+    int specialityId,
+  ) {
     return repository.registerDoctor(
       firstName,
       lastName,

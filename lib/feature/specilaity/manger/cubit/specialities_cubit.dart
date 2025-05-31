@@ -1,9 +1,8 @@
 // lib/presentation/cubits/specialities_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
- import '../../domain/use_cases/specialities_usecase.dart';
+import '../../domain/use_cases/specialities_usecase.dart';
 import '../../domain/entities/speciality_entity.dart';
-
 
 // States
 abstract class SpecialitiesState extends Equatable {

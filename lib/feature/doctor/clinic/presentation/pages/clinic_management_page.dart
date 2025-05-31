@@ -30,14 +30,14 @@ class _ClinicManagementPageState extends State<ClinicManagementPage>
   late AnimationController _animationController;
 
   // Enhanced color palette
-  final Color _primaryColor = AppColors.primaryColor;
-  final Color _secondaryColor = AppColors.secondaryColor;
-  final Color _accentColor = AppColors.accentColor;
-  final Color _backgroundColor = AppColors.backgroundColor;
+  final Color _primaryColor = AppColors.primary;
+  final Color _secondaryColor = AppColors.secondary;
+  final Color _accentColor = AppColors.primaryLight;
+  final Color _backgroundColor = AppColors.background;
   final Color _cardColor = Colors.white;
-  final Color _textColor = AppColors.textColor;
-  final Color _errorColor = AppColors.errorColor;
-  final Color _successColor = AppColors.successColor;
+  final Color _textColor = AppColors.text;
+  final Color _errorColor = AppColors.error;
+  final Color _successColor = AppColors.success;
 
   GovernateModel? _selectedGovernate;
   CityModel? _selectedCity;
