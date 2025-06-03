@@ -8,16 +8,12 @@ abstract class AppStrings {
       register = "Register",
       loginNow = "Login Now",
       getStarted = "Get Started",
-
       title1 = "Find a \n Doctor Near You ",
       title2 = "Virtual\n Consultations ",
       title3 = "Personalized\n Health Plans",
-      descriptions1 =
-          "Quickly book appointments with nearby doctors",
-      descriptions2 =
-          "Access medical advice from home via virtual visits",
-      descriptions3 =
-          "Get custom health plans tailored to your needs.",
+      descriptions1 = "Quickly book appointments with nearby doctors",
+      descriptions2 = "Access medical advice from home via virtual visits",
+      descriptions3 = "Get custom health plans tailored to your needs.",
 
       //!Auth Strings
       welcome = "Welcome!",

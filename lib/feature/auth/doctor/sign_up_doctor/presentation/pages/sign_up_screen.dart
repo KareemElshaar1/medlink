@@ -389,15 +389,6 @@ class _PasswordFieldState extends State<PasswordField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Text(
-        //   widget.label,
-        //   style: TextStyle(
-        //     color: Colors.blue,
-        //     fontSize: 15.sp,
-        //     fontWeight: FontWeight.w600,
-        //   ),
-        // ),
-        // Gap(8.h),
         AppTextFormField(
           controller: widget.controller,
           isObscureText: !isPasswordVisible,

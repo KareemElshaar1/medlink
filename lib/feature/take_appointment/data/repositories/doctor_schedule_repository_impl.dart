@@ -1,4 +1,5 @@
 import '../../domain/entities/doctor_schedule.dart';
+import '../../domain/entities/book_appointment.dart';
 import '../../domain/repositories/doctor_schedule_repository.dart';
 import '../datasources/doctor_schedule_remote_data_source.dart';
 import '../models/doctor_schedule_model.dart';
@@ -20,12 +21,17 @@ class DoctorScheduleRepositoryImpl implements DoctorScheduleRepository {
   }
 
   @override
-  Future<void> bookAppointment(BookAppointmentModel appointment) async {
-    try {
-      await remoteDataSource.bookAppointment(appointment);
-    } catch (e) {
-      throw Exception('Failed to book appointment');
-    }
+  Future<int> bookAppointment(BookAppointment appointment) async {
+    final appointmentModel = BookAppointmentModel(
+      id: appointment.id,
+      doctorId: appointment.doctorId,
+      clinicId: appointment.clinicId,
+      day: appointment.day,
+      appointmentStart: appointment.appointmentStart,
+      appointmentEnd: appointment.appointmentEnd,
+    );
+
+    return await remoteDataSource.bookAppointment(appointmentModel);
   }
 
   DoctorSchedule _mapModelToEntity(DoctorScheduleModel model) {

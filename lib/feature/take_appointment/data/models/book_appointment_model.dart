@@ -1,4 +1,5 @@
 class BookAppointmentModel {
+  final int? id;
   final int doctorId;
   final int clinicId;
   final String day;
@@ -6,6 +7,7 @@ class BookAppointmentModel {
   final String appointmentEnd;
 
   BookAppointmentModel({
+    this.id,
     required this.doctorId,
     required this.clinicId,
     required this.day,
@@ -15,6 +17,7 @@ class BookAppointmentModel {
 
   Map<String, dynamic> toJson() {
     return {
+      if (id != null) 'id': id,
       'doctorId': doctorId,
       'clinicId': clinicId,
       'day': day,

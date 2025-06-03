@@ -80,6 +80,15 @@ import 'feature/take_appointment/domain/use_cases/get_doctor_schedule_usecase.da
 import 'feature/take_appointment/presentation/cubit/doctor_schedule_cubit.dart';
 import 'feature/take_appointment/domain/use_cases/book_appointment_usecase.dart';
 import 'feature/take_appointment/presentation/cubit/book_appointment_cubit.dart';
+import 'feature/payment/data/datasources/payment_remote_data_source.dart';
+import 'feature/payment/data/repositories/payment_repository_impl.dart';
+import 'feature/payment/domain/repositories/payment_repository.dart';
+import 'feature/payment/domain/use_cases/process_payment_usecase.dart';
+import 'feature/payment/presentation/cubit/payment_cubit.dart';
+import 'feature/search/data/datasources/search_remote_data_source.dart';
+import 'feature/search/data/repositories/search_repository_impl.dart';
+import 'feature/search/domain/repositories/search_repository.dart';
+import 'feature/search/presentation/cubit/search_cubit.dart';
 
 final sl = GetIt.instance;
 Future<void> init() async {
@@ -327,5 +336,40 @@ Future<void> init() async {
 
   sl.registerFactory(
     () => BookAppointmentCubit(bookAppointmentUseCase: sl()),
+  );
+
+  // Register Payment Data Source
+  sl.registerLazySingleton<PaymentRemoteDataSource>(
+    () => PaymentRemoteDataSourceImpl(dio: sl()),
+  );
+
+  // Register Payment Repository
+  sl.registerLazySingleton<PaymentRepository>(
+    () => PaymentRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Register Payment Use Case
+  sl.registerLazySingleton<ProcessPaymentUseCase>(
+    () => ProcessPaymentUseCase(repository: sl()),
+  );
+
+  // Register Payment Cubit
+  sl.registerLazySingleton<PaymentCubit>(
+    () => PaymentCubit(processPaymentUseCase: sl()),
+  );
+
+  // Register Search Data Source
+  sl.registerLazySingleton<SearchRemoteDataSource>(
+    () => SearchRemoteDataSourceImpl(dio: sl()),
+  );
+
+  // Register Search Repository
+  sl.registerLazySingleton<SearchRepository>(
+    () => SearchRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Register Search Cubit
+  sl.registerFactory<SearchCubit>(
+    () => SearchCubit(searchRepository: sl()),
   );
 }

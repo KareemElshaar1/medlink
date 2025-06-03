@@ -31,6 +31,10 @@ import '../../feature/specilaity/manger/cubit/specialities_cubit.dart';
 import '../../patient/home_patient.dart';
 import '../../feature/splash/toggle_screen.dart';
 import '../../feature/auth/doctor/sign_up_doctor/presentation/pages/confirm_doctor_code_screen.dart';
+import '../../feature/payment/presentation/pages/payment_page.dart';
+import '../../feature/payment/presentation/cubit/payment_cubit.dart';
+import '../../feature/search/presentation/pages/search_page.dart';
+import '../../feature/search/presentation/cubit/search_cubit.dart';
 
 class Routes {
   static Route onGeneratedRoute(RouteSettings settings) {
@@ -183,6 +187,27 @@ class Routes {
           (context) => BlocProvider.value(
             value: GetIt.instance<ScheduleCubit>(),
             child: EditScheduleScreen(schedule: schedule),
+          ),
+          settings,
+        );
+
+      case PageRouteNames.search:
+        return _createRoute(
+          (context) => BlocProvider(
+            create: (context) => GetIt.instance<SearchCubit>(),
+            child: const SearchPage(),
+          ),
+          settings,
+        );
+
+      case PageRouteNames.payment:
+        final args = settings.arguments as Map<String, dynamic>;
+        return _createRoute(
+          (context) => BlocProvider(
+            create: (context) => GetIt.instance<PaymentCubit>(),
+            child: PaymentPage(
+              appointmentId: args['appointmentId'] as int,
+            ),
           ),
           settings,
         );

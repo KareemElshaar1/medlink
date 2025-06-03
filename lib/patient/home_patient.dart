@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import '../core/routes/page_routes_name.dart';
 import 'recommendation_doctor/presentation/cubit/recommendation_doctor_cubit.dart';
 import 'recommendation_doctor/domain/entities/recommendation_doctor.dart';
 import '../feature/specilaity/manger/cubit/specialities_cubit.dart';
@@ -11,6 +12,8 @@ import '../feature/doctors_by_specialty/presentation/pages/doctors_by_specialty_
 import '../feature/doctors_by_specialty/data/models/doctor_by_specialty_model.dart';
 import '../feature/doctors_by_specialty/presentation/pages/doctor_details_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../feature/search/presentation/cubit/search_cubit.dart';
+import '../feature/search/presentation/pages/search_page.dart';
 
 class HomePatient extends StatelessWidget {
   const HomePatient({super.key});
@@ -487,40 +490,56 @@ class HomePatient extends StatelessWidget {
         ),
         Positioned(
           top: -20.h,
-          child: Container(
-            padding: EdgeInsets.all(12.r),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF3B82F6).withOpacity(0.15),
-                  Color(0xFF60A5FA).withOpacity(0.15),
-                ],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xFF3B82F6).withOpacity(0.25),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
-                ),
-                BoxShadow(
+          child: Builder(
+            builder: (BuildContext context) => GestureDetector(
+              onTap: () {
+                print('Search icon tapped'); // Debug print
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => GetIt.instance<SearchCubit>(),
+                      child: const SearchPage(),
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.all(12.r),
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  blurRadius: 8,
-                  offset: const Offset(0, -4),
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF3B82F6).withOpacity(0.15),
+                      Color(0xFF60A5FA).withOpacity(0.15),
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xFF3B82F6).withOpacity(0.25),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
+                    ),
+                    BoxShadow(
+                      color: Colors.white,
+                      blurRadius: 8,
+                      offset: const Offset(0, -4),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: Color(0xFF3B82F6).withOpacity(0.15),
+                    width: 2,
+                  ),
                 ),
-              ],
-              border: Border.all(
-                color: Color(0xFF3B82F6).withOpacity(0.15),
-                width: 2,
+                child: Icon(
+                  Icons.search_rounded,
+                  color: Color(0xFF3B82F6),
+                  size: 32.sp,
+                ),
               ),
-            ),
-            child: Icon(
-              Icons.search_rounded,
-              color: Color(0xFF3B82F6),
-              size: 32.sp,
             ),
           )
               .animate()

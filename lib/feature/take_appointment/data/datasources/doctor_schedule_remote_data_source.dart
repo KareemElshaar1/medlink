@@ -4,7 +4,7 @@ import '../models/book_appointment_model.dart';
 
 abstract class DoctorScheduleRemoteDataSource {
   Future<List<DoctorScheduleModel>> getDoctorSchedule(int doctorId);
-  Future<void> bookAppointment(BookAppointmentModel appointment);
+  Future<int> bookAppointment(BookAppointmentModel appointment);
 }
 
 class DoctorScheduleRemoteDataSourceImpl
@@ -27,12 +27,29 @@ class DoctorScheduleRemoteDataSourceImpl
   }
 
   @override
-  Future<void> bookAppointment(BookAppointmentModel appointment) async {
+  Future<int> bookAppointment(BookAppointmentModel appointment) async {
     try {
-      await dio.post('/api/Patient/BookAppointment',
+      final response = await dio.post('/api/Patient/BookAppointment',
           data: appointment.toJson());
+
+      if (response.statusCode == 204) {
+        // For 204 No Content, we'll return a temporary ID
+        // You might want to adjust this based on your API's behavior
+        return 0;
+      } else if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.data['id'] as int;
+      } else {
+        throw Exception(
+            'Failed to book appointment: ${response.statusMessage}');
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        throw Exception(
+            'Failed to book appointment: ${e.response?.data['message'] ?? e.message}');
+      }
+      throw Exception('Failed to book appointment: ${e.message}');
     } catch (e) {
-      throw Exception('Failed to book appointment');
+      throw Exception('Failed to book appointment: $e');
     }
   }
 }
