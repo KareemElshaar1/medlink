@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../specilaity/domain/entities/speciality_entity.dart';
 import '../../../../../../specilaity/manger/cubit/specialities_cubit.dart';
 import '../doctor_registration_cubit.dart';
-import '../../../../../../../core/services/email_service.dart';
 import '../../../../../../../core/routes/page_routes_name.dart';
+import '../../../../../../../core/services/email_service.dart';
 
 class SignUpDoctorController {
   final formKey = GlobalKey<FormState>();

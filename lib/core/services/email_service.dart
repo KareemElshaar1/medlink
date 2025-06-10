@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:async';
 
 class EmailService {
   static String generateVerificationCode() {
@@ -12,6 +11,10 @@ class EmailService {
     required String email,
     required String code,
   }) async {
-    await Future.delayed(const Duration(seconds: 5));
+    // Simulate network delay
+    await Future.delayed(const Duration(seconds: 2));
+
+    // In a real app, this would integrate with an email service
+    print('Sending verification code $code to $email for $name');
   }
 }

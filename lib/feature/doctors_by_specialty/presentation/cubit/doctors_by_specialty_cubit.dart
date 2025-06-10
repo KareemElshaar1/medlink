@@ -48,4 +48,14 @@ class DoctorsBySpecialtyCubit extends Cubit<DoctorsBySpecialtyState> {
       emit(DoctorsBySpecialtyError(e.toString()));
     }
   }
+
+  Future<void> getAllDoctors() async {
+    try {
+      emit(DoctorsBySpecialtyLoading());
+      final doctors = await dataSource.getAllDoctors();
+      emit(DoctorsBySpecialtyLoaded(doctors));
+    } catch (e) {
+      emit(DoctorsBySpecialtyError(e.toString()));
+    }
+  }
 }

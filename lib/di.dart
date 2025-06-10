@@ -89,6 +89,7 @@ import 'feature/search/data/datasources/search_remote_data_source.dart';
 import 'feature/search/data/repositories/search_repository_impl.dart';
 import 'feature/search/domain/repositories/search_repository.dart';
 import 'feature/search/presentation/cubit/search_cubit.dart';
+import 'feature/payment/domain/use_cases/get_appointments_usecase.dart';
 
 final sl = GetIt.instance;
 Future<void> init() async {
@@ -353,9 +354,16 @@ Future<void> init() async {
     () => ProcessPaymentUseCase(repository: sl()),
   );
 
+  sl.registerLazySingleton<GetAppointmentsUseCase>(
+    () => GetAppointmentsUseCase(repository: sl()),
+  );
+
   // Register Payment Cubit
-  sl.registerLazySingleton<PaymentCubit>(
-    () => PaymentCubit(processPaymentUseCase: sl()),
+  sl.registerFactory<PaymentCubit>(
+    () => PaymentCubit(
+      processPaymentUseCase: sl(),
+      getAppointmentsUseCase: sl(),
+    ),
   );
 
   // Register Search Data Source

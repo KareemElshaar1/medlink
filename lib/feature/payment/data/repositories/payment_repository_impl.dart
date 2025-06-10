@@ -1,7 +1,6 @@
-import '../../domain/entities/payment.dart';
-import '../../domain/repositories/payment_repository.dart';
 import '../datasources/payment_remote_data_source.dart';
-import '../models/payment_model.dart';
+import '../../domain/repositories/payment_repository.dart';
+import '../models/appointment_model.dart';
 
 class PaymentRepositoryImpl implements PaymentRepository {
   final PaymentRemoteDataSource remoteDataSource;
@@ -9,16 +8,26 @@ class PaymentRepositoryImpl implements PaymentRepository {
   PaymentRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<void> processPayment(Payment payment) async {
-    final paymentModel = PaymentModel(
-      appointmentId: payment.appointmentId,
-      cardNumber: payment.cardNumber,
-      cardHolderName: payment.cardHolderName,
-      expirationMonth: payment.expirationMonth,
-      expirationYear: payment.expirationYear,
-      cvv: payment.cvv,
+  Future<Map<String, dynamic>> processPayment({
+    required int appointmentId,
+    required String cardNumber,
+    required String cardHolderName,
+    required String expirationMonth,
+    required String expirationYear,
+    required String cvv,
+  }) async {
+    return await remoteDataSource.processPayment(
+      appointmentId: appointmentId,
+      cardNumber: cardNumber,
+      cardHolderName: cardHolderName,
+      expirationMonth: expirationMonth,
+      expirationYear: expirationYear,
+      cvv: cvv,
     );
+  }
 
-    await remoteDataSource.processPayment(paymentModel);
+  @override
+  Future<List<AppointmentModel>> getAppointments() async {
+    return await remoteDataSource.getAppointments();
   }
 }

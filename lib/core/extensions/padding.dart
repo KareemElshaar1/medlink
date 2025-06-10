@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 extension PaddingtoWidget on Widget {
-   Widget setHorizontalPadding(BuildContext context, double value,
+  Widget setHorizontalPadding(BuildContext context, double value,
       {bool enableScreenUtil = true}) {
     double horizontalPadding = enableScreenUtil
         ? value.w
@@ -13,7 +13,7 @@ extension PaddingtoWidget on Widget {
     );
   }
 
-   Widget setVerticalPadding(BuildContext context, double value,
+  Widget setVerticalPadding(BuildContext context, double value,
       {bool enableScreenUtil = true}) {
     double verticalPadding = enableScreenUtil
         ? value.h
@@ -24,7 +24,7 @@ extension PaddingtoWidget on Widget {
     );
   }
 
-   Widget setHorizontalAndVerticalPadding(
+  Widget setHorizontalAndVerticalPadding(
       BuildContext context, double widthValue, double heightValue,
       {bool enableScreenUtil = true}) {
     double horizontalPadding = enableScreenUtil
@@ -42,7 +42,7 @@ extension PaddingtoWidget on Widget {
     );
   }
 
-   Widget setOnlyPadding(
+  Widget setOnlyPadding(
       BuildContext context, double top, double down, double right, double left,
       {bool enableScreenUtil = true}) {
     double topPadding = enableScreenUtil ? top.h : top;

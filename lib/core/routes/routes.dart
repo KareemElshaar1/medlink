@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medlink/core/routes/page_routes_name.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 import '../../feature/Selection/select_screen.dart';
 import '../../feature/auth/doctor/sign_in_doctor/presentation/manager/auth_cubit.dart';
@@ -201,13 +202,10 @@ class Routes {
         );
 
       case PageRouteNames.payment:
-        final args = settings.arguments as Map<String, dynamic>;
         return _createRoute(
-          (context) => BlocProvider(
+          (context) => Provider<PaymentCubit>(
             create: (context) => GetIt.instance<PaymentCubit>(),
-            child: PaymentPage(
-              appointmentId: args['appointmentId'] as int,
-            ),
+            child: const PaymentPage(),
           ),
           settings,
         );
