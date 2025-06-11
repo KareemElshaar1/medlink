@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:medlink/core/theme/app_colors.dart';
+import 'package:medlink/core/utils/color_manger.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -41,7 +41,7 @@ class DoctorProfileView extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.primary.withOpacity(0.1),
+              ColorsManager.primary.withOpacity(0.05),
               Colors.white,
             ],
           ),
@@ -52,7 +52,7 @@ class DoctorProfileView extends StatelessWidget {
               if (state is DoctorProfileLoading) {
                 return Center(
                   child: CircularProgressIndicator(
-                    color: AppColors.primary,
+                    color: ColorsManager.primary,
                   ),
                 );
               }
@@ -130,8 +130,8 @@ class DoctorProfileView extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.primary,
-            AppColors.secondary,
+            ColorsManager.primary.withOpacity(0.95),
+            ColorsManager.primaryLight.withOpacity(0.95),
           ],
         ),
         borderRadius: BorderRadius.only(
@@ -140,9 +140,9 @@ class DoctorProfileView extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+            color: ColorsManager.primary.withOpacity(0.15),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -153,13 +153,13 @@ class DoctorProfileView extends StatelessWidget {
               width: 40.w,
               height: 40.h,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10.r),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    spreadRadius: 1,
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 4,
+                    spreadRadius: 0,
                   ),
                 ],
               ),
@@ -202,13 +202,13 @@ class DoctorProfileView extends StatelessWidget {
               width: 40.w,
               height: 40.h,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withOpacity(0.15),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    spreadRadius: 1,
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 4,
+                    spreadRadius: 0,
                   ),
                 ],
               ),
@@ -251,12 +251,16 @@ class DoctorProfileView extends StatelessWidget {
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.1),
-            blurRadius: 20,
+            color: ColorsManager.primary.withOpacity(0.08),
+            blurRadius: 15,
             spreadRadius: 0,
-            offset: const Offset(0, 10),
+            offset: const Offset(0, 5),
           ),
         ],
+        border: Border.all(
+          color: ColorsManager.primary.withOpacity(0.05),
+          width: 1,
+        ),
       ),
       child: Column(
         children: [
@@ -268,14 +272,14 @@ class DoctorProfileView extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.primary,
+                    color: ColorsManager.primary.withOpacity(0.2),
                     width: 2,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.2),
-                      blurRadius: 20,
-                      spreadRadius: 5,
+                      color: ColorsManager.primary.withOpacity(0.1),
+                      blurRadius: 15,
+                      spreadRadius: 2,
                     ),
                   ],
                 ),
@@ -292,19 +296,19 @@ class DoctorProfileView extends StatelessWidget {
                             placeholder: (context, url) => Icon(
                               Icons.person_rounded,
                               size: 70.sp,
-                              color: AppColors.primary,
+                              color: ColorsManager.primary,
                             ),
                             errorWidget: (context, url, error) => Icon(
                               Icons.person_rounded,
                               size: 70.sp,
-                              color: AppColors.primary,
+                              color: ColorsManager.primary,
                             ),
                           ),
                         )
                       : Icon(
                           Icons.person_rounded,
                           size: 70.sp,
-                          color: AppColors.primary,
+                          color: ColorsManager.primary,
                         ),
                 ),
               ),
@@ -314,7 +318,7 @@ class DoctorProfileView extends StatelessWidget {
           Text(
             fullName,
             style: TextStyle(
-              color: AppColors.text,
+              color: ColorsManager.textDark,
               fontSize: 28.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -323,12 +327,24 @@ class DoctorProfileView extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             decoration: BoxDecoration(
-              color: Colors.amber.withOpacity(0.1),
+              gradient: LinearGradient(
+                colors: [
+                  Colors.amber.withOpacity(0.1),
+                  Colors.amber.withOpacity(0.05),
+                ],
+              ),
               borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
-                color: Colors.amber.withOpacity(0.3),
+                color: Colors.amber.withOpacity(0.2),
                 width: 1,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.amber.withOpacity(0.05),
+                  blurRadius: 10,
+                  spreadRadius: 0,
+                ),
+              ],
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -342,7 +358,7 @@ class DoctorProfileView extends StatelessWidget {
                 Text(
                   profile.rate?.toString() ?? '0.0',
                   style: TextStyle(
-                    color: AppColors.text,
+                    color: ColorsManager.textDark,
                     fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -351,7 +367,7 @@ class DoctorProfileView extends StatelessWidget {
                 Text(
                   'Rating',
                   style: TextStyle(
-                    color: AppColors.grey,
+                    color: ColorsManager.textLight,
                     fontSize: 16.sp,
                   ),
                 ),
@@ -371,28 +387,39 @@ class DoctorProfileView extends StatelessWidget {
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.1),
-            blurRadius: 20,
+            color: ColorsManager.primary.withOpacity(0.08),
+            blurRadius: 15,
             spreadRadius: 0,
-            offset: const Offset(0, 10),
+            offset: const Offset(0, 5),
           ),
         ],
+        border: Border.all(
+          color: ColorsManager.primary.withOpacity(0.05),
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(
-                Icons.person_outline_rounded,
-                color: AppColors.primary,
-                size: 24.sp,
+              Container(
+                padding: EdgeInsets.all(8.r),
+                decoration: BoxDecoration(
+                  color: ColorsManager.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  Icons.person_outline_rounded,
+                  color: ColorsManager.primary,
+                  size: 24.sp,
+                ),
               ),
               SizedBox(width: 12.w),
               Text(
                 'Personal Information',
                 style: TextStyle(
-                  color: AppColors.text,
+                  color: ColorsManager.textDark,
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -440,12 +467,19 @@ class DoctorProfileView extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
-              color: (iconColor ?? AppColors.primary).withOpacity(0.1),
+              color: (iconColor ?? ColorsManager.primary).withOpacity(0.08),
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: (iconColor ?? ColorsManager.primary).withOpacity(0.05),
+                  blurRadius: 8,
+                  spreadRadius: 0,
+                ),
+              ],
             ),
             child: Icon(
               icon,
-              color: iconColor ?? AppColors.primary,
+              color: iconColor ?? ColorsManager.primary,
               size: 24.sp,
             ),
           ),
@@ -457,7 +491,7 @@ class DoctorProfileView extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    color: AppColors.grey,
+                    color: ColorsManager.textLight,
                     fontSize: 14.sp,
                   ),
                 ),
@@ -465,7 +499,7 @@ class DoctorProfileView extends StatelessWidget {
                 Text(
                   value,
                   style: TextStyle(
-                    color: AppColors.text,
+                    color: ColorsManager.textDark,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                   ),

@@ -75,10 +75,11 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         contentPadding: widget.contentPadding ??
             EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
         focusedBorder:
-            widget.focusedBorder ?? _buildBorder(ColorsManager.mainBlue),
-        enabledBorder: widget.enabledBorder ?? _buildBorder(Color(0xff1565C0)),
-        errorBorder: widget.errorBorder ?? _buildBorder(Colors.red),
-        focusedErrorBorder: _buildBorder(Colors.red),
+            widget.focusedBorder ?? _buildBorder(ColorsManager.primary),
+        enabledBorder:
+            widget.enabledBorder ?? _buildBorder(ColorsManager.primaryDark),
+        errorBorder: widget.errorBorder ?? _buildBorder(ColorsManager.error),
+        focusedErrorBorder: _buildBorder(ColorsManager.error),
         hintStyle: widget.hintStyle ??
             TextStyles.font14GrayRegular.copyWith(fontSize: 14.sp),
         hintText: widget.hintText,
@@ -86,14 +87,14 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         labelStyle: widget.labelStyle ??
             TextStyles.font14GrayRegular.copyWith(
               fontSize: 16.sp,
-              color: ColorsManager.mainBlue,
+              color: ColorsManager.primary,
             ),
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.isObscureText
             ? IconButton(
                 icon: Icon(
                   isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.grey,
+                  color: ColorsManager.gray,
                   size: 20.sp,
                 ),
                 onPressed: () {
@@ -106,11 +107,14 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         fillColor: widget.backgroundColor ?? ColorsManager.moreLightGray,
         filled: true,
         errorStyle: TextStyle(
-          color: Colors.red,
+          color: ColorsManager.error,
           fontSize: 12.sp,
           height: 1,
         ),
         errorMaxLines: 1,
+        constraints: BoxConstraints(
+          minHeight: 70.h,
+        ),
       ),
       style: widget.inputTextStyle ??
           TextStyles.font24BlackBold.copyWith(fontSize: 14.sp),

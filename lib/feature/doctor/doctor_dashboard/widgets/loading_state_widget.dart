@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:medlink/core/theme/app_colors.dart';
+import 'package:medlink/core/utils/color_manger.dart';
 
 class LoadingStateWidget extends StatelessWidget {
   const LoadingStateWidget({super.key});
@@ -18,14 +18,14 @@ class LoadingStateWidget extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.2),
+                  color: ColorsManager.primary.withOpacity(0.2),
                   blurRadius: 20,
                   spreadRadius: 2,
                 ),
               ],
             ),
             child: CircularProgressIndicator(
-              color: AppColors.primary,
+              color: ColorsManager.primary,
               strokeWidth: 3,
             ),
           ),
@@ -33,7 +33,7 @@ class LoadingStateWidget extends StatelessWidget {
           Text(
             'Loading Dashboard...',
             style: TextStyle(
-              color: AppColors.text,
+              color: ColorsManager.textDark,
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
             ),

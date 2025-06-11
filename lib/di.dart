@@ -90,6 +90,15 @@ import 'feature/search/data/repositories/search_repository_impl.dart';
 import 'feature/search/domain/repositories/search_repository.dart';
 import 'feature/search/presentation/cubit/search_cubit.dart';
 import 'feature/payment/domain/use_cases/get_appointments_usecase.dart';
+import 'feature/patient/profile/data/datasources/patient_profile_remote_data_source.dart';
+import 'feature/patient/profile/data/repositories/patient_profile_repository_impl.dart';
+import 'feature/patient/profile/domain/repositories/patient_profile_repository.dart';
+import 'feature/patient/profile/presentation/cubit/patient_profile_cubit.dart';
+import 'feature/patient/profile/data/datasources/patient_profile_local_data_source.dart';
+import 'feature/payment/domain/use_cases/cancel_appointment_usecase.dart';
+import 'feature/doctor/appointments/data/datasources/appointment_api_service.dart';
+import 'feature/doctor/appointments/domain/repositories/appointment_repository.dart';
+import 'feature/doctor/appointments/presentation/cubit/appointment_cubit.dart';
 
 final sl = GetIt.instance;
 Future<void> init() async {
@@ -358,11 +367,16 @@ Future<void> init() async {
     () => GetAppointmentsUseCase(repository: sl()),
   );
 
+  sl.registerLazySingleton<CancelAppointmentUseCase>(
+    () => CancelAppointmentUseCase(sl()),
+  );
+
   // Register Payment Cubit
   sl.registerFactory<PaymentCubit>(
     () => PaymentCubit(
       processPaymentUseCase: sl(),
       getAppointmentsUseCase: sl(),
+      cancelAppointmentUseCase: sl(),
     ),
   );
 
@@ -379,5 +393,35 @@ Future<void> init() async {
   // Register Search Cubit
   sl.registerFactory<SearchCubit>(
     () => SearchCubit(searchRepository: sl()),
+  );
+
+  // Patient Profile
+  sl.registerLazySingleton<PatientProfileRemoteDataSource>(
+    () => PatientProfileRemoteDataSourceImpl(sl()),
+  );
+
+  sl.registerLazySingleton<PatientProfileLocalDataSource>(
+    () => PatientProfileLocalDataSource(),
+  );
+
+  sl.registerLazySingleton<PatientProfileRepository>(
+    () => PatientProfileRepositoryImpl(sl()),
+  );
+
+  sl.registerFactory<PatientProfileCubit>(
+    () => PatientProfileCubit(sl(), sl()),
+  );
+
+  // Appointment Dependencies
+  sl.registerLazySingleton<AppointmentApiService>(
+    () => AppointmentApiServiceImpl(sl()),
+  );
+
+  sl.registerLazySingleton<AppointmentRepository>(
+    () => AppointmentRepositoryImpl(sl()),
+  );
+
+  sl.registerFactory<AppointmentCubit>(
+    () => AppointmentCubit(sl()),
   );
 }

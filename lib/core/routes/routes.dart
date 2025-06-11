@@ -36,6 +36,9 @@ import '../../feature/payment/presentation/pages/payment_page.dart';
 import '../../feature/payment/presentation/cubit/payment_cubit.dart';
 import '../../feature/search/presentation/pages/search_page.dart';
 import '../../feature/search/presentation/cubit/search_cubit.dart';
+import '../../feature/patient/profile/presentation/pages/patient_profile_page.dart';
+import '../../feature/patient/profile/presentation/cubit/patient_profile_cubit.dart';
+import '../../feature/doctor/appointments/presentation/screens/appointments_screen.dart';
 
 class Routes {
   static Route onGeneratedRoute(RouteSettings settings) {
@@ -166,17 +169,14 @@ class Routes {
 
       case PageRouteNames.scheduleList:
         return _createRoute(
-          (context) => BlocProvider.value(
-            value: GetIt.instance<ScheduleCubit>(),
-            child: const ScheduleListScreen(),
-          ),
+          (context) => const ScheduleListScreen(),
           settings,
         );
 
       case PageRouteNames.createSchedule:
         return _createRoute(
-          (context) => BlocProvider.value(
-            value: GetIt.instance<ScheduleCubit>(),
+          (context) => BlocProvider(
+            create: (context) => GetIt.instance<ScheduleCubit>()..getClinics(),
             child: const CreateScheduleScreen(),
           ),
           settings,
@@ -185,8 +185,8 @@ class Routes {
       case PageRouteNames.editSchedule:
         final schedule = settings.arguments as ScheduleModel;
         return _createRoute(
-          (context) => BlocProvider.value(
-            value: GetIt.instance<ScheduleCubit>(),
+          (context) => BlocProvider(
+            create: (context) => GetIt.instance<ScheduleCubit>()..getClinics(),
             child: EditScheduleScreen(schedule: schedule),
           ),
           settings,
@@ -207,6 +207,24 @@ class Routes {
             create: (context) => GetIt.instance<PaymentCubit>(),
             child: const PaymentPage(),
           ),
+          settings,
+        );
+
+      case PageRouteNames.patientProfile:
+        return _createRoute(
+          (context) => BlocProvider(
+            create: (context) => GetIt.instance<AuthCubit>(),
+            child: BlocProvider(
+              create: (context) => GetIt.instance<PatientProfileCubit>(),
+              child: const PatientProfilePage(),
+            ),
+          ),
+          settings,
+        );
+
+      case PageRouteNames.appointments:
+        return _createRoute(
+          (context) => const AppointmentsScreen(),
           settings,
         );
 

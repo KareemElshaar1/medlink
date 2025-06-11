@@ -43,7 +43,7 @@ class LoginForm extends StatelessWidget {
       child: Column(
         children: [
           // Login Title with Animation
-            LoginTitle(),
+          LoginTitle(),
           Gap(20.h),
 
           // Form Fields
@@ -65,14 +65,6 @@ class LoginForm extends StatelessWidget {
           // Login Button
           LoginButton(isLoading: isLoading, onPressed: onLoginPressed),
           Gap(30.h),
-
-          // OR Divider
-          const OrDivider(),
-          Gap(20.h),
-
-          // Social Media Buttons
-          const SocialMediaButtons(),
-          Gap(20.h),
 
           // Sign Up Link
           CustomSignUpLink(

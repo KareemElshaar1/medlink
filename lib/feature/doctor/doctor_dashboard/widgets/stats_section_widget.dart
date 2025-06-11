@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:medlink/core/theme/app_colors.dart';
+import 'package:medlink/core/utils/color_manger.dart';
 
 class StatsSectionWidget extends StatelessWidget {
   const StatsSectionWidget({super.key});
@@ -14,7 +14,7 @@ class StatsSectionWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.grey.withOpacity(0.1),
+            color: ColorsManager.textLight.withOpacity(0.1),
             blurRadius: 20,
             spreadRadius: 0,
             offset: const Offset(0, 10),
@@ -27,7 +27,7 @@ class StatsSectionWidget extends StatelessWidget {
           Text(
             'Your Statistics',
             style: TextStyle(
-              color: AppColors.text,
+              color: ColorsManager.textDark,
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -78,7 +78,7 @@ class StatsSectionWidget extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: AppColors.grey.withOpacity(0.1),
+          color: ColorsManager.textLight.withOpacity(0.1),
           width: 1,
         ),
       ),
@@ -100,7 +100,7 @@ class StatsSectionWidget extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              color: AppColors.text,
+              color: ColorsManager.textDark,
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -109,7 +109,7 @@ class StatsSectionWidget extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: AppColors.grey,
+              color: ColorsManager.textLight,
               fontSize: 12.sp,
             ),
             textAlign: TextAlign.center,

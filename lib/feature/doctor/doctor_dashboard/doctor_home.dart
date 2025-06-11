@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medlink/core/routes/page_routes_name.dart';
-import 'package:medlink/core/theme/app_colors.dart';
+import 'package:medlink/core/utils/color_manger.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get_it/get_it.dart';
@@ -245,8 +245,8 @@ class _DoctorHomeState extends State<DoctorHome> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  AppColors.background,
-                  AppColors.secondary.withOpacity(0.05),
+                  ColorsManager.background,
+                  ColorsManager.secondary.withOpacity(0.05),
                 ],
               ),
             ),
@@ -278,8 +278,8 @@ class _DoctorHomeState extends State<DoctorHome> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColors.primary,
-              AppColors.secondary,
+              ColorsManager.primary,
+              ColorsManager.secondary,
             ],
           ),
           borderRadius: BorderRadius.only(
@@ -288,7 +288,7 @@ class _DoctorHomeState extends State<DoctorHome> {
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.3),
+              color: ColorsManager.primary.withOpacity(0.3),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -641,7 +641,7 @@ class _DoctorHomeState extends State<DoctorHome> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: ColorsManager.primary,
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(

@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/color_manger.dart';
 import '../../../../core/widgets/app_text_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/utils/app_text_style.dart';
@@ -15,16 +15,19 @@ import '../cubit/payment_state.dart';
 import '../../data/models/appointment_model.dart';
 import '../../domain/use_cases/process_payment_usecase.dart';
 import '../../domain/use_cases/get_appointments_usecase.dart';
+import '../../domain/use_cases/cancel_appointment_usecase.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PaymentPage extends StatelessWidget {
   const PaymentPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<PaymentCubit>(
+    return BlocProvider(
       create: (_) => PaymentCubit(
         processPaymentUseCase: GetIt.instance<ProcessPaymentUseCase>(),
         getAppointmentsUseCase: GetIt.instance<GetAppointmentsUseCase>(),
+        cancelAppointmentUseCase: GetIt.instance<CancelAppointmentUseCase>(),
       ),
       child: const PaymentContent(),
     );
@@ -40,7 +43,7 @@ class PaymentContent extends StatelessWidget {
     final state = cubit.state;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ColorsManager.background,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -114,17 +117,17 @@ class PaymentContent extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.success.withOpacity(0.1),
+        color: ColorsManager.success.withOpacity(0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(
         Icons.check_circle_outline,
         size: 64.w,
-        color: AppColors.success,
+        color: ColorsManager.success,
       ),
     ).animate().scale(duration: 600.ms).then().shimmer(
           duration: 1200.ms,
-          color: AppColors.success,
+          color: ColorsManager.success,
         );
   }
 
@@ -132,7 +135,7 @@ class PaymentContent extends StatelessWidget {
     return Text(
       'Payment Successful!',
       style: TextStyles.font24BlackBold.copyWith(
-        color: AppColors.success,
+        color: ColorsManager.success,
       ),
     ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0);
   }
@@ -149,7 +152,7 @@ class PaymentContent extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.grey.withOpacity(0.1),
+        color: ColorsManager.gray.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Column(
@@ -166,28 +169,28 @@ class PaymentContent extends StatelessWidget {
               state.paymentData['status']?.toString().toUpperCase() ??
                   'SUCCESS',
               Icons.check_circle_outline,
-              valueColor: AppColors.success,
+              valueColor: ColorsManager.success,
             ),
             SizedBox(height: 12.h),
             _buildPaymentInfoRow(
               'Amount',
               '\$${state.paymentData['price']?.toString() ?? '0.00'}',
               Icons.attach_money,
-              valueColor: AppColors.primary,
+              valueColor: ColorsManager.primary,
             ),
           ] else ...[
             _buildPaymentInfoRow(
               'Status',
               'SUCCESS',
               Icons.check_circle_outline,
-              valueColor: AppColors.success,
+              valueColor: ColorsManager.success,
             ),
             SizedBox(height: 12.h),
             _buildPaymentInfoRow(
               'Message',
               state.paymentData.toString(),
               Icons.info_outline,
-              valueColor: AppColors.primary,
+              valueColor: ColorsManager.primary,
             ),
           ],
         ],
@@ -199,7 +202,7 @@ class PaymentContent extends StatelessWidget {
     return AppTextButton(
       buttonText: 'Back to Appointments',
       onPressed: () => cubit.getAppointments(),
-      backgroundColor: AppColors.primary,
+      backgroundColor: ColorsManager.primary,
     ).animate(delay: 800.ms).fadeIn().scale(
           begin: const Offset(0.8, 0.8),
           end: const Offset(1, 1),
@@ -208,6 +211,29 @@ class PaymentContent extends StatelessWidget {
 
   Widget _buildAppointmentsList(
       List<AppointmentModel> appointments, PaymentCubit cubit) {
+    if (appointments.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.calendar_month, size: 64.w, color: ColorsManager.primary)
+                .animate()
+                .scale(duration: 600.ms),
+            SizedBox(height: 24.h),
+            Text('No Appointments Found', style: TextStyles.font18DarkBlueBold)
+                .animate()
+                .fadeIn(delay: 200.ms),
+            SizedBox(height: 16.h),
+            Text(
+              'You don\'t have any appointments yet',
+              style: TextStyles.font14GrayRegular,
+              textAlign: TextAlign.center,
+            ).animate().fadeIn(delay: 400.ms),
+          ],
+        ),
+      );
+    }
+
     return ListView.builder(
       padding: EdgeInsets.all(16.w),
       itemCount: appointments.length,
@@ -217,6 +243,7 @@ class PaymentContent extends StatelessWidget {
           appointment: appointment,
           onPayPressed: () =>
               _showPaymentDialog(context, appointment.id, cubit),
+          onCancelPressed: () => _showCancelDialog(context, appointment.id),
         ).animate(delay: (100 * index).ms).fadeIn().slideX(begin: 0.2, end: 0);
       },
     );
@@ -242,7 +269,7 @@ class PaymentContent extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.error_outline, size: 64.w, color: AppColors.error)
+            Icon(Icons.error_outline, size: 64.w, color: ColorsManager.error)
                 .animate()
                 .shake(duration: 600.ms)
                 .then()
@@ -251,7 +278,7 @@ class PaymentContent extends StatelessWidget {
             Text(
               'Error: $message',
               style: TextStyles.font16WhiteSemiBold.copyWith(
-                color: AppColors.error,
+                color: ColorsManager.error,
               ),
             ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
             SizedBox(height: 24.h),
@@ -288,7 +315,7 @@ class PaymentContent extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.calendar_month, size: 64.w, color: AppColors.primary)
+            Icon(Icons.calendar_month, size: 64.w, color: ColorsManager.primary)
                 .animate()
                 .scale(duration: 600.ms),
             SizedBox(height: 24.h),
@@ -313,7 +340,7 @@ class PaymentContent extends StatelessWidget {
       {Color? valueColor}) {
     return Row(
       children: [
-        Icon(icon, size: 20.w, color: AppColors.textLight),
+        Icon(icon, size: 20.w, color: ColorsManager.textLight),
         SizedBox(width: 12.w),
         Expanded(
           child: Column(
@@ -322,14 +349,14 @@ class PaymentContent extends StatelessWidget {
               Text(
                 label,
                 style: TextStyles.font14GrayRegular.copyWith(
-                  color: AppColors.textLight,
+                  color: ColorsManager.textLight,
                 ),
               ),
               SizedBox(height: 4.h),
               Text(
                 value,
                 style: TextStyles.font16WhiteSemiBold.copyWith(
-                  color: valueColor ?? AppColors.primary,
+                  color: valueColor ?? ColorsManager.primary,
                 ),
               ),
             ],
@@ -424,18 +451,18 @@ class PaymentContent extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(16.w),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: ColorsManager.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Row(
                         children: [
                           Icon(Icons.credit_card,
-                              color: AppColors.primary, size: 32.w),
+                              color: ColorsManager.primary, size: 32.w),
                           SizedBox(width: 16.w),
                           Text(
                             'Pay with Visa',
                             style: TextStyles.font24BlackBold.copyWith(
-                              color: AppColors.primary,
+                              color: ColorsManager.primary,
                             ),
                           ),
                         ],
@@ -570,8 +597,8 @@ class PaymentContent extends StatelessWidget {
                         padding: EdgeInsets.only(top: 16.h),
                         child: CircularProgressIndicator(
                           strokeWidth: 3,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(AppColors.primary),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              ColorsManager.primary),
                         ),
                       ),
                   ],
@@ -602,32 +629,71 @@ class PaymentContent extends StatelessWidget {
       isObscureText: obscureText,
       keyboardType: keyboardType,
       validator: validator,
-      prefixIcon: Icon(icon, color: AppColors.textLight, size: 24.w),
-      backgroundColor: AppColors.grey.withOpacity(0.1),
+      prefixIcon: Icon(icon, color: ColorsManager.textLight, size: 24.w),
+      backgroundColor: ColorsManager.gray.withOpacity(0.1),
       inputTextStyle: TextStyles.font16WhiteSemiBold.copyWith(
         color: Colors.black,
       ),
       labelStyle: TextStyles.font16WhiteSemiBold.copyWith(
-        color: AppColors.primary,
+        color: ColorsManager.primary,
       ),
       hintStyle: TextStyles.font16WhiteSemiBold.copyWith(
-        color: AppColors.textLight,
+        color: ColorsManager.textLight,
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        borderSide: BorderSide(color: ColorsManager.primary, width: 2),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
         borderSide:
-            BorderSide(color: AppColors.grey.withOpacity(0.2), width: 2),
+            BorderSide(color: ColorsManager.gray.withOpacity(0.2), width: 2),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.error, width: 2),
+        borderSide: BorderSide(color: ColorsManager.error, width: 2),
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
     ).animate(delay: delay.ms).fadeIn().slideX(begin: 0.2, end: 0);
+  }
+
+  void _showCancelDialog(BuildContext context, int appointmentId) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(
+          'Cancel Appointment',
+          style: TextStyles.font18DarkBlueBold,
+        ),
+        content: Text(
+          'Are you sure you want to cancel this appointment?',
+          style: TextStyles.font14GrayRegular,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              'No',
+              style: TextStyles.font14GrayRegular.copyWith(
+                color: ColorsManager.primary,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              context.read<PaymentCubit>().cancelAppointment(appointmentId);
+            },
+            child: Text(
+              'Yes, Cancel',
+              style: TextStyles.font14GrayRegular.copyWith(
+                color: ColorsManager.error,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -639,7 +705,7 @@ class _LoadingIndicator extends StatelessWidget {
     return const Center(
       child: CircularProgressIndicator(
         strokeWidth: 3,
-        valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+        valueColor: AlwaysStoppedAnimation<Color>(ColorsManager.primary),
       ),
     );
   }
@@ -648,10 +714,12 @@ class _LoadingIndicator extends StatelessWidget {
 class _AppointmentCard extends StatelessWidget {
   final AppointmentModel appointment;
   final VoidCallback onPayPressed;
+  final VoidCallback onCancelPressed;
 
   const _AppointmentCard({
     required this.appointment,
     required this.onPayPressed,
+    required this.onCancelPressed,
   });
 
   @override
@@ -684,26 +752,26 @@ class _AppointmentCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.1),
+        color: ColorsManager.primary.withOpacity(0.1),
         borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
       ),
       child: Row(
         children: [
           Icon(Icons.medical_services_outlined,
-              color: AppColors.primary, size: 24.w),
+              color: ColorsManager.primary, size: 24.w),
           SizedBox(width: 12.w),
           Expanded(
             child: Text(
               'Dr. ${appointment.doctor}',
               style: TextStyles.font16WhiteSemiBold.copyWith(
-                color: AppColors.primary,
+                color: ColorsManager.primary,
               ),
             ),
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
             decoration: BoxDecoration(
-              color: isPaid ? AppColors.success : AppColors.primary,
+              color: isPaid ? ColorsManager.success : ColorsManager.primary,
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
@@ -738,14 +806,28 @@ class _AppointmentCard extends StatelessWidget {
             'Location',
             '${appointment.city}, ${appointment.governorate}',
           ),
-          if (!isPaid) ...[
-            SizedBox(height: 16.h),
-            AppTextButton(
-              buttonText: 'Pay Now',
-              onPressed: onPayPressed,
-              backgroundColor: AppColors.primary,
-            ),
-          ],
+          SizedBox(height: 16.h),
+          Row(
+            children: [
+              if (!isPaid) ...[
+                Expanded(
+                  child: AppTextButton(
+                    buttonText: 'Pay Now',
+                    onPressed: onPayPressed,
+                    backgroundColor: ColorsManager.primary,
+                  ),
+                ),
+                SizedBox(width: 12.w),
+              ],
+              Expanded(
+                child: AppTextButton(
+                  buttonText: 'Cancel',
+                  onPressed: onCancelPressed,
+                  backgroundColor: ColorsManager.error,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -754,7 +836,7 @@ class _AppointmentCard extends StatelessWidget {
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, size: 20.w, color: AppColors.textLight),
+        Icon(icon, size: 20.w, color: ColorsManager.textLight),
         SizedBox(width: 12.w),
         Text('$label: ', style: TextStyles.font14GrayRegular),
         Text(

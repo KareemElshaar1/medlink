@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../../../core/theme/app_colors.dart';
+import '../../../../../../core/utils/color_manger.dart';
 
 class ClinicEmptyWidget extends StatelessWidget {
   final VoidCallback onAddClinic;
@@ -21,14 +21,14 @@ class ClinicEmptyWidget extends StatelessWidget {
             padding: EdgeInsets.all(32.r),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [AppColors.primary, AppColors.secondary],
+                colors: [ColorsManager.primary, ColorsManager.secondary],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: ColorsManager.primaryWithOpacity(0.3),
                   blurRadius: 20,
                   spreadRadius: 5,
                 ),
@@ -37,7 +37,7 @@ class ClinicEmptyWidget extends StatelessWidget {
             child: Icon(
               Icons.local_hospital_rounded,
               size: 88.sp,
-              color: AppColors.text,
+              color: ColorsManager.textDark,
             ),
           ),
           SizedBox(height: 32.h),
@@ -46,7 +46,7 @@ class ClinicEmptyWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 24.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.text,
+              color: ColorsManager.textDark,
             ),
           ),
           SizedBox(height: 16.h),
@@ -57,7 +57,7 @@ class ClinicEmptyWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.sp,
-                color: AppColors.text.withOpacity(0.7),
+                color: ColorsManager.textDark.withOpacity(0.7),
                 height: 1.5,
               ),
             ),
@@ -79,7 +79,7 @@ class ClinicEmptyWidget extends StatelessWidget {
               ),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: ColorsManager.primary,
               padding: EdgeInsets.symmetric(
                 horizontal: 32.w,
                 vertical: 16.h,

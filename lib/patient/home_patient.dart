@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../core/routes/page_routes_name.dart';
 import 'recommendation_doctor/presentation/cubit/recommendation_doctor_cubit.dart';
 import 'recommendation_doctor/domain/entities/recommendation_doctor.dart';
@@ -17,6 +18,8 @@ import '../feature/search/presentation/cubit/search_cubit.dart';
 import '../feature/search/presentation/pages/search_page.dart';
 import '../feature/payment/presentation/pages/payment_page.dart';
 import '../feature/auth/patient/sign_up/presentation/manager/controller/email.dart';
+import '../feature/patient/profile/presentation/pages/patient_profile_page.dart';
+import '../feature/patient/profile/presentation/cubit/patient_profile_cubit.dart';
 
 class HomePatient extends StatelessWidget {
   const HomePatient({super.key});
@@ -32,13 +35,46 @@ class HomePatient extends StatelessWidget {
         BlocProvider(
           create: (context) => GetIt.I<SpecialitiesCubit>()..getSpecialities(),
         ),
+        BlocProvider(
+          create: (context) => GetIt.I<PatientProfileCubit>()..loadProfile(),
+        ),
       ],
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF7F8FA),
-        body: SafeArea(
+      child: const HomePatientContent(),
+    );
+  }
+}
+
+class HomePatientContent extends StatelessWidget {
+  const HomePatientContent({super.key});
+
+  Future<void> _refreshData(BuildContext context) async {
+    final profileCubit = context.read<PatientProfileCubit>();
+    final recommendationCubit = context.read<RecommendationDoctorCubit>();
+    final specialitiesCubit = context.read<SpecialitiesCubit>();
+
+    await Future.wait([
+      profileCubit.loadProfile(),
+      recommendationCubit.getRecommendationDoctors(),
+      specialitiesCubit.getSpecialities(),
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF7F8FA),
+      body: SafeArea(
+        child: BlocListener<PatientProfileCubit, PatientProfileState>(
+          listener: (context, state) {
+            if (state is PatientProfileLoaded) {
+              context
+                  .read<RecommendationDoctorCubit>()
+                  .getRecommendationDoctors();
+              context.read<SpecialitiesCubit>().getSpecialities();
+            }
+          },
           child: Column(
             children: [
-              // Modern Amazing AppBar
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.only(
@@ -60,174 +96,235 @@ class HomePatient extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
+                child: BlocBuilder<PatientProfileCubit, PatientProfileState>(
+                  builder: (context, state) {
+                    final profile =
+                        state is PatientProfileLoaded ? state.profile : null;
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          radius: 28.r,
-                          backgroundColor: Colors.white,
-                          child: ClipOval(
-                            child: Image.network(
-                              'https://randomuser.me/api/portraits/men/32.jpg',
-                              width: 48.w,
-                              height: 48.w,
-                              fit: BoxFit.cover,
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PatientProfilePage(),
+                                  ),
+                                );
+                                if (result == true) {
+                                  await context
+                                      .read<PatientProfileCubit>()
+                                      .loadProfile();
+                                }
+                              },
+                              child: CircleAvatar(
+                                radius: 28.r,
+                                backgroundColor: Colors.white,
+                                child: ClipOval(
+                                  child: profile?.profilePic != null
+                                      ? CachedNetworkImage(
+                                          imageUrl:
+                                              'http://medlink.runasp.net${profile!.profilePic}',
+                                          width: 48.w,
+                                          height: 48.w,
+                                          fit: BoxFit.cover,
+                                          memCacheWidth: 200,
+                                          memCacheHeight: 200,
+                                          maxWidthDiskCache: 200,
+                                          maxHeightDiskCache: 200,
+                                          cacheKey:
+                                              '${profile.profilePic}_${DateTime.now().millisecondsSinceEpoch}',
+                                          placeholder: (context, url) =>
+                                              Container(
+                                            width: 48.w,
+                                            height: 48.w,
+                                            color: Colors.grey[200],
+                                            child: Icon(Icons.person,
+                                                size: 36.sp,
+                                                color: Colors.grey[400]),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Container(
+                                            width: 48.w,
+                                            height: 48.w,
+                                            color: Colors.grey[200],
+                                            child: Icon(Icons.person,
+                                                size: 36.sp,
+                                                color: Colors.grey[400]),
+                                          ),
+                                        )
+                                      : Container(
+                                          width: 48.w,
+                                          height: 48.w,
+                                          color: Colors.grey[200],
+                                          child: Icon(Icons.person,
+                                              size: 36.sp,
+                                              color: Colors.grey[400]),
+                                        ),
+                                ),
+                              ),
                             ),
+                            SizedBox(width: 16.w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Hi, ${profile?.name ?? 'User'}!',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(
+                                  'How are you today?',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.85),
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.18),
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.notifications_none_rounded,
+                                color: Colors.white, size: 30.sp),
+                            onPressed: () {},
                           ),
                         ),
-                        SizedBox(width: 16.w),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Hi, Omar!',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 4.h),
-                            Text(
-                              'How are you today?',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.85),
-                                fontSize: 14.sp,
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.18),
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.notifications_none_rounded,
-                            color: Colors.white, size: 30.sp),
-                        onPressed: () {},
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
-              // Main content
               Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 12.h),
-                        // Doctor Speciality Section
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Doctor Speciality',
-                                style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AllSpecialtiesPage(),
+                child: RefreshIndicator(
+                  onRefresh: () => _refreshData(context),
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 16.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 12.h),
+                          // Doctor Speciality Section
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Doctor Speciality',
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AllSpecialtiesPage(),
+                                    ),
+                                  );
+                                },
+                                child: Text('See All',
+                                    style: TextStyle(
+                                        color: Color(0xFF3B82F6),
+                                        fontSize: 14.sp)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 16.h),
+                          BlocBuilder<SpecialitiesCubit, SpecialitiesState>(
+                            builder: (context, state) {
+                              if (state is SpecialitiesLoading) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (state is SpecialitiesLoaded) {
+                                return SizedBox(
+                                  height: 100.h,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: state.specialities.length,
+                                    itemBuilder: (context, index) {
+                                      final specialty =
+                                          state.specialities[index];
+                                      return _specialityItem(
+                                        _getIconData(specialty.name),
+                                        specialty.name,
+                                        specialty.id,
+                                      );
+                                    },
                                   ),
                                 );
-                              },
-                              child: Text('See All',
+                              } else if (state is SpecialitiesError) {
+                                return Center(child: Text(state.message));
+                              }
+                              return const SizedBox();
+                            },
+                          ),
+                          SizedBox(height: 32.h),
+                          // Recommendation Doctor Section
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Recommendation Doctor',
                                   style: TextStyle(
-                                      color: Color(0xFF3B82F6),
-                                      fontSize: 14.sp)),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16.h),
-                        BlocBuilder<SpecialitiesCubit, SpecialitiesState>(
-                          builder: (context, state) {
-                            if (state is SpecialitiesLoading) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            } else if (state is SpecialitiesLoaded) {
-                              return SizedBox(
-                                height: 100.h,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: state.specialities.length,
-                                  itemBuilder: (context, index) {
-                                    final specialty = state.specialities[index];
-                                    return _specialityItem(
-                                      _getIconData(specialty.name),
-                                      specialty.name,
-                                      specialty.id,
-                                    );
-                                  },
-                                ),
-                              );
-                            } else if (state is SpecialitiesError) {
-                              return Center(child: Text(state.message));
-                            }
-                            return const SizedBox();
-                          },
-                        ),
-                        SizedBox(height: 32.h),
-                        // Recommendation Doctor Section
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Recommendation Doctor',
-                                style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AllDoctorsPage(),
-                                  ),
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AllDoctorsPage(),
+                                    ),
+                                  );
+                                },
+                                child: Text('See All',
+                                    style: TextStyle(
+                                        color: Color(0xFF3B82F6),
+                                        fontSize: 14.sp)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 16.h),
+                          BlocBuilder<RecommendationDoctorCubit,
+                              RecommendationDoctorState>(
+                            builder: (context, state) {
+                              if (state is RecommendationDoctorLoading) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (state is RecommendationDoctorLoaded) {
+                                return Column(
+                                  children: state.doctors
+                                      .take(5)
+                                      .map((doctor) => _doctorCard(doctor))
+                                      .toList(),
                                 );
-                              },
-                              child: Text('See All',
-                                  style: TextStyle(
-                                      color: Color(0xFF3B82F6),
-                                      fontSize: 14.sp)),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16.h),
-                        BlocBuilder<RecommendationDoctorCubit,
-                            RecommendationDoctorState>(
-                          builder: (context, state) {
-                            if (state is RecommendationDoctorLoading) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            } else if (state is RecommendationDoctorLoaded) {
-                              return Column(
-                                children: state.doctors
-                                    .take(5)
-                                    .map((doctor) => _doctorCard(doctor))
-                                    .toList(),
-                              );
-                            } else if (state is RecommendationDoctorError) {
-                              return Center(child: Text(state.message));
-                            }
-                            return const SizedBox();
-                          },
-                        ),
-                      ],
+                              } else if (state is RecommendationDoctorError) {
+                                return Center(child: Text(state.message));
+                              }
+                              return const SizedBox();
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -235,8 +332,8 @@ class HomePatient extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: _modernBottomNav(),
       ),
+      bottomNavigationBar: _modernBottomNav(context),
     );
   }
 
@@ -384,7 +481,7 @@ class HomePatient extends StatelessWidget {
     );
   }
 
-  Widget _modernBottomNav() {
+  Widget _modernBottomNav(BuildContext context) {
     return Builder(
       builder: (BuildContext context) => Stack(
         clipBehavior: Clip.none,
@@ -422,7 +519,22 @@ class HomePatient extends StatelessWidget {
                   child:
                       Icon(Icons.event_note, color: Colors.grey, size: 28.sp),
                 ),
-                Icon(Icons.person_rounded, color: Colors.grey, size: 28.sp),
+                GestureDetector(
+                  onTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PatientProfilePage(),
+                      ),
+                    );
+                    // Refresh profile data if returning from edit
+                    if (result == true) {
+                      context.read<PatientProfileCubit>().loadProfile();
+                    }
+                  },
+                  child: Icon(Icons.person_rounded,
+                      color: Colors.grey, size: 28.sp),
+                ),
               ],
             ),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../../../core/theme/app_colors.dart';
+import '../../../../../../core/utils/color_manger.dart';
 import '../../../../../../core/widgets/app_text_button.dart';
 
 class ClinicErrorWidget extends StatelessWidget {
@@ -23,11 +23,11 @@ class ClinicErrorWidget extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(20.r),
             decoration: BoxDecoration(
-              color: AppColors.error.withOpacity(0.1),
+              color: ColorsManager.errorWithOpacity(0.1),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.error.withOpacity(0.2),
+                  color: ColorsManager.errorWithOpacity(0.2),
                   blurRadius: 15,
                   spreadRadius: 5,
                 ),
@@ -36,7 +36,7 @@ class ClinicErrorWidget extends StatelessWidget {
             child: Icon(
               Icons.error_outline_rounded,
               size: 70.sp,
-              color: AppColors.error,
+              color: ColorsManager.error,
             ),
           ),
           SizedBox(height: 30.h),
@@ -44,7 +44,7 @@ class ClinicErrorWidget extends StatelessWidget {
             'Error: $message',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: AppColors.error,
+                  color: ColorsManager.error,
                   fontWeight: FontWeight.w600,
                 ),
           ),
@@ -57,7 +57,7 @@ class ClinicErrorWidget extends StatelessWidget {
               color: Colors.white,
               size: 20.sp,
             ),
-            backgroundColor: AppColors.error,
+            backgroundColor: ColorsManager.error,
             buttonHeight: 50.h,
             horizontalPadding: 30.w,
             verticalPadding: 15.h,

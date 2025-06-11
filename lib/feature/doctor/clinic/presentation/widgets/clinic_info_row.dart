@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../../core/theme/app_colors.dart';
+import '../../../../../../core/utils/color_manger.dart';
 
 class ClinicInfoRow extends StatelessWidget {
   final IconData icon;
@@ -19,7 +19,7 @@ class ClinicInfoRow extends StatelessWidget {
         Icon(
           icon,
           size: 16.sp,
-          color: AppColors.primary,
+          color: ColorsManager.primary,
         ),
         SizedBox(width: 8.w),
         Expanded(
@@ -27,7 +27,7 @@ class ClinicInfoRow extends StatelessWidget {
             text,
             style: TextStyle(
               fontSize: 14.sp,
-              color: AppColors.text,
+              color: ColorsManager.textDark,
             ),
           ),
         ),

@@ -20,14 +20,15 @@ class CustomSignUpLink extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(text, style: TextStyle(fontSize: 14.sp, color: Colors.grey[700])),
+        Text(text,
+            style: TextStyle(fontSize: 14.sp, color: ColorsManager.textLight)),
         GestureDetector(
           onTap: onTap,
           child: Text(
             actionText,
             style: TextStyle(
               fontSize: 14.sp,
-              color: ColorsManager.mainBlue,
+              color: ColorsManager.primary,
               fontWeight: FontWeight.bold,
             ),
           ),

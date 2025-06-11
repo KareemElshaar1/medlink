@@ -99,7 +99,7 @@ class _AppTextButtonState extends State<AppTextButton> {
                 ? widget.disabledBackgroundColor ?? ColorsManager.lighterGray
                 : widget.useGradient
                     ? null
-                    : widget.backgroundColor ?? ColorsManager.mainBlue,
+                    : widget.backgroundColor ?? ColorsManager.primary,
             borderRadius: BorderRadius.circular(widget.borderRadius?.r ?? 16.r),
           ),
           padding: EdgeInsets.symmetric(

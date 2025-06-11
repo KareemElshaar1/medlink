@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../../../core/widgets/app_text_button.dart';
-import '../../../../../../core/theme/app_colors.dart';
+import '../../../../../../core/utils/color_manger.dart';
 import '../../data/models/city_model.dart';
 import '../../data/models/clinic_model.dart';
 import '../../data/models/governate_model.dart';
@@ -30,14 +30,14 @@ class _ClinicManagementPageState extends State<ClinicManagementPage>
   late AnimationController _animationController;
 
   // Enhanced color palette
-  final Color _primaryColor = AppColors.primary;
-  final Color _secondaryColor = AppColors.secondary;
-  final Color _accentColor = AppColors.primaryLight;
-  final Color _backgroundColor = AppColors.background;
+  final Color _primaryColor = ColorsManager.primary;
+  final Color _secondaryColor = ColorsManager.secondary;
+  final Color _accentColor = ColorsManager.primaryLight;
+  final Color _backgroundColor = ColorsManager.background;
   final Color _cardColor = Colors.white;
-  final Color _textColor = AppColors.text;
-  final Color _errorColor = AppColors.error;
-  final Color _successColor = AppColors.success;
+  final Color _textColor = ColorsManager.textDark;
+  final Color _errorColor = ColorsManager.error;
+  final Color _successColor = ColorsManager.success;
 
   GovernateModel? _selectedGovernate;
   CityModel? _selectedCity;

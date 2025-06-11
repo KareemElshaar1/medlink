@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../data/models/clinic_model.dart';
-import '../../../../../../core/theme/app_colors.dart';
+import '../../../../../../core/utils/color_manger.dart';
 
 class ClinicCard extends StatelessWidget {
   final ClinicModel clinic;
@@ -18,54 +19,208 @@ class ClinicCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white,
-            AppColors.background,
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      margin: EdgeInsets.only(bottom: 16.h),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(20.r),
           onTap: onEdit,
-          child: Padding(
-            padding: EdgeInsets.all(16.r),
+          child: Container(
+            padding: EdgeInsets.all(20.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                  spreadRadius: 0,
+                ),
+              ],
+              border: Border.all(
+                color: Colors.grey.withOpacity(0.06),
+                width: 1,
+              ),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHeader(),
+                // Header with clinic name and actions
+                Row(
+                  children: [
+                    // Clinic icon and name
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10.r),
+                            decoration: BoxDecoration(
+                              color: ColorsManager.primary,
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Icon(
+                              Icons.local_hospital_rounded,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  clinic.name,
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(0xFF1A1A1A),
+                                    letterSpacing: -0.5,
+                                  ),
+                                ),
+                                Text(
+                                  'Medical Clinic',
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Action buttons
+                    Row(
+                      children: [
+                        _buildActionButton(
+                          icon: Icons.edit_rounded,
+                          color: ColorsManager.primary,
+                          onPressed: onEdit,
+                        ),
+                        SizedBox(width: 4.w),
+                        _buildActionButton(
+                          icon: Icons.delete_outline_rounded,
+                          color: ColorsManager.error,
+                          onPressed: onDelete,
+                        ),
+                      ],
+                    ),
+                  ],
+                ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
+
+                SizedBox(height: 20.h),
+
+                // Clinic information
+                Container(
+                  padding: EdgeInsets.all(16.w),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8F9FA),
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.08),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      // Phone and Price row
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildInfoItem(
+                              icon: Icons.phone_rounded,
+                              label: 'Phone',
+                              value: clinic.phone,
+                              iconColor: const Color(0xFF4A90E2),
+                            ),
+                          ),
+                          Container(
+                            width: 1,
+                            height: 40.h,
+                            color: Colors.grey.withOpacity(0.2),
+                            margin: EdgeInsets.symmetric(horizontal: 16.w),
+                          ),
+                          Expanded(
+                            child: _buildInfoItem(
+                              icon: Icons.attach_money_rounded,
+                              label: 'Price',
+                              value: '${clinic.price} EGP',
+                              iconColor: const Color(0xFF10B981),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+                    .animate()
+                    .fadeIn(duration: 600.ms, delay: 200.ms)
+                    .slideY(begin: 0.1),
+
                 SizedBox(height: 16.h),
-                _buildInfoRow(
-                  icon: Icons.phone,
-                  label: 'Phone',
-                  value: clinic.phone,
-                ),
-                SizedBox(height: 8.h),
-                _buildInfoRow(
-                  icon: Icons.attach_money,
-                  label: 'Price',
-                  value: '${clinic.price} EGP',
-                ),
-                SizedBox(height: 8.h),
-                _buildInfoRow(
-                  icon: Icons.location_on,
-                  label: 'Location',
-                  value: clinic.location,
-                ),
+
+                // Location information
+                Container(
+                  padding: EdgeInsets.all(16.w),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8F9FA),
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.08),
+                    ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(6.r),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEF4444).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Icon(
+                          Icons.location_on_rounded,
+                          size: 16.sp,
+                          color: const Color(0xFFEF4444),
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Location',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              clinic.location,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: const Color(0xFF1A1A1A),
+                                fontWeight: FontWeight.w500,
+                                height: 1.4,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                    .animate()
+                    .fadeIn(duration: 800.ms, delay: 400.ms)
+                    .slideX(begin: 0.1),
               ],
             ),
           ),
@@ -74,103 +229,66 @@ class ClinicCard extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Text(
-            clinic.name,
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-        ),
-        PopupMenuButton<String>(
-          icon: Icon(
-            Icons.more_vert,
-            color: Colors.black,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          elevation: 0,
-          onSelected: (value) {
-            if (value == 'edit') {
-              onEdit();
-            } else if (value == 'delete') {
-              onDelete();
-            }
-          },
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: 'edit',
-              child: Row(
-                children: [
-                  Icon(Icons.edit, size: 20.sp),
-                  SizedBox(width: 8.w),
-                  Text('Edit'),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              value: 'delete',
-              child: Row(
-                children: [
-                  Icon(Icons.delete, size: 20.sp),
-                  SizedBox(width: 8.w),
-                  Text('Delete'),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInfoRow({
+  Widget _buildActionButton({
     required IconData icon,
-    required String label,
-    required String value,
+    required Color color,
+    required VoidCallback onPressed,
   }) {
-    return Row(
-      children: [
-        Container(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10.r),
+        onTap: onPressed,
+        child: Container(
           padding: EdgeInsets.all(8.r),
           decoration: BoxDecoration(
-            color: Colors.grey[200],
+            color: color.withOpacity(0.08),
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: Icon(
             icon,
-            size: 20.sp,
-            color: AppColors.grey,
+            color: color,
+            size: 18.sp,
           ),
         ),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: AppColors.text,
-                ),
+      ),
+    );
+  }
+
+  Widget _buildInfoItem({
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color iconColor,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              icon,
+              size: 16.sp,
+              color: iconColor,
+            ),
+            SizedBox(width: 6.w),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w600,
               ),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  color: AppColors.text,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
+            ),
+          ],
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: const Color(0xFF1A1A1A),
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],

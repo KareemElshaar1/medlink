@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:medlink/core/theme/app_colors.dart';
+import 'package:medlink/core/utils/color_manger.dart';
 
 class RecentPatientsSectionWidget extends StatelessWidget {
   const RecentPatientsSectionWidget({super.key});
@@ -18,7 +18,7 @@ class RecentPatientsSectionWidget extends StatelessWidget {
               Text(
                 'Recent Patients',
                 style: TextStyle(
-                  color: AppColors.text,
+                  color: ColorsManager.textDark,
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -28,12 +28,12 @@ class RecentPatientsSectionWidget extends StatelessWidget {
                 icon: Icon(
                   Icons.arrow_forward_rounded,
                   size: 18.sp,
-                  color: AppColors.primary,
+                  color: ColorsManager.primary,
                 ),
                 label: Text(
                   'View All',
                   style: TextStyle(
-                    color: AppColors.primary,
+                    color: ColorsManager.primary,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                   ),
@@ -52,7 +52,7 @@ class RecentPatientsSectionWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.r),
             boxShadow: [
               BoxShadow(
-                color: AppColors.grey.withOpacity(0.1),
+                color: ColorsManager.textLight.withOpacity(0.1),
                 blurRadius: 20,
                 spreadRadius: 0,
                 offset: const Offset(0, 10),
@@ -65,20 +65,20 @@ class RecentPatientsSectionWidget extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(20.r),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: ColorsManager.primary.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.people_alt_rounded,
                   size: 32.sp,
-                  color: AppColors.primary,
+                  color: ColorsManager.primary,
                 ),
               ),
               SizedBox(height: 20.h),
               Text(
                 'No recent patients',
                 style: TextStyle(
-                  color: AppColors.text,
+                  color: ColorsManager.textDark,
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
                 ),
@@ -87,7 +87,7 @@ class RecentPatientsSectionWidget extends StatelessWidget {
               Text(
                 'Your recent patients will appear here',
                 style: TextStyle(
-                  color: AppColors.grey,
+                  color: ColorsManager.textLight,
                   fontSize: 14.sp,
                 ),
                 textAlign: TextAlign.center,
@@ -98,7 +98,7 @@ class RecentPatientsSectionWidget extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () {},
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: AppColors.primary),
+                    side: BorderSide(color: ColorsManager.primary),
                     padding: EdgeInsets.symmetric(vertical: 12.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.r),
@@ -107,7 +107,7 @@ class RecentPatientsSectionWidget extends StatelessWidget {
                   child: Text(
                     'View All Patients',
                     style: TextStyle(
-                      color: AppColors.primary,
+                      color: ColorsManager.primary,
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                     ),

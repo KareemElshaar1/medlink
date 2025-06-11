@@ -273,7 +273,7 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
                         Gap(30.h),
 
                         // Social Sign Up Section
-                        const SignUpAlternatives(),
+                        //  const SignUpAlternatives(),
 
                         Gap(40.h), // Extra bottom space
                       ],
@@ -498,134 +498,134 @@ class PhoneInputField extends StatelessWidget {
   }
 }
 
-// Improved Sign Up Alternatives Widget
-class SignUpAlternatives extends StatelessWidget {
-  const SignUpAlternatives({super.key});
+// // Improved Sign Up Alternatives Widget
+// // class SignUpAlternatives extends StatelessWidget {
+//   const SignUpAlternatives({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    // Responsive sizing for social buttons
-    final buttonSize = MediaQuery.of(context).size.width < 360 ? 45.0 : 50.0;
+//   @override
+//   Widget build(BuildContext context) {
+//     // Responsive sizing for social buttons
+//     final buttonSize = MediaQuery.of(context).size.width < 360 ? 45.0 : 50.0;
 
-    return Column(
-      children: [
-        // OR divider
-        Row(
-          children: [
-            Expanded(
-              child: Divider(color: Colors.grey.withOpacity(0.3), thickness: 1),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Text(
-                "OR",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Divider(color: Colors.grey.withOpacity(0.3), thickness: 1),
-            ),
-          ],
-        ),
-        Gap(20.h),
+//     return Column(
+//       children: [
+//         // OR divider
+//         Row(
+//           children: [
+//             Expanded(
+//               child: Divider(color: Colors.grey.withOpacity(0.3), thickness: 1),
+//             ),
+//             Padding(
+//               padding: EdgeInsets.symmetric(horizontal: 16.w),
+//               child: Text(
+//                 "OR",
+//                 style: TextStyle(
+//                   color: Colors.grey,
+//                   fontSize: 14.sp,
+//                   fontWeight: FontWeight.w500,
+//                 ),
+//               ),
+//             ),
+//             Expanded(
+//               child: Divider(color: Colors.grey.withOpacity(0.3), thickness: 1),
+//             ),
+//           ],
+//         ),
+//         Gap(20.h),
 
-        // Social sign up options
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildSocialButton(
-              onPressed: () {},
-              icon: "assets/images/google.png",
-              backgroundColor: Colors.white,
-              size: buttonSize,
-            ),
-            Gap(16.w),
-            _buildSocialButton(
-              onPressed: () {},
-              icon: "assets/images/facebook.jpeg",
-              backgroundColor: Colors.white,
-              size: buttonSize,
-            ),
-            Gap(16.w),
-            _buildSocialButton(
-              onPressed: () {},
-              icon: "assets/images/linkedin.jpeg",
-              backgroundColor: Colors.white,
-              size: buttonSize,
-            ),
-          ],
-        ),
-        Gap(24.h),
+//         // Social sign up options
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             _buildSocialButton(
+//               onPressed: () {},
+//               icon: "assets/images/google.png",
+//               backgroundColor: Colors.white,
+//               size: buttonSize,
+//             ),
+//             Gap(16.w),
+//             _buildSocialButton(
+//               onPressed: () {},
+//               icon: "assets/images/facebook.jpeg",
+//               backgroundColor: Colors.white,
+//               size: buttonSize,
+//             ),
+//             Gap(16.w),
+//             _buildSocialButton(
+//               onPressed: () {},
+//               icon: "assets/images/linkedin.jpeg",
+//               backgroundColor: Colors.white,
+//               size: buttonSize,
+//             ),
+//           ],
+//         ),
+//         Gap(24.h),
 
-        // Already have an account
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Already have an account?",
-              style: TextStyle(color: Colors.grey, fontSize: 14.sp),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(PageRouteNames.sign_in_doctor);
-              },
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(
-                "Sign In",
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+//         // Already have an account
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text(
+//               "Already have an account?",
+//               style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+//             ),
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.of(context).pushNamed(PageRouteNames.sign_in_doctor);
+//               },
+//               style: TextButton.styleFrom(
+//                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+//                 minimumSize: Size.zero,
+//                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+//               ),
+//               child: Text(
+//                 "Sign In",
+//                 style: TextStyle(
+//                   color: Colors.blue,
+//                   fontSize: 14.sp,
+//                   fontWeight: FontWeight.bold,
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
 
-  Widget _buildSocialButton({
-    required VoidCallback onPressed,
-    required String icon,
-    required Color backgroundColor,
-    required double size,
-  }) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(12.r),
-      child: Container(
-        width: size.w,
-        height: size.h,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: Colors.grey.withOpacity(0.3), width: 1),
-          // Add subtle shadow for better visual appeal
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Center(
-          child: Image.asset(
-            icon,
-            width: size * 0.70, // 24/50 = 0.48
-            height: size * 0.60,
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   Widget _buildSocialButton({
+//     required VoidCallback onPressed,
+//     required String icon,
+//     required Color backgroundColor,
+//     required double size,
+//   }) {
+//     return InkWell(
+//       onTap: onPressed,
+//       borderRadius: BorderRadius.circular(12.r),
+//       child: Container(
+//         width: size.w,
+//         height: size.h,
+//         decoration: BoxDecoration(
+//           color: backgroundColor,
+//           borderRadius: BorderRadius.circular(12.r),
+//           border: Border.all(color: Colors.grey.withOpacity(0.3), width: 1),
+//           // Add subtle shadow for better visual appeal
+//           boxShadow: [
+//             BoxShadow(
+//               color: Colors.black.withOpacity(0.05),
+//               blurRadius: 4,
+//               offset: const Offset(0, 2),
+//             ),
+//           ],
+//         ),
+//         child: Center(
+//           child: Image.asset(
+//             icon,
+//             width: size * 0.70, // 24/50 = 0.48
+//             height: size * 0.60,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/widgets/app_text_button.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../core/utils/app_text_style.dart';
-import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/utils/color_manger.dart';
 import '../cubit/schedule_cubit.dart';
 import '../../data/models/clinic_model.dart';
 
@@ -47,7 +47,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: AppColors.primary,
+              primary: ColorsManager.primary,
               onPrimary: Colors.white,
               surface: Colors.white,
               onSurface: Colors.black,
@@ -79,7 +79,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('End time must be after start time'),
-            backgroundColor: AppColors.error,
+            backgroundColor: ColorsManager.error,
           ),
         );
         return;
@@ -97,7 +97,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ColorsManager.background,
       appBar: AppBar(
         title: Text(
           'Create Schedule',
@@ -107,7 +107,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
           ),
         ),
         elevation: 0,
-        backgroundColor: AppColors.primary,
+        backgroundColor: ColorsManager.primary,
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -127,8 +127,8 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.background,
-              AppColors.secondary.withOpacity(0.1),
+              ColorsManager.background,
+              ColorsManager.secondary.withOpacity(0.1),
             ],
           ),
         ),
@@ -163,8 +163,8 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              AppColors.primary.withOpacity(0.1),
-                              AppColors.secondary.withOpacity(0.1),
+                              ColorsManager.primary.withOpacity(0.1),
+                              ColorsManager.secondary.withOpacity(0.1),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -184,13 +184,13 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                             Container(
                               padding: EdgeInsets.all(12.r),
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withOpacity(0.1),
+                                color: ColorsManager.primary.withOpacity(0.1),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 Icons.calendar_today,
                                 size: 32.w,
-                                color: AppColors.primary,
+                                color: ColorsManager.primary,
                               ),
                             ),
                             SizedBox(height: 16.h),
@@ -199,7 +199,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                               style: TextStyle(
                                 fontSize: 20.sp,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
+                                color: ColorsManager.primary,
                               ),
                             ),
                             SizedBox(height: 8.h),
@@ -416,20 +416,16 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                   ),
                                 ],
                               ),
-                              child: AppTextFormField(
-                                hintText: 'Start Time',
-                                labelText: 'Start Time',
-                                readOnly: true,
-                                onTap: () => _selectTime(context, true),
-                                controller: TextEditingController(
-                                  text: _startTime?.format(context) ?? '',
+                              child: TextButton(
+                                onPressed: () => _selectTime(context, true),
+                                child: Text(
+                                  _startTime?.format(context) ??
+                                      'Select Start Time',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14.sp,
+                                  ),
                                 ),
-                                validator: (value) {
-                                  if (_startTime == null) {
-                                    return 'Required';
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
                           ),
@@ -448,20 +444,16 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                                   ),
                                 ],
                               ),
-                              child: AppTextFormField(
-                                hintText: 'End Time',
-                                labelText: 'End Time',
-                                readOnly: true,
-                                onTap: () => _selectTime(context, false),
-                                controller: TextEditingController(
-                                  text: _endTime?.format(context) ?? '',
+                              child: TextButton(
+                                onPressed: () => _selectTime(context, false),
+                                child: Text(
+                                  _endTime?.format(context) ??
+                                      'Select End Time',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14.sp,
+                                  ),
                                 ),
-                                validator: (value) {
-                                  if (_endTime == null) {
-                                    return 'Required';
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
                           ),
@@ -481,7 +473,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                       child: ElevatedButton(
                         onPressed: _submitForm,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: ColorsManager.primary,
                           foregroundColor: Colors.white,
                           padding: EdgeInsets.symmetric(vertical: 16.h),
                           shape: RoundedRectangleBorder(

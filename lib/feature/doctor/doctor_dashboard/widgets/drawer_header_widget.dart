@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:medlink/core/theme/app_colors.dart';
+import 'package:medlink/core/utils/color_manger.dart';
 import 'package:medlink/feature/doctor/profile/data/models/doctor_profile_model.dart';
 
 class DrawerHeaderWidget extends StatelessWidget {
@@ -34,8 +34,8 @@ class DrawerHeaderWidget extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.primary,
-            AppColors.secondary,
+            ColorsManager.primary,
+            ColorsManager.secondary,
           ],
         ),
       ),
@@ -64,7 +64,7 @@ class DrawerHeaderWidget extends StatelessWidget {
                 backgroundColor: Colors.white,
                 child: isLoading
                     ? CircularProgressIndicator(
-                        color: AppColors.primary,
+                        color: ColorsManager.primary,
                         strokeWidth: 3,
                       )
                     : profilePicUrl.isNotEmpty
@@ -76,20 +76,20 @@ class DrawerHeaderWidget extends StatelessWidget {
                               height: 90.r,
                               placeholder: (context, url) =>
                                   CircularProgressIndicator(
-                                color: AppColors.primary,
+                                color: ColorsManager.primary,
                                 strokeWidth: 3,
                               ),
                               errorWidget: (context, url, error) => Icon(
                                 Icons.person_rounded,
                                 size: 50.sp,
-                                color: AppColors.primary,
+                                color: ColorsManager.primary,
                               ),
                             ),
                           )
                         : Icon(
                             Icons.person_rounded,
                             size: 50.sp,
-                            color: AppColors.primary,
+                            color: ColorsManager.primary,
                           ),
               ),
             ),

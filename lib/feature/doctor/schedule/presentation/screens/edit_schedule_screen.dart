@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/widgets/app_text_button.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../core/utils/app_text_style.dart';
-import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/utils/color_manger.dart';
 import '../../data/models/schedule_model.dart';
 import '../../data/models/clinic_model.dart';
 import '../cubit/schedule_cubit.dart';
@@ -67,7 +67,7 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: AppColors.primary,
+              primary: ColorsManager.primary,
               onPrimary: Colors.white,
               surface: Colors.white,
               onSurface: Colors.black,
@@ -160,7 +160,7 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('End time must be after start time'),
-          backgroundColor: AppColors.error,
+          backgroundColor: ColorsManager.error,
         ),
       );
       return;
@@ -198,7 +198,7 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ColorsManager.background,
       appBar: AppBar(
         title: Text(
           'Edit Schedule',
@@ -208,7 +208,7 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
           ),
         ),
         elevation: 0,
-        backgroundColor: AppColors.primary,
+        backgroundColor: ColorsManager.primary,
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -228,8 +228,8 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.background,
-              AppColors.secondary.withOpacity(0.1),
+              ColorsManager.background,
+              ColorsManager.secondary.withOpacity(0.1),
             ],
           ),
         ),
@@ -237,9 +237,26 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
           listener: (context, state) {
             if (state is ScheduleError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: ColorsManager.error,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                ),
               );
             } else if (state is ScheduleEdited) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Schedule updated successfully'),
+                  backgroundColor: ColorsManager.success,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -249,7 +266,7 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Header Section
+                  // Header Card
                   Animate(
                     effects: [
                       FadeEffect(duration: 600.ms),
@@ -257,16 +274,86 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                           begin: const Offset(0, 0.2), duration: 600.ms),
                     ],
                     child: Container(
-                      padding: EdgeInsets.all(16.w),
+                      padding: EdgeInsets.all(20.w),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            AppColors.primary.withOpacity(0.1),
-                            AppColors.secondary.withOpacity(0.1),
+                            ColorsManager.primary.withOpacity(0.1),
+                            ColorsManager.secondary.withOpacity(0.1),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
+                        borderRadius: BorderRadius.circular(16.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: ColorsManager.primary.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(12.r),
+                                decoration: BoxDecoration(
+                                  color: ColorsManager.primary.withOpacity(0.1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.calendar_today,
+                                  size: 24.w,
+                                  color: ColorsManager.primary,
+                                ),
+                              ),
+                              SizedBox(width: 12.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Edit Schedule',
+                                      style: TextStyle(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: ColorsManager.primary,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      'Update your schedule details',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Colors.black.withOpacity(0.6),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
+
+                  // Form Fields
+                  Animate(
+                    effects: [
+                      FadeEffect(duration: 600.ms),
+                      SlideEffect(
+                          begin: const Offset(0, 0.2), duration: 600.ms),
+                    ],
+                    delay: 200.ms,
+                    child: Container(
+                      padding: EdgeInsets.all(20.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(16.r),
                         boxShadow: [
                           BoxShadow(
@@ -279,268 +366,523 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            padding: EdgeInsets.all(12.r),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.calendar_today,
-                              size: 32.w,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            'Edit Schedule',
-                            style: TextStyle(
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            'Update your schedule details',
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.black.withOpacity(0.6),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 24.h),
-
-                  // Clinic Dropdown
-                  BlocBuilder<ScheduleCubit, ScheduleState>(
-                    builder: (context, state) {
-                      if (state is ClinicsLoaded) {
-                        return Animate(
-                          effects: [
-                            FadeEffect(duration: 600.ms),
-                            SlideEffect(
-                                begin: const Offset(0, 0.2), duration: 600.ms),
-                          ],
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12.r),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.schedule,
+                                size: 20.w,
+                                color: ColorsManager.primary,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                'Schedule Details',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorsManager.primary,
                                 ),
-                              ],
-                            ),
-                            child: AppTextFormField(
-                              hintText: 'Select Clinic',
-                              labelText: 'Clinic',
-                              readOnly: true,
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20.r),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20.h),
+
+                          // Clinic Selection
+                          BlocBuilder<ScheduleCubit, ScheduleState>(
+                            builder: (context, state) {
+                              if (state is ClinicsLoaded) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Clinic',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black.withOpacity(0.7),
+                                      ),
                                     ),
-                                  ),
-                                  builder: (context) => Container(
-                                    padding: EdgeInsets.all(16.w),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          width: 40.w,
-                                          height: 4.h,
-                                          margin: EdgeInsets.only(bottom: 16.h),
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300],
-                                            borderRadius:
-                                                BorderRadius.circular(2.r),
-                                          ),
-                                        ),
-                                        ...state.clinics.map((clinic) {
-                                          return ListTile(
-                                            title: Text(
-                                              clinic.name,
-                                              style: TextStyle(
-                                                fontSize: 14.sp,
-                                                color: Colors.black
-                                                    .withOpacity(0.7),
+                                    SizedBox(height: 8.h),
+                                    InkWell(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          backgroundColor: Colors.transparent,
+                                          builder: (context) => Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                top: Radius.circular(20.r),
                                               ),
                                             ),
-                                            onTap: () {
-                                              setState(() {
-                                                _selectedClinic = clinic;
-                                              });
-                                              Navigator.pop(context);
-                                            },
-                                          );
-                                        }),
-                                      ],
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  width: 40.w,
+                                                  height: 4.h,
+                                                  margin: EdgeInsets.only(
+                                                    top: 8.h,
+                                                    bottom: 16.h,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey[300],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2.r),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 16.w),
+                                                  child: Text(
+                                                    'Select Clinic',
+                                                    style: TextStyle(
+                                                      fontSize: 18.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          ColorsManager.primary,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 16.h),
+                                                ...state.clinics.map((clinic) {
+                                                  return ListTile(
+                                                    leading: Icon(
+                                                      Icons.medical_services,
+                                                      color:
+                                                          ColorsManager.primary,
+                                                    ),
+                                                    title: Text(
+                                                      clinic.name,
+                                                      style: TextStyle(
+                                                        fontSize: 14.sp,
+                                                        color: Colors.black
+                                                            .withOpacity(0.7),
+                                                      ),
+                                                    ),
+                                                    onTap: () {
+                                                      setState(() {
+                                                        _selectedClinic =
+                                                            clinic;
+                                                      });
+                                                      Navigator.pop(context);
+                                                    },
+                                                  );
+                                                }),
+                                                SizedBox(height: 16.h),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 16.w,
+                                          vertical: 12.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.grey.withOpacity(0.3),
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.r),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.medical_services,
+                                                  size: 20.w,
+                                                  color: ColorsManager.primary,
+                                                ),
+                                                SizedBox(width: 8.w),
+                                                Text(
+                                                  _selectedClinic?.name ??
+                                                      widget.schedule.clinic,
+                                                  style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    color: Colors.black
+                                                        .withOpacity(0.7),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Icon(
+                                              Icons.arrow_drop_down,
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 );
-                              },
-                              controller: TextEditingController(
-                                text: _selectedClinic?.name ??
-                                    widget.schedule.clinic,
-                              ),
-                            ),
+                              }
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            },
                           ),
-                        );
-                      }
-                      return const Center(child: CircularProgressIndicator());
-                    },
-                  ),
-                  SizedBox(height: 16.h),
+                          SizedBox(height: 20.h),
 
-                  // Day Dropdown
-                  Animate(
-                    effects: [
-                      FadeEffect(duration: 600.ms),
-                      SlideEffect(
-                          begin: const Offset(0, 0.2), duration: 600.ms),
-                    ],
-                    delay: 200.ms,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12.r),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
+                          // Day Selection
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Day',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                              ),
+                              SizedBox(height: 8.h),
+                              InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    backgroundColor: Colors.transparent,
+                                    isScrollControlled: true,
+                                    builder: (context) => Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.7,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20.r),
+                                        ),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            width: 40.w,
+                                            height: 4.h,
+                                            margin: EdgeInsets.only(
+                                              top: 8.h,
+                                              bottom: 16.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              borderRadius:
+                                                  BorderRadius.circular(2.r),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16.w),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  'Select Day',
+                                                  style: TextStyle(
+                                                    fontSize: 18.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                    color:
+                                                        ColorsManager.primary,
+                                                  ),
+                                                ),
+                                                IconButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  icon: Icon(
+                                                    Icons.close,
+                                                    color: Colors.black
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(height: 16.h),
+                                          Expanded(
+                                            child: ListView.builder(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 16.w),
+                                              itemCount: _days.length,
+                                              itemBuilder: (context, index) {
+                                                final day = _days[index];
+                                                final isSelected =
+                                                    _dayController.text == day;
+                                                return InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _dayController.text = day;
+                                                    });
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      vertical: 12.h,
+                                                      horizontal: 16.w,
+                                                    ),
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 8.h),
+                                                    decoration: BoxDecoration(
+                                                      color: isSelected
+                                                          ? ColorsManager
+                                                              .primary
+                                                              .withOpacity(0.1)
+                                                          : Colors.transparent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.r),
+                                                      border: Border.all(
+                                                        color: isSelected
+                                                            ? ColorsManager
+                                                                .primary
+                                                            : Colors.grey
+                                                                .withOpacity(
+                                                                    0.3),
+                                                      ),
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.calendar_today,
+                                                          size: 20.w,
+                                                          color: isSelected
+                                                              ? ColorsManager
+                                                                  .primary
+                                                              : Colors.black
+                                                                  .withOpacity(
+                                                                      0.5),
+                                                        ),
+                                                        SizedBox(width: 12.w),
+                                                        Text(
+                                                          day,
+                                                          style: TextStyle(
+                                                            fontSize: 14.sp,
+                                                            color: isSelected
+                                                                ? ColorsManager
+                                                                    .primary
+                                                                : Colors.black
+                                                                    .withOpacity(
+                                                                        0.7),
+                                                            fontWeight:
+                                                                isSelected
+                                                                    ? FontWeight
+                                                                        .bold
+                                                                    : FontWeight
+                                                                        .normal,
+                                                          ),
+                                                        ),
+                                                        if (isSelected) ...[
+                                                          Spacer(),
+                                                          Icon(
+                                                            Icons.check_circle,
+                                                            color: ColorsManager
+                                                                .primary,
+                                                            size: 20.w,
+                                                          ),
+                                                        ],
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w,
+                                    vertical: 12.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey.withOpacity(0.3),
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.calendar_today,
+                                            size: 20.w,
+                                            color: ColorsManager.primary,
+                                          ),
+                                          SizedBox(width: 8.w),
+                                          Text(
+                                            _dayController.text,
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                              color:
+                                                  Colors.black.withOpacity(0.7),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        color: Colors.black.withOpacity(0.5),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20.h),
+
+                          // Time Selection
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Start Time',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black.withOpacity(0.7),
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    InkWell(
+                                      onTap: () => _selectTime(context, true),
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 16.w,
+                                          vertical: 12.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.grey.withOpacity(0.3),
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.r),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.access_time,
+                                                  size: 20.w,
+                                                  color: ColorsManager.primary,
+                                                ),
+                                                SizedBox(width: 8.w),
+                                                Text(
+                                                  _startTime != null
+                                                      ? _formatTimeForApi(
+                                                          _startTime!)
+                                                      : _formatTimeForDisplay(
+                                                          widget.schedule
+                                                              .appointmentStart),
+                                                  style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    color: Colors.black
+                                                        .withOpacity(0.7),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Icon(
+                                              Icons.arrow_drop_down,
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 16.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'End Time',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black.withOpacity(0.7),
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    InkWell(
+                                      onTap: () => _selectTime(context, false),
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 16.w,
+                                          vertical: 12.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.grey.withOpacity(0.3),
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.r),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.access_time,
+                                                  size: 20.w,
+                                                  color: ColorsManager.primary,
+                                                ),
+                                                SizedBox(width: 8.w),
+                                                Text(
+                                                  _endTime != null
+                                                      ? _formatTimeForApi(
+                                                          _endTime!)
+                                                      : _formatTimeForDisplay(
+                                                          widget.schedule
+                                                              .appointmentEnd),
+                                                  style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    color: Colors.black
+                                                        .withOpacity(0.7),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Icon(
+                                              Icons.arrow_drop_down,
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      child: AppTextFormField(
-                        hintText: 'Select Day',
-                        labelText: 'Day',
-                        readOnly: true,
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(20.r),
-                              ),
-                            ),
-                            builder: (context) => Container(
-                              padding: EdgeInsets.all(16.w),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: 40.w,
-                                    height: 4.h,
-                                    margin: EdgeInsets.only(bottom: 16.h),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(2.r),
-                                    ),
-                                  ),
-                                  ..._days.map((day) {
-                                    return ListTile(
-                                      title: Text(
-                                        day,
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          color: Colors.black.withOpacity(0.7),
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        setState(() {
-                                          _dayController.text = day;
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                    );
-                                  }),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                        controller: _dayController,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-
-                  // Time Selection Row
-                  Animate(
-                    effects: [
-                      FadeEffect(duration: 600.ms),
-                      SlideEffect(
-                          begin: const Offset(0, 0.2), duration: 600.ms),
-                    ],
-                    delay: 400.ms,
-                    child: Row(
-                      children: [
-                        // Start Time
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12.r),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: AppTextFormField(
-                              hintText: 'Start Time',
-                              labelText: 'Start Time',
-                              readOnly: true,
-                              onTap: () => _selectTime(context, true),
-                              controller: TextEditingController(
-                                text: _startTime != null
-                                    ? _formatTimeForApi(_startTime!)
-                                    : _formatTimeForDisplay(
-                                        widget.schedule.appointmentStart),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 16.w),
-                        // End Time
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12.r),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: AppTextFormField(
-                              hintText: 'End Time',
-                              labelText: 'End Time',
-                              readOnly: true,
-                              onTap: () => _selectTime(context, false),
-                              controller: TextEditingController(
-                                text: _endTime != null
-                                    ? _formatTimeForApi(_endTime!)
-                                    : _formatTimeForDisplay(
-                                        widget.schedule.appointmentEnd),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                   SizedBox(height: 32.h),
@@ -552,11 +894,11 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                       SlideEffect(
                           begin: const Offset(0, 0.2), duration: 600.ms),
                     ],
-                    delay: 800.ms,
+                    delay: 400.ms,
                     child: ElevatedButton(
                       onPressed: state is ScheduleLoading ? null : _handleEdit,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
+                        backgroundColor: ColorsManager.primary,
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(vertical: 16.h),
                         shape: RoundedRectangleBorder(
@@ -564,12 +906,35 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
                         ),
                         elevation: 4,
                       ),
-                      child: Text(
-                        state is ScheduleLoading ? 'Saving...' : 'Save Changes',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (state is ScheduleLoading)
+                            SizedBox(
+                              width: 20.w,
+                              height: 20.w,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          else
+                            Icon(
+                              Icons.save,
+                              size: 20.w,
+                            ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            state is ScheduleLoading
+                                ? 'Saving...'
+                                : 'Save Changes',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

@@ -32,13 +32,13 @@ class RememberMeAndForgetPassword extends StatelessWidget {
               child: Checkbox(
                 value: isRememberMeSelected,
                 onChanged: onRememberMeChanged,
-                activeColor: ColorsManager.mainBlue,
+                activeColor: ColorsManager.primary,
                 checkColor: Colors.white,
               ),
             ),
             Text(
               'Remember Me',
-              style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+              style: TextStyle(fontSize: 14.sp, color: ColorsManager.textLight),
             ),
           ],
         ),
@@ -51,14 +51,14 @@ class RememberMeAndForgetPassword extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: const Color(0xFFF81418), width: 1.0),
+                bottom: BorderSide(color: ColorsManager.error, width: 1.0),
               ),
             ),
             child: Text(
               'Forgot Password?',
               style: TextStyle(
                 fontSize: 14.sp,
-                color: const Color(0xFFF81418),
+                color: ColorsManager.error,
                 fontWeight: FontWeight.w500,
               ),
             ),

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medlink/core/theme/app_colors.dart';
+import 'package:medlink/core/utils/color_manger.dart';
 
 import '../../core/helper/shared_pref_helper.dart';
 import '../../core/routes/page_routes_name.dart';
-import '../../core/utils/color_manger.dart';
 import '../auth/doctor/sign_in_doctor/presentation/manager/auth_cubit.dart';
 import '../auth/doctor/sign_in_doctor/presentation/manager/auth_state.dart';
 import '../auth/patient/sign_in/presentation/manager/auth_cubit.dart';
@@ -95,7 +94,7 @@ class _ToggleScreenState extends State<ToggleScreen> {
           ),
         ],
         child: Center(
-          child: CircularProgressIndicator(color: AppColors.primary),
+          child: CircularProgressIndicator(color: ColorsManager.primary),
         ),
       ),
     );

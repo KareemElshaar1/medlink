@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../../../core/theme/app_colors.dart';
+import '../../../../../../core/utils/color_manger.dart';
 import '../../../../../../core/widgets/app_text_button.dart';
 
 class ScheduleErrorWidget extends StatelessWidget {
@@ -26,8 +26,8 @@ class ScheduleErrorWidget extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: LinearGradient(
                 colors: [
-                  AppColors.error.withOpacity(0.1),
-                  AppColors.warning.withOpacity(0.1),
+                  ColorsManager.error.withOpacity(0.1),
+                  ColorsManager.warning.withOpacity(0.1),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -37,7 +37,7 @@ class ScheduleErrorWidget extends StatelessWidget {
             child: Icon(
               Icons.error_outline_rounded,
               size: 70.sp,
-              color: AppColors.error,
+              color: ColorsManager.error,
             ),
           ).animate().fadeIn(duration: 600.ms).scale(),
           SizedBox(height: 24.h),
@@ -72,7 +72,7 @@ class ScheduleErrorWidget extends StatelessWidget {
               color: Colors.white,
               size: 20.sp,
             ),
-            backgroundColor: AppColors.error,
+            backgroundColor: ColorsManager.error,
             buttonHeight: 50.h,
             horizontalPadding: 30.w,
             verticalPadding: 15.h,

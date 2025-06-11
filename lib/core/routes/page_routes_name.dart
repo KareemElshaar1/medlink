@@ -17,4 +17,6 @@ class PageRouteNames {
   static const String confirm_doctor_code = '/confirm-doctor-code';
   static const String search = '/search';
   static const String payment = '/payment';
+  static const String patientProfile = '/patient-profile';
+  static const String appointments = '/appointments';
 }

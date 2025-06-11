@@ -5,7 +5,7 @@ import 'color_manger.dart';
 import 'font_weight_helper.dart';
 
 class TextStyles {
-   static TextStyle customStyle({
+  static TextStyle customStyle({
     required double fontSize,
     required FontWeight fontWeight,
     Color? color,
@@ -13,11 +13,11 @@ class TextStyles {
     return TextStyle(
       fontSize: fontSize.sp,
       fontWeight: fontWeight,
-      color: color ?? ColorsManager.mainBlue,
+      color: color ?? ColorsManager.primary,
     );
   }
 
-   static TextStyle font24BlackBold = customStyle(
+  static TextStyle font24BlackBold = customStyle(
     fontSize: 24,
     fontWeight: FontWeightHelper.bold,
     color: Colors.black,
@@ -26,19 +26,19 @@ class TextStyles {
   static TextStyle font30BlueBold = customStyle(
     fontSize: 30,
     fontWeight: FontWeightHelper.bold,
-    color: ColorsManager.mainBlue,
+    color: ColorsManager.primary,
   );
 
   static TextStyle font13BlueSemiBold = customStyle(
     fontSize: 13,
     fontWeight: FontWeightHelper.semiBold,
-    color: ColorsManager.mainBlue,
+    color: ColorsManager.primary,
   );
 
   static TextStyle font13DarkBlueMedium = customStyle(
     fontSize: 13,
     fontWeight: FontWeightHelper.medium,
-    color: ColorsManager.darkBlue,
+    color: ColorsManager.primaryDark,
   );
 
   static TextStyle font14GrayRegular = customStyle(
@@ -56,7 +56,7 @@ class TextStyles {
   static TextStyle font18DarkBlueBold = customStyle(
     fontSize: 18,
     fontWeight: FontWeightHelper.bold,
-    color: ColorsManager.darkBlue,
+    color: ColorsManager.primaryDark,
   );
 
   static TextStyle font18WhiteMedium = customStyle(
@@ -64,5 +64,4 @@ class TextStyles {
     fontWeight: FontWeightHelper.medium,
     color: Colors.white,
   );
-
- }
+}

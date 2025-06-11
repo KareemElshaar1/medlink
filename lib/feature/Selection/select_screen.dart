@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:medlink/core/theme/app_colors.dart';
+import 'package:medlink/core/utils/color_manger.dart';
 
 import '../../core/routes/page_routes_name.dart';
 
@@ -17,7 +17,7 @@ class SelectScreen extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.primary.withOpacity(0.1),
+              ColorsManager.primary.withOpacity(0.1),
               Colors.white,
             ],
           ),
@@ -33,7 +33,7 @@ class SelectScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 28.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
+                    color: ColorsManager.primary,
                   ),
                 ),
               ),
@@ -138,7 +138,7 @@ class SelectionCard extends StatelessWidget {
             Icon(
               icon,
               size: 50.sp,
-              color: AppColors.primary,
+              color: ColorsManager.primary,
             ),
             SizedBox(height: 16.h),
             Text(
@@ -146,7 +146,7 @@ class SelectionCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.primary,
+                color: ColorsManager.primary,
               ),
             ),
             SizedBox(height: 8.h),

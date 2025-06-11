@@ -66,14 +66,6 @@ class LoginForm extends StatelessWidget {
           LoginButton(isLoading: isLoading, onPressed: onLoginPressed),
           Gap(30.h),
 
-          // OR Divider
-          const OrDivider(),
-          Gap(20.h),
-
-          // Social Media Buttons
-          const SocialMediaButtons(),
-          Gap(20.h),
-
           // Sign Up Link
           CustomSignUpLink(
             onTap: () {

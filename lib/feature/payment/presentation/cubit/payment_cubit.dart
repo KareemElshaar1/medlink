@@ -1,19 +1,19 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/use_cases/process_payment_usecase.dart';
 import '../../domain/use_cases/get_appointments_usecase.dart';
+import '../../domain/use_cases/cancel_appointment_usecase.dart';
 import 'payment_state.dart';
 
-class PaymentCubit extends ChangeNotifier {
+class PaymentCubit extends Cubit<PaymentState> {
   final ProcessPaymentUseCase processPaymentUseCase;
   final GetAppointmentsUseCase getAppointmentsUseCase;
-  PaymentState _state = PaymentInitial();
+  final CancelAppointmentUseCase cancelAppointmentUseCase;
 
   PaymentCubit({
     required this.processPaymentUseCase,
     required this.getAppointmentsUseCase,
-  });
-
-  PaymentState get state => _state;
+    required this.cancelAppointmentUseCase,
+  }) : super(PaymentInitial());
 
   Future<void> processPayment({
     required int appointmentId,
@@ -23,8 +23,7 @@ class PaymentCubit extends ChangeNotifier {
     required String expirationYear,
     required String cvv,
   }) async {
-    _state = PaymentLoading();
-    notifyListeners();
+    emit(PaymentLoading());
     try {
       final result = await processPaymentUseCase(
         appointmentId: appointmentId,
@@ -34,24 +33,34 @@ class PaymentCubit extends ChangeNotifier {
         expirationYear: expirationYear,
         cvv: cvv,
       );
-      _state = PaymentLoaded(result);
-      notifyListeners();
+      emit(PaymentLoaded(result));
     } catch (e) {
-      _state = PaymentError(e.toString());
-      notifyListeners();
+      emit(PaymentError(e.toString()));
     }
   }
 
   Future<void> getAppointments() async {
-    _state = PaymentLoading();
-    notifyListeners();
+    emit(PaymentLoading());
     try {
       final appointments = await getAppointmentsUseCase();
-      _state = AppointmentsLoaded(appointments);
-      notifyListeners();
+      emit(AppointmentsLoaded(appointments));
     } catch (e) {
-      _state = PaymentError(e.toString());
-      notifyListeners();
+      if (e.toString().contains('404')) {
+        // If no appointments found, emit empty list instead of error
+        emit(AppointmentsLoaded([]));
+      } else {
+        emit(PaymentError(e.toString()));
+      }
+    }
+  }
+
+  Future<void> cancelAppointment(int appointmentId) async {
+    try {
+      await cancelAppointmentUseCase(appointmentId);
+      // Refresh appointments after cancellation
+      await getAppointments();
+    } catch (e) {
+      emit(PaymentError(e.toString()));
     }
   }
 }

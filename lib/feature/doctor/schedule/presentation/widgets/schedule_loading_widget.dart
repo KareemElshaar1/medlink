@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../../../core/theme/app_colors.dart';
+import '../../../../../../core/utils/color_manger.dart';
 
 class ScheduleLoadingWidget extends StatelessWidget {
   const ScheduleLoadingWidget({super.key});
@@ -18,15 +18,15 @@ class ScheduleLoadingWidget extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: LinearGradient(
                 colors: [
-                  AppColors.primary.withOpacity(0.1),
-                  AppColors.secondary.withOpacity(0.1),
+                  ColorsManager.primary.withOpacity(0.1),
+                  ColorsManager.secondary.withOpacity(0.1),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
             ),
             child: CircularProgressIndicator(
-              color: AppColors.primary,
+              color: ColorsManager.primary,
               strokeWidth: 3,
             ),
           ).animate().fadeIn(duration: 600.ms).scale(),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../../../core/theme/app_colors.dart';
+import '../../../../../../core/utils/color_manger.dart';
 
 class ScheduleEmptyWidget extends StatelessWidget {
   final VoidCallback onAddSchedule;
@@ -28,8 +28,8 @@ class ScheduleEmptyWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.primary.withOpacity(0.1),
-                    AppColors.secondary.withOpacity(0.1),
+                    ColorsManager.primary.withOpacity(0.1),
+                    ColorsManager.secondary.withOpacity(0.1),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -38,7 +38,7 @@ class ScheduleEmptyWidget extends StatelessWidget {
               child: Icon(
                 Icons.calendar_today,
                 size: 64.w,
-                color: AppColors.primary,
+                color: ColorsManager.primary,
               ),
             ),
           ),
@@ -79,7 +79,7 @@ class ScheduleEmptyWidget extends StatelessWidget {
               ),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: ColorsManager.primary,
               padding: EdgeInsets.symmetric(
                 horizontal: 32.w,
                 vertical: 16.h,

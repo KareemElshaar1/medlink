@@ -72,7 +72,7 @@ class _SignUpPatientState extends State<SignUpPatient> {
                     const Gap(30),
 
                     // Social Sign Up Section
-                    const SignUpAlternatives(),
+                    //  const SignUpAlternatives(),
                     const Gap(40),
                   ],
                 ).setHorizontalPadding(context, enableScreenUtil: true, 24),
