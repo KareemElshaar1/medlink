@@ -3,7 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medlink/core/utils/color_manger.dart';
 
 class StatsSectionWidget extends StatelessWidget {
-  const StatsSectionWidget({super.key});
+  final int totalPatients;
+  final int todayAppointments;
+  final double rating;
+
+  const StatsSectionWidget({
+    super.key,
+    this.totalPatients = 0,
+    this.todayAppointments = 0,
+    this.rating = 0.0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,21 +49,21 @@ class StatsSectionWidget extends StatelessWidget {
                 icon: Icons.calendar_today_rounded,
                 iconColor: Colors.blue,
                 iconBgColor: Colors.blue.withOpacity(0.1),
-                value: '0',
+                value: todayAppointments.toString(),
                 label: 'Today\'s\nAppointments',
               ),
               _buildStatCard(
                 icon: Icons.people_alt_rounded,
                 iconColor: Colors.purple,
                 iconBgColor: Colors.purple.withOpacity(0.1),
-                value: '0',
+                value: totalPatients.toString(),
                 label: 'Total\nPatients',
               ),
               _buildStatCard(
                 icon: Icons.star_rounded,
                 iconColor: Colors.amber,
                 iconBgColor: Colors.amber.withOpacity(0.1),
-                value: '0.0',
+                value: rating.toStringAsFixed(1),
                 label: 'Rating',
               ),
             ],

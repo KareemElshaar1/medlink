@@ -55,63 +55,10 @@ class _DoctorHomeState extends State<DoctorHome> {
       color: Colors.purple,
     ),
     DrawerItem(
-      title: 'Patient Records',
-      icon: Icons.medical_services_rounded,
-      route: '/patients',
-      color: Colors.green,
-      subItems: [
-        DrawerSubItem(
-          title: 'All Patients',
-          route: '/patients/all',
-          icon: Icons.people_alt_rounded,
-        ),
-        DrawerSubItem(
-          title: 'Recent Patients',
-          route: '/patients/recent',
-          icon: Icons.recent_actors_rounded,
-        ),
-        DrawerSubItem(
-          title: 'Patient History',
-          route: '/patients/history',
-          icon: Icons.history_rounded,
-        ),
-      ],
-    ),
-    DrawerItem(
-      title: 'Prescriptions',
-      icon: Icons.medication_rounded,
-      route: '/prescriptions',
+      title: 'Appointments',
+      icon: Icons.event_note_rounded,
+      route: PageRouteNames.appointments,
       color: Colors.orange,
-      subItems: [
-        DrawerSubItem(
-          title: 'New Prescription',
-          route: '/prescriptions/new',
-          icon: Icons.add_circle_rounded,
-        ),
-        DrawerSubItem(
-          title: 'Prescription History',
-          route: '/prescriptions/history',
-          icon: Icons.history_rounded,
-        ),
-      ],
-    ),
-    DrawerItem(
-      title: 'Medical Reports',
-      icon: Icons.assignment_rounded,
-      route: '/reports',
-      color: Colors.pink,
-      subItems: [
-        DrawerSubItem(
-          title: 'Create Report',
-          route: '/reports/create',
-          icon: Icons.add_circle_rounded,
-        ),
-        DrawerSubItem(
-          title: 'View Reports',
-          route: '/reports/view',
-          icon: Icons.visibility_rounded,
-        ),
-      ],
     ),
     DrawerItem(
       title: 'My Clinics',
@@ -120,52 +67,10 @@ class _DoctorHomeState extends State<DoctorHome> {
       color: Colors.teal,
     ),
     DrawerItem(
-      title: 'Consultations',
-      icon: Icons.video_call_rounded,
-      route: '/consultations',
-      color: Colors.indigo,
-      subItems: [
-        DrawerSubItem(
-          title: 'Start Consultation',
-          route: '/consultations/start',
-          icon: Icons.video_call_rounded,
-        ),
-        DrawerSubItem(
-          title: 'Consultation History',
-          route: '/consultations/history',
-          icon: Icons.history_rounded,
-        ),
-      ],
-    ),
-    DrawerItem(
-      title: 'Earnings',
-      icon: Icons.payments_rounded,
-      route: '/earnings',
-      color: Colors.amber,
-      subItems: [
-        DrawerSubItem(
-          title: 'Today\'s Earnings',
-          route: '/earnings/today',
-          icon: Icons.today_rounded,
-        ),
-        DrawerSubItem(
-          title: 'Monthly Report',
-          route: '/earnings/monthly',
-          icon: Icons.calendar_month_rounded,
-        ),
-      ],
-    ),
-    DrawerItem(
       title: 'Profile',
       icon: Icons.person_rounded,
       route: '/profile',
       color: Colors.deepPurple,
-    ),
-    DrawerItem(
-      title: 'Settings',
-      icon: Icons.settings_rounded,
-      route: '/settings',
-      color: Colors.grey,
     ),
   ];
 
@@ -279,7 +184,7 @@ class _DoctorHomeState extends State<DoctorHome> {
             end: Alignment.bottomRight,
             colors: [
               ColorsManager.primary,
-              ColorsManager.secondary,
+              ColorsManager.primaryDark,
             ],
           ),
           borderRadius: BorderRadius.only(
@@ -558,6 +463,13 @@ class _DoctorHomeState extends State<DoctorHome> {
     switch (item.route) {
       case PageRouteNames.doctorhome:
         break;
+      case PageRouteNames.appointments:
+        try {
+          Navigator.pushNamed(context, PageRouteNames.appointments);
+        } catch (e) {
+          _showErrorSnackBar('Navigation failed: ${e.toString()}');
+        }
+        break;
       case PageRouteNames.clinicList:
         try {
           Navigator.pushNamed(context, PageRouteNames.clinicList);
@@ -696,12 +608,12 @@ class _DoctorHomeState extends State<DoctorHome> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //  WelcomeCardWidget(doctorProfile: _doctorProfile),
+            //  SizedBox(height: 24.h),
+            //  const StatsSectionWidget(),
             SizedBox(height: 24.h),
-            const StatsSectionWidget(),
+            const MyPatientsSectionWidget(),
             SizedBox(height: 24.h),
-            const AppointmentsSectionWidget(),
-            SizedBox(height: 24.h),
-            const RecentPatientsSectionWidget(),
+            const MyScheduleSectionWidget(),
           ],
         ),
       ),

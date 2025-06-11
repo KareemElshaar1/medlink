@@ -35,7 +35,7 @@ class DrawerHeaderWidget extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             ColorsManager.primary,
-            ColorsManager.secondary,
+            ColorsManager.primaryDark,
           ],
         ),
       ),

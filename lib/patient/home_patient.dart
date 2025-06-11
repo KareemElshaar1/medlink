@@ -20,6 +20,8 @@ import '../feature/payment/presentation/pages/payment_page.dart';
 import '../feature/auth/patient/sign_up/presentation/manager/controller/email.dart';
 import '../feature/patient/profile/presentation/pages/patient_profile_page.dart';
 import '../feature/patient/profile/presentation/cubit/patient_profile_cubit.dart';
+import 'dart:async';
+import '../../../../../core/utils/color_manger.dart';
 
 class HomePatient extends StatelessWidget {
   const HomePatient({super.key});
@@ -44,8 +46,419 @@ class HomePatient extends StatelessWidget {
   }
 }
 
-class HomePatientContent extends StatelessWidget {
+class AutoScrollDoctorCard extends StatelessWidget {
+  final RecommendationDoctor doctor;
+
+  const AutoScrollDoctorCard({
+    super.key,
+    required this.doctor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        final doctorModel = DoctorBySpecialtyModel(
+          id: doctor.id,
+          firstName: doctor.firstName,
+          lastName: doctor.lastName,
+          speciality: doctor.speciality,
+          about: doctor.about,
+          rate: doctor.rate,
+          profilePic: doctor.profilePic,
+        );
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DoctorDetailsPage(doctor: doctorModel),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              const Color(0xFFF8FAFC),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF6366F1).withOpacity(0.08),
+              blurRadius: 24,
+              offset: const Offset(0, 12),
+              spreadRadius: 0,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+              spreadRadius: 0,
+            ),
+          ],
+          border: Border.all(
+            color: const Color(0xFFE2E8F0),
+            width: 1,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(20.w),
+          child: Row(
+            children: [
+              // Enhanced Profile Picture Section
+              Stack(
+                children: [
+                  // Gradient background circle
+                  Container(
+                    width: 88.w,
+                    height: 88.h,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          const Color(0xFF6366F1),
+                          const Color(0xFF8B5CF6),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Profile picture or avatar
+                  Container(
+                    width: 88.w,
+                    height: 88.h,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 3,
+                      ),
+                    ),
+                    child: ClipOval(
+                      child: doctor.profilePic != null
+                          ? Image.network(
+                              'http://medlink.runasp.net${doctor.profilePic}',
+                              width: 88.w,
+                              height: 88.h,
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Container(
+                                  width: 88.w,
+                                  height: 88.h,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey[100],
+                                  ),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        const Color(0xFF6366F1),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return _buildAvatarFallback();
+                              },
+                            )
+                          : _buildAvatarFallback(),
+                    ),
+                  ),
+                  // Online status indicator
+                  Positioned(
+                    bottom: 4.h,
+                    right: 4.w,
+                    child: Container(
+                      width: 20.w,
+                      height: 20.h,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF10B981),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(width: 20.w),
+
+              // Doctor Information Section
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Doctor Name
+                    Text(
+                      'Dr. ${doctor.firstName} ${doctor.lastName}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18.sp,
+                        color: const Color(0xFF1E293B),
+                        letterSpacing: -0.5,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+                    SizedBox(height: 8.h),
+
+                    // Specialty with icon
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF6366F1).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16.r),
+                        border: Border.all(
+                          color: const Color(0xFF6366F1).withOpacity(0.2),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.medical_services_rounded,
+                            size: 14.sp,
+                            color: const Color(0xFF6366F1),
+                          ),
+                          SizedBox(width: 6.w),
+                          Flexible(
+                            child: Text(
+                              doctor.speciality,
+                              style: TextStyle(
+                                color: const Color(0xFF6366F1),
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: 12.h),
+
+                    // Rating and additional info
+                    Row(
+                      children: [
+                        // Rating
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFBBF24).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.star_rounded,
+                                color: const Color(0xFFFBBF24),
+                                size: 16.sp,
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                doctor.rate?.toStringAsFixed(1) ?? 'N/A',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13.sp,
+                                  color: const Color(0xFF92400E),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(width: 12.w),
+
+                        // Experience indicator
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF10B981).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.verified_rounded,
+                                color: const Color(0xFF10B981),
+                                size: 14.sp,
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                'Verified',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 11.sp,
+                                  color: const Color(0xFF065F46),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(width: 16.w),
+
+              // Action Button
+              Container(
+                width: 44.w,
+                height: 44.h,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      const Color(0xFF6366F1),
+                      const Color(0xFF8B5CF6),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF6366F1).withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.arrow_forward_rounded,
+                  color: Colors.white,
+                  size: 20.sp,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvatarFallback() {
+    // Create initials from first and last name
+    String initials = '';
+    if (doctor.firstName.isNotEmpty) {
+      initials += doctor.firstName[0].toUpperCase();
+    }
+    if (doctor.lastName.isNotEmpty) {
+      initials += doctor.lastName[0].toUpperCase();
+    }
+
+    return Container(
+      width: 88.w,
+      height: 88.h,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF6366F1),
+            const Color(0xFF8B5CF6),
+          ],
+        ),
+      ),
+      child: Center(
+        child: initials.isNotEmpty
+            ? Text(
+                initials,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32.sp,
+                  fontWeight: FontWeight.w700,
+                ),
+              )
+            : Icon(
+                Icons.person_rounded,
+                size: 44.sp,
+                color: Colors.white,
+              ),
+      ),
+    );
+  }
+}
+
+class HomePatientContent extends StatefulWidget {
   const HomePatientContent({super.key});
+
+  @override
+  State<HomePatientContent> createState() => _HomePatientContentState();
+}
+
+class _HomePatientContentState extends State<HomePatientContent> {
+  final PageController _pageController = PageController();
+  Timer? _autoScrollTimer;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _startAutoScroll();
+  }
+
+  @override
+  void dispose() {
+    _autoScrollTimer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _startAutoScroll() {
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (_pageController.hasClients) {
+        if (_currentPage < 4) {
+          _currentPage++;
+        } else {
+          _currentPage = 0;
+        }
+        _pageController.animateToPage(
+          _currentPage,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
 
   Future<void> _refreshData(BuildContext context) async {
     final profileCubit = context.read<PatientProfileCubit>();
@@ -221,6 +634,21 @@ class HomePatientContent extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 12.h),
+                          // Auto-scrolling Doctor List
+                          BlocBuilder<RecommendationDoctorCubit,
+                              RecommendationDoctorState>(
+                            builder: (context, state) {
+                              if (state is RecommendationDoctorLoading) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (state is RecommendationDoctorLoaded) {
+                                return AutoScrollDoctorList(
+                                    doctors: state.doctors);
+                              }
+                              return const SizedBox();
+                            },
+                          ),
+                          SizedBox(height: 32.h),
                           // Doctor Speciality Section
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,7 +705,7 @@ class HomePatientContent extends StatelessWidget {
                             },
                           ),
                           SizedBox(height: 32.h),
-                          // Recommendation Doctor Section
+                          // Original Recommendation Doctor Section
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -374,7 +802,6 @@ class HomePatientContent extends StatelessWidget {
     return Builder(
       builder: (context) => GestureDetector(
         onTap: () {
-          // Convert RecommendationDoctor to DoctorBySpecialtyModel
           final doctorModel = DoctorBySpecialtyModel(
             id: doctor.id,
             firstName: doctor.firstName,
@@ -393,7 +820,7 @@ class HomePatientContent extends StatelessWidget {
           );
         },
         child: Container(
-          margin: EdgeInsets.only(top: 12.h, bottom: 20.h),
+          margin: EdgeInsets.symmetric(horizontal: 8.w),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -629,5 +1056,245 @@ class HomePatientContent extends StatelessWidget {
       default:
         return Icons.medical_services;
     }
+  }
+}
+
+class AutoScrollDoctorList extends StatefulWidget {
+  final List<RecommendationDoctor> doctors;
+
+  const AutoScrollDoctorList({
+    super.key,
+    required this.doctors,
+  });
+
+  @override
+  State<AutoScrollDoctorList> createState() => _AutoScrollDoctorListState();
+}
+
+class _AutoScrollDoctorListState extends State<AutoScrollDoctorList> {
+  final PageController _pageController = PageController();
+  Timer? _autoScrollTimer;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _startAutoScroll();
+  }
+
+  @override
+  void dispose() {
+    _autoScrollTimer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _startAutoScroll() {
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (_pageController.hasClients) {
+        if (_currentPage < 4) {
+          _currentPage++;
+        } else {
+          _currentPage = 0;
+        }
+        _pageController.animateToPage(
+          _currentPage,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 220.h,
+      margin: EdgeInsets.symmetric(vertical: 16.h),
+      child: PageView.builder(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentPage = index;
+          });
+        },
+        itemCount: widget.doctors.take(5).length,
+        itemBuilder: (context, index) {
+          final doctor = widget.doctors[index];
+          return _buildDoctorCard(doctor);
+        },
+      ),
+    );
+  }
+
+  Widget _buildDoctorCard(RecommendationDoctor doctor) {
+    return GestureDetector(
+      onTap: () {
+        final doctorModel = DoctorBySpecialtyModel(
+          id: doctor.id,
+          firstName: doctor.firstName,
+          lastName: doctor.lastName,
+          speciality: doctor.speciality,
+          about: doctor.about,
+          rate: doctor.rate,
+          profilePic: doctor.profilePic,
+        );
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DoctorDetailsPage(doctor: doctorModel),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 8.w),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ColorsManager.primary.withOpacity(0.1),
+              ColorsManager.secondary.withOpacity(0.1),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: ColorsManager.primary.withOpacity(0.1),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              right: -20.w,
+              top: -20.h,
+              child: Container(
+                width: 100.w,
+                height: 100.h,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: ColorsManager.primary.withOpacity(0.1),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Row(
+                children: [
+                  Container(
+                    width: 80.w,
+                    height: 80.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16.r),
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ColorsManager.primary.withOpacity(0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14.r),
+                      child: doctor.profilePic != null
+                          ? Image.network(
+                              'http://medlink.runasp.net${doctor.profilePic}',
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey[200],
+                                  child: Icon(Icons.person,
+                                      size: 36.sp, color: Colors.grey[400]),
+                                );
+                              },
+                            )
+                          : Container(
+                              color: Colors.grey[200],
+                              child: Icon(Icons.person,
+                                  size: 36.sp, color: Colors.grey[400]),
+                            ),
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Dr. ${doctor.firstName} ${doctor.lastName}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.sp,
+                            color: ColorsManager.textDark,
+                          ),
+                        ),
+                        SizedBox(height: 6.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 4.h),
+                          decoration: BoxDecoration(
+                            color: ColorsManager.primary.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Text(
+                            doctor.speciality,
+                            style: TextStyle(
+                              color: ColorsManager.primary,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Row(
+                          children: [
+                            Icon(Icons.star, color: Colors.amber, size: 18.sp),
+                            SizedBox(width: 4.w),
+                            Text(
+                              doctor.rate?.toString() ?? 'N/A',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14.sp,
+                                color: ColorsManager.textDark,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w, vertical: 4.h),
+                              decoration: BoxDecoration(
+                                color: Colors.green.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Text(
+                                'Available',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

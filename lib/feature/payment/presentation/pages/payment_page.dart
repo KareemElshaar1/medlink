@@ -545,7 +545,7 @@ class PaymentContent extends StatelessWidget {
                             delay: 800,
                           ),
                         ),
-                        SizedBox(width: 16.w),
+                        SizedBox(width: 18.w),
                         Expanded(
                           child: _buildAnimatedFormField(
                             controller: cvvController,
