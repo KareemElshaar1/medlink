@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../cubit/doctors_by_specialty_cubit.dart';
 import '../../data/models/doctor_by_specialty_model.dart';
 import 'doctor_details_page.dart';
@@ -91,20 +92,31 @@ class AllDoctorsPage extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12.r),
                 child: doctor.profilePic != null
-                    ? Image.network(
-                        'http://medlink.runasp.net${doctor.profilePic}',
+                    ? CachedNetworkImage(
+                        imageUrl:
+                            'http://medlink.runasp.net${doctor.profilePic}',
                         width: 80.w,
                         height: 80.w,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            width: 80.w,
-                            height: 80.w,
-                            color: Colors.grey[200],
-                            child: Icon(Icons.person,
-                                size: 40.sp, color: Colors.grey[400]),
-                          );
-                        },
+                        placeholder: (context, url) => Container(
+                          width: 80.w,
+                          height: 80.w,
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  const Color(0xFF3B82F6)),
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          width: 80.w,
+                          height: 80.w,
+                          color: Colors.grey[200],
+                          child: Icon(Icons.person,
+                              size: 40.sp, color: Colors.grey[400]),
+                        ),
                       )
                     : Container(
                         width: 80.w,

@@ -24,6 +24,7 @@ import 'package:medlink/feature/doctor/doctor_dashboard/widgets/appointments_sec
 import 'package:medlink/feature/doctor/doctor_dashboard/widgets/recent_patients_section_widget.dart';
 import 'package:medlink/feature/doctor/doctor_dashboard/widgets/loading_state_widget.dart';
 import 'package:medlink/feature/doctor/doctor_dashboard/models/drawer_item_model.dart';
+import 'package:medlink/feature/Selection/select_screen.dart';
 
 class DoctorHome extends StatefulWidget {
   const DoctorHome({super.key});
@@ -570,8 +571,14 @@ class _DoctorHomeState extends State<DoctorHome> {
       child: ElevatedButton.icon(
         onPressed: () {
           context.read<AuthDoctorCubit>().logout();
-          Navigator.of(context)
-              .pushReplacementNamed(PageRouteNames.SelectScreen);
+          if (context.mounted) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const SelectScreen(),
+              ),
+              (route) => false,
+            );
+          }
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red.withOpacity(0.1),

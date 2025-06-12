@@ -24,7 +24,7 @@ class LoginButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
-            color: ColorsManager.primary.withOpacity(0.3),
+            color: ColorsManager.primaryWithOpacity(0.3),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 3),
@@ -37,7 +37,7 @@ class LoginButton extends StatelessWidget {
         buttonWidth: double.infinity,
         backgroundColor: ColorsManager.primary,
         onPressed: isLoading ? null : onPressed,
-        disabledBackgroundColor: ColorsManager.lighterGray,
+        disabledBackgroundColor: ColorsManager.disabled,
         isLoading: isLoading,
       ),
     );

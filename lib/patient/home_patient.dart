@@ -820,8 +820,8 @@ class _HomePatientContentState extends State<HomePatientContent> {
           );
         },
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 8.w),
-          padding: EdgeInsets.all(16.w),
+          margin: EdgeInsets.only(bottom: 16.h),
+          padding: EdgeInsets.all(20.w),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20.r),
@@ -873,7 +873,7 @@ class _HomePatientContentState extends State<HomePatientContent> {
                         fontSize: 18.sp,
                       ),
                     ),
-                    SizedBox(height: 6.h),
+                    SizedBox(height: 8.h),
                     Text(
                       doctor.speciality,
                       style: TextStyle(
@@ -881,7 +881,7 @@ class _HomePatientContentState extends State<HomePatientContent> {
                         fontSize: 14.sp,
                       ),
                     ),
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 12.h),
                     Row(
                       children: [
                         Icon(Icons.star, color: Colors.amber, size: 20.sp),
@@ -1265,23 +1265,6 @@ class _AutoScrollDoctorListState extends State<AutoScrollDoctorList> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.sp,
                                 color: ColorsManager.textDark,
-                              ),
-                            ),
-                            SizedBox(width: 8.w),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8.w, vertical: 4.h),
-                              decoration: BoxDecoration(
-                                color: Colors.green.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                              child: Text(
-                                'Available',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
                               ),
                             ),
                           ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../data/models/doctor_by_specialty_model.dart';
 import '../../../take_appointment/domain/entities/doctor_schedule.dart';
 import '../../../take_appointment/presentation/cubit/doctor_schedule_cubit.dart';
@@ -54,16 +55,25 @@ class _DoctorDetailsView extends StatelessWidget {
                 children: [
                   // Background Image
                   doctor.profilePic != null
-                      ? Image.network(
-                          'http://medlink.runasp.net${doctor.profilePic}',
+                      ? CachedNetworkImage(
+                          imageUrl:
+                              'http://medlink.runasp.net${doctor.profilePic}',
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.grey[200],
-                              child: Icon(Icons.person,
-                                  size: 80.sp, color: Colors.grey[400]),
-                            );
-                          },
+                          placeholder: (context, url) => Container(
+                            color: Colors.grey[200],
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    const Color(0xFF3B82F6)),
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.grey[200],
+                            child: Icon(Icons.person,
+                                size: 80.sp, color: Colors.grey[400]),
+                          ),
                         )
                       : Container(
                           color: Colors.grey[200],

@@ -356,7 +356,13 @@ class _BookingConfirmationPageState extends State<BookingConfirmationPage> {
                   ),
                 );
                 // Navigate to payment page with the appointment ID
-                Navigator.pushNamed(context, PageRouteNames.payment);
+                Navigator.pushNamed(
+                  context,
+                  PageRouteNames.payment,
+                  arguments: {
+                    'price': (widget.schedule.price ?? 0).toString(),
+                  },
+                );
               } else if (state is BookAppointmentError) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

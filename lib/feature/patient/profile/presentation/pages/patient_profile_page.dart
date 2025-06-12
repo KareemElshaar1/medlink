@@ -19,6 +19,7 @@ import 'package:medlink/core/widgets/app_text_button.dart';
 import 'package:medlink/core/widgets/custom_text_field.dart';
 import '../../../../../core/routes/page_routes_name.dart';
 import '../../../../auth/patient/sign_in/presentation/manager/auth_cubit.dart';
+import '../../../../Selection/select_screen.dart';
 
 class PatientProfilePage extends StatelessWidget {
   const PatientProfilePage({super.key});
@@ -341,8 +342,12 @@ class PatientProfileView extends StatelessWidget {
                           Navigator.pop(dialogContext);
                           await context.read<AuthCubit>().logout();
                           if (context.mounted) {
-                            Navigator.of(context).pushReplacementNamed(
-                                PageRouteNames.SelectScreen);
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) => const SelectScreen(),
+                              ),
+                              (route) => false,
+                            );
                           }
                         },
                         child: Text(

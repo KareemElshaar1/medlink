@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get_it/get_it.dart';
 import '../cubit/doctors_by_specialty_cubit.dart';
 import '../../data/models/doctor_by_specialty_model.dart';
@@ -56,7 +57,7 @@ class DoctorsBySpecialtyPage extends StatelessWidget {
                 itemCount: state.doctors.length,
                 itemBuilder: (context, index) {
                   final doctor = state.doctors[index];
-                  return _doctorCard(doctor);
+                  return _buildDoctorCard(context, doctor);
                 },
               );
             } else if (state is DoctorsBySpecialtyError) {
@@ -69,100 +70,107 @@ class DoctorsBySpecialtyPage extends StatelessWidget {
     );
   }
 
-  Widget _doctorCard(DoctorBySpecialtyModel doctor) {
-    return Builder(
-      builder: (context) => GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DoctorDetailsPage(doctor: doctor),
-            ),
-          );
-        },
-        child: Container(
-          margin: EdgeInsets.only(bottom: 16.h),
-          padding: EdgeInsets.all(16.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
+  Widget _buildDoctorCard(BuildContext context, DoctorBySpecialtyModel doctor) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DoctorDetailsPage(doctor: doctor),
           ),
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
-                child: doctor.profilePic != null
-                    ? Image.network(
-                        'http://medlink.runasp.net${doctor.profilePic}',
-                        width: 80.w,
-                        height: 80.w,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            width: 80.w,
-                            height: 80.w,
-                            color: Colors.grey[200],
-                            child: Icon(Icons.person,
-                                size: 40.sp, color: Colors.grey[400]),
-                          );
-                        },
-                      )
-                    : Container(
-                        width: 80.w,
-                        height: 80.w,
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 16.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Doctor Image
+            Container(
+              width: 100.w,
+              height: 100.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12.r),
+                  bottomLeft: Radius.circular(12.r),
+                ),
+              ),
+              child: doctor.profilePic != null
+                  ? CachedNetworkImage(
+                      imageUrl: 'http://medlink.runasp.net${doctor.profilePic}',
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                const Color(0xFF3B82F6)),
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Container(
                         color: Colors.grey[200],
                         child: Icon(Icons.person,
                             size: 40.sp, color: Colors.grey[400]),
                       ),
-              ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Dr. ${doctor.firstName} ${doctor.lastName}',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    )
+                  : Container(
+                      color: Colors.grey[200],
+                      child: Icon(Icons.person,
+                          size: 40.sp, color: Colors.grey[400]),
                     ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      doctor.speciality ?? 'No specialty',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: Colors.grey[600],
-                      ),
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Dr. ${doctor.firstName} ${doctor.lastName}',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
                     ),
-                    SizedBox(height: 8.h),
-                    if (doctor.rate != null) ...[
-                      Row(
-                        children: [
-                          Icon(Icons.star, color: Colors.amber, size: 18.sp),
-                          SizedBox(width: 4.w),
-                          Text(
-                            doctor.rate.toString(),
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    doctor.speciality ?? 'No specialty',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  if (doctor.rate != null) ...[
+                    Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.amber, size: 18.sp),
+                        SizedBox(width: 4.w),
+                        Text(
+                          doctor.rate.toString(),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ],
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -87,16 +87,16 @@ class _AppTextButtonState extends State<AppTextButton> {
                 ? LinearGradient(
                     colors: widget.gradientColors ??
                         [
-                          const Color(0xff4FC3F7),
-                          const Color(0xff298DB9),
-                          const Color(0xff0C75A4)
+                          ColorsManager.primaryLight,
+                          ColorsManager.primary,
+                          ColorsManager.primaryDark,
                         ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   )
                 : null,
             color: isButtonDisabled
-                ? widget.disabledBackgroundColor ?? ColorsManager.lighterGray
+                ? widget.disabledBackgroundColor ?? ColorsManager.disabled
                 : widget.useGradient
                     ? null
                     : widget.backgroundColor ?? ColorsManager.primary,
@@ -108,8 +108,8 @@ class _AppTextButtonState extends State<AppTextButton> {
           ),
           child: Center(
             child: isShowingLoading
-                ? const CircularProgressIndicator(
-                    color: Colors.white,
+                ? CircularProgressIndicator(
+                    color: ColorsManager.background,
                   )
                 : Row(
                     mainAxisSize: MainAxisSize.min,
@@ -125,13 +125,13 @@ class _AppTextButtonState extends State<AppTextButton> {
                             ? (widget.disabledTextStyle ??
                                 TextStyle(
                                   fontSize: 16.sp,
-                                  color: Colors.grey[400],
+                                  color: ColorsManager.textDisabled,
                                   fontWeight: FontWeight.w600,
                                 ))
                             : (widget.textStyle ??
                                 TextStyle(
                                   fontSize: 16.sp,
-                                  color: Colors.white,
+                                  color: ColorsManager.background,
                                   fontWeight: FontWeight.w600,
                                 )),
                       ),

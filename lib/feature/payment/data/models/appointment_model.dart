@@ -1,6 +1,7 @@
 class AppointmentModel {
   final int id;
   final String doctor;
+  final String doctorImage;
   final String clinic;
   final String governorate;
   final String city;
@@ -13,6 +14,7 @@ class AppointmentModel {
   AppointmentModel({
     required this.id,
     required this.doctor,
+    required this.doctorImage,
     required this.clinic,
     required this.governorate,
     required this.city,
@@ -27,6 +29,7 @@ class AppointmentModel {
     return AppointmentModel(
       id: json['id'],
       doctor: json['doctor'],
+      doctorImage: json['doctorImage'] ?? 'https://via.placeholder.com/150',
       clinic: json['clinic'],
       governorate: json['governorate'],
       city: json['city'],
