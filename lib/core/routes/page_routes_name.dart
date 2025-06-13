@@ -19,4 +19,8 @@ class PageRouteNames {
   static const String payment = '/payment';
   static const String patientProfile = '/patient-profile';
   static const String appointments = '/appointments';
+  static const String pharmacy = '/pharmacy';
+  static const String checkout = '/checkout';
+  static const String map = '/map';
+  static const String resetPassword = '/reset-password';
 }

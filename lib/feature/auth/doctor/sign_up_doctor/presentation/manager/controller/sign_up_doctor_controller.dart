@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../specilaity/domain/entities/speciality_entity.dart';
-import '../../../../../../specilaity/manger/cubit/specialities_cubit.dart';
-import '../doctor_registration_cubit.dart';
+import '../../../../../../patient/specilaity/domain/entities/speciality_entity.dart';
+import '../../../../../../patient/specilaity/manger/cubit/specialities_cubit.dart';
+  import '../doctor_registration_cubit.dart';
 import '../../../../../../../core/routes/page_routes_name.dart';
 import '../../../../../../../core/services/email_service.dart';
 

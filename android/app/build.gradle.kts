@@ -8,10 +8,9 @@ android {
     namespace = "com.example.untitled6"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "29.0.13113456"
-    multiDexEnabled = true
-
 
     compileOptions {
+        // تفعيل دعم desugaring
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -27,23 +26,34 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // تفعيل MultiDex
+        multiDexEnabled = true
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
 
-            signingConfig = signingConfigs.getByName("debug") // مؤقت للتجربة فقط
+            // مؤقت للتجربة فقط
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 }
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // دعم MultiDex
+    implementation("androidx.multidex:multidex:2.0.1")
+
+    // دعم Java 8 Desugaring
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }

@@ -3,7 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../../../core/widgets/custom_text_field.dart';
- import '../manager/controller/sign_up_doctor_controller.dart';
+import '../../../../../../core/utils/color_manger.dart';
+import '../manager/controller/sign_up_doctor_controller.dart';
 import '../pages/sign_up_screen.dart';
 
 class SignUpFormFields extends StatelessWidget {
@@ -30,7 +31,7 @@ class SignUpFormFields extends StatelessWidget {
             hintText: "Enter your first name",
             prefixIcon: Icon(
               Icons.person_rounded,
-              color: Colors.blue,
+              color: ColorsManager.primary,
               size: 20.sp,
             ),
             validator: (value) {
@@ -49,7 +50,7 @@ class SignUpFormFields extends StatelessWidget {
             hintText: "Enter your last name",
             prefixIcon: Icon(
               Icons.person_rounded,
-              color: Colors.blue,
+              color: ColorsManager.primary,
               size: 20.sp,
             ),
             validator: (value) {
@@ -64,19 +65,22 @@ class SignUpFormFields extends StatelessWidget {
           // Email Field
           AppTextFormField(
             labelText: "Email Address",
+            labelStyle: TextStyle(color: ColorsManager.textLight),
             controller: controller.emailController,
             hintText: "doctor@example.com",
+            hintStyle: TextStyle(color: ColorsManager.textDark),
             keyboardType: TextInputType.emailAddress,
             prefixIcon: Icon(
               Icons.email_rounded,
-              color: Colors.blue,
+              color: ColorsManager.primary,
               size: 20.sp,
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return "Please enter your email";
               }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                  .hasMatch(value)) {
                 return "Please enter a valid email";
               }
               return null;

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+ import '../../../doctors_by_specialty/presentation/pages/doctors_by_specialty_page.dart';
 import '../../manger/cubit/specialities_cubit.dart';
-import '../../../doctors_by_specialty/presentation/pages/doctors_by_specialty_page.dart';
 
 class AllSpecialtiesPage extends StatelessWidget {
   const AllSpecialtiesPage({super.key});

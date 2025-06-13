@@ -4,15 +4,133 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:medlink/core/extensions/padding.dart';
+import 'package:medlink/core/utils/color_manger.dart';
+import 'package:medlink/core/widgets/buildHeader.dart' as header;
 
 import '../../../../../../core/routes/page_routes_name.dart';
 import '../../../../../../core/widgets/app_text_button.dart';
 import '../../../../../../core/widgets/custom_text_field.dart';
-import '../../../../../../core/widgets/buildHeader.dart';
-import '../../../../../specilaity/manger/cubit/specialities_cubit.dart';
-import '../../../../../specilaity/domain/entities/speciality_entity.dart';
+  import '../../../../../patient/specilaity/domain/entities/speciality_entity.dart';
+import '../../../../../patient/specilaity/manger/cubit/specialities_cubit.dart';
 import '../manager/doctor_registration_cubit.dart';
 import '../manager/controller/sign_up_doctor_controller.dart';
+
+// Password Field Widget
+class PasswordField extends StatefulWidget {
+  final String label;
+  final TextEditingController controller;
+  final String hintText;
+  final String? Function(String?)? validator;
+
+  const PasswordField({
+    super.key,
+    required this.label,
+    required this.controller,
+    required this.hintText,
+    this.validator,
+  });
+
+  @override
+  State<PasswordField> createState() => _PasswordFieldState();
+}
+
+class _PasswordFieldState extends State<PasswordField> {
+  bool isPasswordVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AppTextFormField(
+          controller: widget.controller,
+          isObscureText: !isPasswordVisible,
+          hintText: widget.hintText,
+          suffixIcon: IconButton(
+            icon: Icon(
+              isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              color: ColorsManager.textLight,
+              size: 20.sp,
+            ),
+            onPressed: () {
+              setState(() {
+                isPasswordVisible = !isPasswordVisible;
+              });
+            },
+          ),
+          prefixIcon: Icon(
+            Icons.lock_rounded,
+            color: ColorsManager.primary,
+            size: 20.sp,
+          ),
+          validator: widget.validator,
+        ),
+      ],
+    );
+  }
+}
+
+// Sign Up Title Widget
+class SignUpTitle extends StatelessWidget {
+  const SignUpTitle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          "Sign Up as Doctor",
+          style: TextStyle(
+            fontSize: 24.sp,
+            fontWeight: FontWeight.bold,
+            color: ColorsManager.textDark,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Text(
+            "Create your account to start providing healthcare services",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14.sp, color: ColorsManager.textLight),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Phone Input Field Widget
+class PhoneInputField extends StatelessWidget {
+  final Function(String) onPhoneChanged;
+
+  const PhoneInputField({super.key, required this.onPhoneChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AppTextFormField(
+          onChanged: onPhoneChanged,
+          keyboardType: TextInputType.phone,
+          hintText: "Enter your phone number",
+          prefixIcon: Icon(
+            Icons.phone_rounded,
+            color: ColorsManager.primary,
+            size: 20.sp,
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Please enter your phone number";
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+}
 
 class SignUpDoctor extends StatefulWidget {
   const SignUpDoctor({super.key});
@@ -66,13 +184,15 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
     return Stack(
       children: [
         Scaffold(
+          backgroundColor: Colors.white,
           body: SafeArea(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   // Animated Header - Adjusted height
-                  MedLinkHeader(height: headerHeight, showAnimation: true),
+                  header.MedLinkHeader(
+                      height: headerHeight, showAnimation: true),
 
                   Container(
                     decoration: BoxDecoration(
@@ -105,7 +225,7 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
                                 hintText: "Enter your first name",
                                 prefixIcon: Icon(
                                   Icons.person_rounded,
-                                  color: Colors.blue,
+                                  color: ColorsManager.primary,
                                   size: 20.sp,
                                 ),
                                 validator: (value) {
@@ -124,7 +244,7 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
                                 hintText: "Enter your last name",
                                 prefixIcon: Icon(
                                   Icons.person_rounded,
-                                  color: Colors.blue,
+                                  color: ColorsManager.primary,
                                   size: 20.sp,
                                 ),
                                 validator: (value) {
@@ -144,7 +264,7 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
                                 keyboardType: TextInputType.emailAddress,
                                 prefixIcon: Icon(
                                   Icons.email_rounded,
-                                  color: Colors.blue,
+                                  color: ColorsManager.primary,
                                   size: 20.sp,
                                 ),
                                 validator: (value) {
@@ -255,8 +375,9 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
                                               }
                                             }
                                           },
-                                    backgroundColor: Colors.blue,
-                                    disabledBackgroundColor: Colors.grey,
+                                    backgroundColor: ColorsManager.primary,
+                                    disabledBackgroundColor:
+                                        ColorsManager.disabled,
                                     isLoading: isLoading,
                                     textStyle: TextStyle(
                                       color: Colors.white,
@@ -309,7 +430,8 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
                       height: 40.w,
                       child: CircularProgressIndicator(
                         strokeWidth: 3.w,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            ColorsManager.primary),
                       ),
                     ),
                   ],
@@ -328,7 +450,7 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
   Widget _buildErrorSpecialities(String message) {
     return Text(
       'Error loading specialities: $message',
-      style: TextStyle(color: Colors.red, fontSize: 14.sp),
+      style: TextStyle(color: ColorsManager.textDark, fontSize: 14.sp),
     );
   }
 
@@ -336,19 +458,80 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
     return DropdownButtonFormField<Speciality>(
       decoration: InputDecoration(
         labelText: "Speciality",
+        hintText: "Select your medical speciality",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(color: ColorsManager.disabled),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(color: ColorsManager.disabled, width: 1.5),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(color: ColorsManager.primary, width: 2.0),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(color: Colors.red, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(color: Colors.red, width: 2.0),
+        ),
+        filled: true,
+        fillColor: Colors.white,
         prefixIcon: Icon(
           Icons.medical_services_rounded,
-          color: Colors.blue,
+          color: ColorsManager.primary,
           size: 20.sp,
         ),
+        suffixIcon: Icon(
+          Icons.keyboard_arrow_down_rounded,
+          color: ColorsManager.darkGray,
+          size: 24.sp,
+        ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 16.w,
+          vertical: 12.h,
+        ),
+      ),
+      dropdownColor: Colors.white,
+      borderRadius: BorderRadius.circular(12.r),
+      icon: SizedBox.shrink(), // Hide default dropdown icon
+      isExpanded: true,
+      style: TextStyle(
+        fontSize: 16.sp,
+        color: ColorsManager.darkGray,
+        fontWeight: FontWeight.w500,
       ),
       items: specialities.map((speciality) {
-        return DropdownMenuItem(
+        return DropdownMenuItem<Speciality>(
           value: speciality,
-          child: Text(speciality.name),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.local_hospital_outlined,
+                  size: 18.sp,
+                  color: ColorsManager.primary.withOpacity(0.7),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Text(
+                    speciality.name,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: ColorsManager.darkGray,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       }).toList(),
       onChanged: _controller.onSpecialityChanged,
@@ -358,274 +541,7 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
         }
         return null;
       },
+      menuMaxHeight: 300.h,
     );
   }
 }
-
-// Improved Password Field Widget
-class PasswordField extends StatefulWidget {
-  final String label;
-  final TextEditingController controller;
-  final String hintText;
-  final String? Function(String?)? validator;
-
-  const PasswordField({
-    super.key,
-    required this.label,
-    required this.controller,
-    required this.hintText,
-    this.validator,
-  });
-
-  @override
-  State<PasswordField> createState() => _PasswordFieldState();
-}
-
-class _PasswordFieldState extends State<PasswordField> {
-  bool isPasswordVisible = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppTextFormField(
-          controller: widget.controller,
-          isObscureText: !isPasswordVisible,
-          hintText: widget.hintText,
-          suffixIcon: IconButton(
-            icon: Icon(
-              isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-              color: Colors.grey,
-              size: 20.sp,
-            ),
-            onPressed: () {
-              setState(() {
-                isPasswordVisible = !isPasswordVisible;
-              });
-            },
-          ),
-          prefixIcon: Icon(
-            Icons.lock_rounded,
-            color: Colors.blue,
-            size: 20.sp,
-          ),
-          validator: widget.validator ??
-              (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Password cannot be empty';
-                }
-                if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
-                }
-                return null;
-              },
-        ),
-      ],
-    );
-  }
-}
-
-// Improved Sign Up Title Widget
-class SignUpTitle extends StatelessWidget {
-  const SignUpTitle({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          "Sign Up as Doctor",
-          style: TextStyle(
-            fontSize: 24.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        ),
-        SizedBox(height: 8.h),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Text(
-            "Create your account to start providing healthcare services",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14.sp, color: Colors.grey),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// Improved Phone Input Field Widget
-class PhoneInputField extends StatelessWidget {
-  final Function(String) onPhoneChanged;
-
-  const PhoneInputField({super.key, required this.onPhoneChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Text(
-        //   "Phone Number",
-        //   style: TextStyle(
-        //     color: Colors.blue,
-        //     fontSize: 15.sp,
-        //     fontWeight: FontWeight.w600,
-        //   ),
-        // ),
-        // Gap(8.h),
-        AppTextFormField(
-          onChanged: onPhoneChanged,
-          keyboardType: TextInputType.phone,
-          hintText: "Enter your phone number",
-          prefixIcon: Icon(
-            Icons.phone_rounded,
-            color: Colors.blue,
-            size: 20.sp,
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Please enter your phone number";
-            }
-            // You could add phone validation logic here
-            return null;
-          },
-        ),
-      ],
-    );
-  }
-}
-
-// // Improved Sign Up Alternatives Widget
-// // class SignUpAlternatives extends StatelessWidget {
-//   const SignUpAlternatives({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // Responsive sizing for social buttons
-//     final buttonSize = MediaQuery.of(context).size.width < 360 ? 45.0 : 50.0;
-
-//     return Column(
-//       children: [
-//         // OR divider
-//         Row(
-//           children: [
-//             Expanded(
-//               child: Divider(color: Colors.grey.withOpacity(0.3), thickness: 1),
-//             ),
-//             Padding(
-//               padding: EdgeInsets.symmetric(horizontal: 16.w),
-//               child: Text(
-//                 "OR",
-//                 style: TextStyle(
-//                   color: Colors.grey,
-//                   fontSize: 14.sp,
-//                   fontWeight: FontWeight.w500,
-//                 ),
-//               ),
-//             ),
-//             Expanded(
-//               child: Divider(color: Colors.grey.withOpacity(0.3), thickness: 1),
-//             ),
-//           ],
-//         ),
-//         Gap(20.h),
-
-//         // Social sign up options
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             _buildSocialButton(
-//               onPressed: () {},
-//               icon: "assets/images/google.png",
-//               backgroundColor: Colors.white,
-//               size: buttonSize,
-//             ),
-//             Gap(16.w),
-//             _buildSocialButton(
-//               onPressed: () {},
-//               icon: "assets/images/facebook.jpeg",
-//               backgroundColor: Colors.white,
-//               size: buttonSize,
-//             ),
-//             Gap(16.w),
-//             _buildSocialButton(
-//               onPressed: () {},
-//               icon: "assets/images/linkedin.jpeg",
-//               backgroundColor: Colors.white,
-//               size: buttonSize,
-//             ),
-//           ],
-//         ),
-//         Gap(24.h),
-
-//         // Already have an account
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text(
-//               "Already have an account?",
-//               style: TextStyle(color: Colors.grey, fontSize: 14.sp),
-//             ),
-//             TextButton(
-//               onPressed: () {
-//                 Navigator.of(context).pushNamed(PageRouteNames.sign_in_doctor);
-//               },
-//               style: TextButton.styleFrom(
-//                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-//                 minimumSize: Size.zero,
-//                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-//               ),
-//               child: Text(
-//                 "Sign In",
-//                 style: TextStyle(
-//                   color: Colors.blue,
-//                   fontSize: 14.sp,
-//                   fontWeight: FontWeight.bold,
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ],
-//     );
-//   }
-
-//   Widget _buildSocialButton({
-//     required VoidCallback onPressed,
-//     required String icon,
-//     required Color backgroundColor,
-//     required double size,
-//   }) {
-//     return InkWell(
-//       onTap: onPressed,
-//       borderRadius: BorderRadius.circular(12.r),
-//       child: Container(
-//         width: size.w,
-//         height: size.h,
-//         decoration: BoxDecoration(
-//           color: backgroundColor,
-//           borderRadius: BorderRadius.circular(12.r),
-//           border: Border.all(color: Colors.grey.withOpacity(0.3), width: 1),
-//           // Add subtle shadow for better visual appeal
-//           boxShadow: [
-//             BoxShadow(
-//               color: Colors.black.withOpacity(0.05),
-//               blurRadius: 4,
-//               offset: const Offset(0, 2),
-//             ),
-//           ],
-//         ),
-//         child: Center(
-//           child: Image.asset(
-//             icon,
-//             width: size * 0.70, // 24/50 = 0.48
-//             height: size * 0.60,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

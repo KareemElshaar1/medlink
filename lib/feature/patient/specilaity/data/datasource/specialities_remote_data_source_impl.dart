@@ -1,7 +1,7 @@
 // lib/data/datasources/specialities_remote_data_source_impl.dart
 import 'package:dio/dio.dart';
-import 'package:medlink/feature/specilaity/domain/entities/speciality_entity.dart';
- import 'specialities_remote_data_source.dart';
+  import '../../domain/entities/speciality_entity.dart';
+import 'specialities_remote_data_source.dart';
 
 class SpecialitiesRemoteDataSourceImpl implements SpecialitiesRemoteDataSource {
   final Dio dio;

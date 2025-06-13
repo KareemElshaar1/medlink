@@ -1,25 +1,18 @@
+import 'dart:io';
+import 'package:animate_do/animate_do.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:medlink/core/utils/color_manger.dart';
-import 'package:animate_do/animate_do.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:dio/dio.dart';
-import 'dart:io';
-import '../cubit/patient_profile_cubit.dart';
-import '../../data/models/patient_profile_model.dart';
-import '../../data/datasources/patient_profile_remote_data_source.dart';
-import '../../data/repositories/patient_profile_repository_impl.dart';
-import '../../domain/repositories/patient_profile_repository.dart';
-import 'package:medlink/core/interceptors/auth_interceptor.dart';
-import 'package:medlink/feature/patient/profile/presentation/pages/edit_patient_profile_page.dart';
-import 'package:medlink/di.dart';
+import 'package:medlink/core/utils/color_manger.dart';
 import 'package:medlink/core/widgets/app_text_button.dart';
-import 'package:medlink/core/widgets/custom_text_field.dart';
-import '../../../../../core/routes/page_routes_name.dart';
-import '../../../../auth/patient/sign_in/presentation/manager/auth_cubit.dart';
+import 'package:medlink/di.dart';
 import '../../../../Selection/select_screen.dart';
+import '../../../../auth/patient/sign_in/presentation/manager/auth_cubit.dart';
+import '../../data/models/patient_profile_model.dart';
+import '../cubit/patient_profile_cubit.dart';
+import 'edit_patient_profile_page.dart';
 
 class PatientProfilePage extends StatelessWidget {
   const PatientProfilePage({super.key});

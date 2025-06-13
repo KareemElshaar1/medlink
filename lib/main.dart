@@ -13,15 +13,15 @@ void main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   await SharedPrefHelper.init();
-  await checkIfLoggedInUser();
+  // await checkIfLoggedInUser();
   await init(); // Initialize dependency injection
 
   runApp(const Medlink());
 }
 
-Future<void> checkIfLoggedInUser() async {
-  String? userToken =
-      await SharedPrefHelper.getSecuredString(SharedPrefKeys.userToken);
+// Future<void> checkIfLoggedInUser() async {
+//   String? userToken =
+//       await SharedPrefHelper.getSecuredString(SharedPrefKeys.userToken);
 
-  isLoggedInUser = userToken?.isNotEmpty ?? false;
-}
+//   isLoggedInUser = userToken?.isNotEmpty ?? false;
+// }

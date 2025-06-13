@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import '../routes/page_routes_name.dart';
 import '../utils/color_manger.dart';
 
 class RememberMeAndForgetPassword extends StatelessWidget {
@@ -45,11 +45,11 @@ class RememberMeAndForgetPassword extends StatelessWidget {
         // Forget Password
         GestureDetector(
           onTap: () {
-            // Handle forget password action
+            Navigator.of(context).pushNamed(PageRouteNames.resetPassword);
           },
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(color: ColorsManager.error, width: 1.0),
               ),

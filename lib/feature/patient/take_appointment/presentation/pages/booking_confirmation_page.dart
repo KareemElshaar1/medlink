@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import '../../data/models/book_appointment_model.dart';
 import '../cubit/book_appointment_cubit.dart';
-import '../../../take_appointment/domain/entities/doctor_schedule.dart';
+import '../../domain/entities/doctor_schedule.dart';
 import 'package:medlink/core/routes/page_routes_name.dart';
 
 class BookingConfirmationPage extends StatefulWidget {

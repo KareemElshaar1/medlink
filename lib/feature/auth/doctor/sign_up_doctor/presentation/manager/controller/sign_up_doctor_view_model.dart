@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../specilaity/domain/entities/speciality_entity.dart';
-import '../../../../../../specilaity/manger/cubit/specialities_cubit.dart';
+  import '../../../../../../patient/specilaity/domain/entities/speciality_entity.dart';
+import '../../../../../../patient/specilaity/manger/cubit/specialities_cubit.dart';
 import '../doctor_registration_cubit.dart';
 
 class SignUpDoctorViewModel {

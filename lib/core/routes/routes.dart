@@ -15,6 +15,7 @@ import '../../feature/auth/patient/sign_in/presentation/manager/cubit/login_cubi
 import '../../feature/auth/patient/sign_in/presentation/pages/sign_in_screen.dart';
 import '../../feature/auth/patient/sign_up/presentation/manager/cubit/patient_register_cubit.dart';
 import '../../feature/auth/patient/sign_up/presentation/pages/sign_up_screen.dart';
+import '../../feature/checkout/presentation/checkout_screen.dart';
 import '../../feature/doctor/clinic/presentation/cubit/clinic_cubit.dart';
 import '../../feature/doctor/clinic/presentation/pages/clinic_list_page_fixed.dart';
 import '../../feature/doctor/profile/presentation/pages/doctor_profile_page.dart';
@@ -28,17 +29,21 @@ import '../../feature/doctor/schedule/presentation/cubit/schedule_cubit.dart';
 import '../../feature/doctor/schedule/data/models/schedule_model.dart';
 import '../../feature/onboarding/ui/on_boarding_screen.dart';
 import '../../feature/doctor/doctor_dashboard/doctor_home.dart';
-import '../../feature/specilaity/manger/cubit/specialities_cubit.dart';
-import '../../patient/home_patient.dart';
+import '../../feature/patient/home_patient.dart';
+import '../../feature/patient/payment/presentation/cubit/payment_cubit.dart';
+import '../../feature/patient/payment/presentation/pages/payment_page.dart';
+import '../../feature/patient/profile/presentation/cubit/patient_profile_cubit.dart';
+import '../../feature/patient/profile/presentation/pages/patient_profile_page.dart';
+import '../../feature/patient/search/presentation/cubit/search_cubit.dart';
+import '../../feature/patient/search/presentation/pages/search_page.dart';
+import '../../feature/patient/specilaity/manger/cubit/specialities_cubit.dart';
 import '../../feature/splash/toggle_screen.dart';
 import '../../feature/auth/doctor/sign_up_doctor/presentation/pages/confirm_doctor_code_screen.dart';
-import '../../feature/payment/presentation/pages/payment_page.dart';
-import '../../feature/payment/presentation/cubit/payment_cubit.dart';
-import '../../feature/search/presentation/pages/search_page.dart';
-import '../../feature/search/presentation/cubit/search_cubit.dart';
-import '../../feature/patient/profile/presentation/pages/patient_profile_page.dart';
-import '../../feature/patient/profile/presentation/cubit/patient_profile_cubit.dart';
 import '../../feature/doctor/appointments/presentation/screens/appointments_screen.dart';
+import '../../feature/pharmacy/presentation/product_page.dart';
+import '../../feature/pharmacy/presentation/cubit/product_cubit.dart';
+import '../../feature/google map/presentation/google_map_page.dart';
+import '../../feature/auth/patient/reset_password/presentation/pages/reset_password_screen.dart';
 
 class Routes {
   static Route onGeneratedRoute(RouteSettings settings) {
@@ -225,6 +230,35 @@ class Routes {
       case PageRouteNames.appointments:
         return _createRoute(
           (context) => const AppointmentsScreen(),
+          settings,
+        );
+
+      case PageRouteNames.pharmacy:
+        return _createRoute(
+          (context) => BlocProvider(
+            create: (context) => GetIt.instance<ProductCubit>(),
+            child: Builder(
+              builder: (context) => const ProductPage(),
+            ),
+          ),
+          settings,
+        );
+
+      case PageRouteNames.checkout:
+        return _createRoute(
+          (context) => const CheckoutScreen(),
+          settings,
+        );
+
+      case PageRouteNames.map:
+        return _createRoute(
+          (context) => const MapScreen(),
+          settings,
+        );
+
+      case PageRouteNames.resetPassword:
+        return _createRoute(
+          (context) => const ResetPasswordScreen(),
           settings,
         );
 

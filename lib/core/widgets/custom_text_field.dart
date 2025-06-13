@@ -87,7 +87,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         labelStyle: widget.labelStyle ??
             TextStyles.font14GrayRegular.copyWith(
               fontSize: 16.sp,
-              color: ColorsManager.primary,
+              color: ColorsManager.disabledDark,
             ),
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.isObscureText
@@ -117,7 +117,12 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         ),
       ),
       style: widget.inputTextStyle ??
-          TextStyles.font24BlackBold.copyWith(fontSize: 14.sp),
+          TextStyles.font24BlackBold.copyWith(
+            fontSize: 14.sp,
+            color: widget.controller?.text.isEmpty ?? true
+                ? ColorsManager.overlayDark
+                : ColorsManager.textDark,
+          ),
       validator: widget.validator,
       textInputAction: widget.textInputAction,
       keyboardType: widget.keyboardType,

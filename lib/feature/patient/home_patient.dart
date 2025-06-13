@@ -1,27 +1,28 @@
+import 'dart:async';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import '../core/routes/page_routes_name.dart';
-import 'recommendation_doctor/presentation/cubit/recommendation_doctor_cubit.dart';
-import 'recommendation_doctor/domain/entities/recommendation_doctor.dart';
-import '../feature/specilaity/manger/cubit/specialities_cubit.dart';
-import '../feature/specilaity/domain/entities/speciality_entity.dart';
-import '../feature/specilaity/presentation/pages/all_specialties_page.dart';
-import '../feature/doctors_by_specialty/presentation/pages/doctors_by_specialty_page.dart';
-import '../feature/doctors_by_specialty/data/models/doctor_by_specialty_model.dart';
-import '../feature/doctors_by_specialty/presentation/pages/doctor_details_page.dart';
-import '../feature/doctors_by_specialty/presentation/pages/all_doctors_page.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import '../feature/search/presentation/cubit/search_cubit.dart';
-import '../feature/search/presentation/pages/search_page.dart';
-import '../feature/payment/presentation/pages/payment_page.dart';
-import '../feature/auth/patient/sign_up/presentation/manager/controller/email.dart';
-import '../feature/patient/profile/presentation/pages/patient_profile_page.dart';
-import '../feature/patient/profile/presentation/cubit/patient_profile_cubit.dart';
-import 'dart:async';
+import 'package:medlink/feature/patient/payment/presentation/pages/payment_page.dart';
+import 'package:medlink/feature/patient/profile/presentation/cubit/patient_profile_cubit.dart';
+import 'package:medlink/feature/patient/profile/presentation/pages/patient_profile_page.dart';
+import 'package:medlink/feature/patient/search/presentation/cubit/search_cubit.dart';
+import 'package:medlink/feature/patient/search/presentation/pages/search_page.dart';
+import 'package:medlink/feature/patient/specilaity/manger/cubit/specialities_cubit.dart';
+import 'package:medlink/feature/patient/specilaity/presentation/pages/all_specialties_page.dart';
+import 'package:medlink/feature/pharmacy/presentation/product_page.dart';
+import 'package:medlink/feature/pharmacy/presentation/cubit/product_cubit.dart';
+
 import '../../../../../core/utils/color_manger.dart';
+import 'doctors_by_specialty/data/models/doctor_by_specialty_model.dart';
+import 'doctors_by_specialty/presentation/pages/all_doctors_page.dart';
+import 'doctors_by_specialty/presentation/pages/doctor_details_page.dart';
+import 'doctors_by_specialty/presentation/pages/doctors_by_specialty_page.dart';
+import 'recommendation_doctor/domain/entities/recommendation_doctor.dart';
+import 'recommendation_doctor/presentation/cubit/recommendation_doctor_cubit.dart';
 
 class HomePatient extends StatelessWidget {
   const HomePatient({super.key});
@@ -78,12 +79,12 @@ class AutoScrollDoctorCard extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
               Colors.white,
-              const Color(0xFFF8FAFC),
+              Color(0xFFF8FAFC),
             ],
           ),
           borderRadius: BorderRadius.circular(24.r),
@@ -117,14 +118,14 @@ class AutoScrollDoctorCard extends StatelessWidget {
                   Container(
                     width: 88.w,
                     height: 88.h,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          const Color(0xFF6366F1),
-                          const Color(0xFF8B5CF6),
+                          Color(0xFF6366F1),
+                          Color(0xFF8B5CF6),
                         ],
                       ),
                     ),
@@ -168,8 +169,9 @@ class AutoScrollDoctorCard extends StatelessWidget {
                                                       .expectedTotalBytes!
                                               : null,
                                       strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        const Color(0xFF6366F1),
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                        Color(0xFF6366F1),
                                       ),
                                     ),
                                   ),
@@ -344,12 +346,12 @@ class AutoScrollDoctorCard extends StatelessWidget {
                 width: 44.w,
                 height: 44.h,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      const Color(0xFF6366F1),
-                      const Color(0xFF8B5CF6),
+                      Color(0xFF6366F1),
+                      Color(0xFF8B5CF6),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12.r),
@@ -387,14 +389,14 @@ class AutoScrollDoctorCard extends StatelessWidget {
     return Container(
       width: 88.w,
       height: 88.h,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF6366F1),
-            const Color(0xFF8B5CF6),
+            Color(0xFF6366F1),
+            Color(0xFF8B5CF6),
           ],
         ),
       ),
@@ -670,7 +672,7 @@ class _HomePatientContentState extends State<HomePatientContent> {
                                 },
                                 child: Text('See All',
                                     style: TextStyle(
-                                        color: Color(0xFF3B82F6),
+                                        color: const Color(0xFF3B82F6),
                                         fontSize: 14.sp)),
                               ),
                             ],
@@ -726,7 +728,7 @@ class _HomePatientContentState extends State<HomePatientContent> {
                                 },
                                 child: Text('See All',
                                     style: TextStyle(
-                                        color: Color(0xFF3B82F6),
+                                        color: const Color(0xFF3B82F6),
                                         fontSize: 14.sp)),
                               ),
                             ],
@@ -751,6 +753,64 @@ class _HomePatientContentState extends State<HomePatientContent> {
                               return const SizedBox();
                             },
                           ),
+                          SizedBox(height: 32.h),
+                          // Pharmacy Section
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Online Pharmacy',
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BlocProvider(
+                                        create: (context) =>
+                                            GetIt.instance<ProductCubit>(),
+                                        child: const ProductPage(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text('See All',
+                                    style: TextStyle(
+                                        color: const Color(0xFF3B82F6),
+                                        fontSize: 14.sp)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 16.h),
+                          SizedBox(
+                            height: 180.h,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                _buildPharmacyCard(
+                                  'مسكنات الألم',
+                                  'https://img.freepik.com/free-photo/medicine-capsules-global-health-with-geometric-pattern-digital-remix_53876-126742.jpg',
+                                  'خصم 20%',
+                                  'من 150 ج.م',
+                                ),
+                                _buildPharmacyCard(
+                                  'فيتامينات',
+                                  'https://img.freepik.com/free-photo/vitamin-bottle-with-pills_23-2148511023.jpg',
+                                  'خصم 15%',
+                                  'من 250 ج.م',
+                                ),
+                                _buildPharmacyCard(
+                                  'إسعافات أولية',
+                                  'https://img.freepik.com/free-photo/first-aid-kit-with-bandages-medicine_23-2148511019.jpg',
+                                  'خصم 10%',
+                                  'من 300 ج.م',
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 32.h),
                         ],
                       ),
                     ),
@@ -786,7 +846,7 @@ class _HomePatientContentState extends State<HomePatientContent> {
               CircleAvatar(
                 radius: 32.r,
                 backgroundColor: Colors.white,
-                child: Icon(icon, color: Color(0xFF3B82F6), size: 32.sp),
+                child: Icon(icon, color: const Color(0xFF3B82F6), size: 32.sp),
               ),
               SizedBox(height: 12.h),
               Text(label,
@@ -930,7 +990,8 @@ class _HomePatientContentState extends State<HomePatientContent> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.home_rounded, color: Color(0xFF3B82F6), size: 30.sp),
+                Icon(Icons.home_rounded,
+                    color: const Color(0xFF3B82F6), size: 30.sp),
                 Icon(Icons.chat_bubble_outline_rounded,
                     color: Colors.grey, size: 28.sp),
                 SizedBox(width: 36.sp), // Placeholder for search icon
@@ -989,30 +1050,30 @@ class _HomePatientContentState extends State<HomePatientContent> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Color(0xFF3B82F6).withOpacity(0.15),
-                        Color(0xFF60A5FA).withOpacity(0.15),
+                        const Color(0xFF3B82F6).withOpacity(0.15),
+                        const Color(0xFF60A5FA).withOpacity(0.15),
                       ],
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0xFF3B82F6).withOpacity(0.25),
+                        color: const Color(0xFF3B82F6).withOpacity(0.25),
                         blurRadius: 16,
                         offset: const Offset(0, 6),
                       ),
-                      BoxShadow(
+                      const BoxShadow(
                         color: Colors.white,
                         blurRadius: 8,
-                        offset: const Offset(0, -4),
+                        offset: Offset(0, -4),
                       ),
                     ],
                     border: Border.all(
-                      color: Color(0xFF3B82F6).withOpacity(0.15),
+                      color: const Color(0xFF3B82F6).withOpacity(0.15),
                       width: 2,
                     ),
                   ),
                   child: Icon(
                     Icons.search_rounded,
-                    color: Color(0xFF3B82F6),
+                    color: const Color(0xFF3B82F6),
                     size: 36.sp,
                   ),
                 ),
@@ -1026,7 +1087,7 @@ class _HomePatientContentState extends State<HomePatientContent> {
                   )
                   .shimmer(
                     duration: 1800.ms,
-                    color: Color(0xFF3B82F6).withOpacity(0.3),
+                    color: const Color(0xFF3B82F6).withOpacity(0.3),
                   )
                   .then()
                   .shake(
@@ -1056,6 +1117,201 @@ class _HomePatientContentState extends State<HomePatientContent> {
       default:
         return Icons.medical_services;
     }
+  }
+
+  Widget _buildPharmacyCard(
+      String title, String imageUrl, String discount, String price) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => GetIt.instance<ProductCubit>(),
+              child: const ProductPage(),
+            ),
+          ),
+        );
+      },
+      child: Container(
+        width: 280.w,
+        margin: EdgeInsets.only(right: 16.w),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ColorsManager.primary.withOpacity(0.1),
+              ColorsManager.secondary.withOpacity(0.1),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: ColorsManager.primary.withOpacity(0.1),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            // Background decorative elements
+            Positioned(
+              right: -20.w,
+              top: -20.h,
+              child: Container(
+                width: 100.w,
+                height: 100.h,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: ColorsManager.primary.withOpacity(0.1),
+                ),
+              ),
+            ),
+            Positioned(
+              left: -30.w,
+              bottom: -30.h,
+              child: Container(
+                width: 120.w,
+                height: 120.h,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: ColorsManager.secondary.withOpacity(0.1),
+                ),
+              ),
+            ),
+            // Content
+            Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Row(
+                children: [
+                  // Image
+                  Container(
+                    width: 100.w,
+                    height: 100.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ColorsManager.primary.withOpacity(0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.r),
+                      child: Image.network(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[200],
+                            child: Icon(
+                              Icons.medical_services_rounded,
+                              size: 36.sp,
+                              color: Colors.grey[400],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                  // Text content
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: ColorsManager.textDark,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: ColorsManager.primary.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Text(
+                            discount,
+                            style: TextStyle(
+                              color: ColorsManager.primary,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          price,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: ColorsManager.textMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Shop now button
+            Positioned(
+              bottom: 16.h,
+              right: 16.w,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 12.w,
+                  vertical: 6.h,
+                ),
+                decoration: BoxDecoration(
+                  color: ColorsManager.primary,
+                  borderRadius: BorderRadius.circular(12.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: ColorsManager.primary.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'تسوق الآن',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      color: Colors.white,
+                      size: 16.sp,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ).animate().fadeIn(duration: 600.ms).slideX(begin: 0.2);
   }
 }
 
@@ -1280,4 +1536,129 @@ class _AutoScrollDoctorListState extends State<AutoScrollDoctorList> {
       ),
     );
   }
+}
+
+Widget _buildSpecialityCard(String title, String imageUrl) {
+  return Container(
+    width: 100.w,
+    margin: EdgeInsets.only(right: 16.w),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16.r),
+      boxShadow: [
+        BoxShadow(
+          color: ColorsManager.primary.withOpacity(0.1),
+          blurRadius: 8,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 60.w,
+          height: 60.w,
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            color: ColorsManager.primary.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(
+                Icons.medical_services_rounded,
+                size: 24.sp,
+                color: ColorsManager.primary,
+              );
+            },
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.w),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w500,
+              color: ColorsManager.textDark,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    ),
+  ).animate().fadeIn(duration: 600.ms).slideX(begin: 0.2);
+}
+
+Widget _buildSpecialitiesSection() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'التخصصات',
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                color: ColorsManager.textDark,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                // Handle view all
+              },
+              child: Text(
+                'عرض الكل',
+                style: TextStyle(
+                  color: ColorsManager.primary,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      SizedBox(height: 16.h),
+      SizedBox(
+        height: 120.h,
+        child: ListView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          scrollDirection: Axis.horizontal,
+          children: [
+            _buildSpecialityCard(
+              'طب عام',
+              'https://img.icons8.com/color/96/000000/stethoscope.png',
+            ),
+            _buildSpecialityCard(
+              'طب أسنان',
+              'https://img.icons8.com/color/96/000000/dental-braces.png',
+            ),
+            _buildSpecialityCard(
+              'طب عيون',
+              'https://img.icons8.com/color/96/000000/eye.png',
+            ),
+            _buildSpecialityCard(
+              'طب أطفال',
+              'https://img.icons8.com/color/96/000000/baby.png',
+            ),
+            _buildSpecialityCard(
+              'طب نساء',
+              'https://img.icons8.com/color/96/000000/pregnant.png',
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }

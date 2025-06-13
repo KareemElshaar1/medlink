@@ -1,23 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import '../../../../core/utils/color_manger.dart';
-import '../../../../core/widgets/app_text_button.dart';
-import '../../../../core/widgets/custom_text_field.dart';
-import '../../../../core/utils/app_text_style.dart';
-import '../../../../core/utils/font_weight_helper.dart';
-import '../../../../core/extensions/padding.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../../../../core/utils/app_text_style.dart';
+import '../../../../../core/utils/color_manger.dart';
+import '../../../../../core/utils/font_weight_helper.dart';
+import '../../../../../core/widgets/app_text_button.dart';
+import '../../data/models/appointment_model.dart';
 import '../cubit/payment_cubit.dart';
 import '../cubit/payment_state.dart';
-import '../../data/models/appointment_model.dart';
-import '../../domain/use_cases/process_payment_usecase.dart';
-import '../../domain/use_cases/get_appointments_usecase.dart';
-import '../../domain/use_cases/cancel_appointment_usecase.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PaymentPage extends StatelessWidget {
   const PaymentPage({super.key});
