@@ -1,8 +1,10 @@
 // lib/presentation/screens/signup/sign_up_patient_viewmodel.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import '../../../domain/entities/patient_entities.dart';
 import '../cubit/patient_register_cubit.dart';
+import '../cubit/patient_register_state.dart';
 import 'confirm.dart';
 import 'email.dart';
 
@@ -73,43 +75,53 @@ class SignUpPatientViewModel {
         // First register the patient
         await _cubit.registerPatient(patient);
 
-        // Generate and send verification code
-        verificationCode = _generateCode();
-        try {
-          await EmailService.sendVerificationCode(
-            name: patient.name,
-            email: patient.email,
-            code: verificationCode!,
-          );
+        // Only proceed with verification if registration was successful
+        if (_cubit.state is PatientRegistrationSuccess) {
+          // Generate and send verification code
+          verificationCode = _generateCode();
+          try {
+            await EmailService.sendVerificationCode(
+              name: patient.name,
+              email: patient.email,
+              code: verificationCode!,
+            );
 
-          // Navigate to confirmation screen
-          if (context.mounted) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ConfirmCodeScreen(
-                  correctCode: verificationCode!,
-                  cubit: _cubit,
+            // Navigate to confirmation screen only after successful registration and email sending
+            if (context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ConfirmCodeScreen(
+                    correctCode: verificationCode!,
+                    cubit: _cubit,
+                  ),
                 ),
-              ),
-            );
-          }
-        } catch (e) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content:
-                    Text('Failed to send verification code: ${e.toString()}'),
-                backgroundColor: Colors.red,
-              ),
-            );
+              );
+            }
+          } catch (e) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content:
+                      Text('Failed to send verification code: ${e.toString()}'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
           }
         }
       } catch (e) {
         if (context.mounted) {
+          String errorMessage = 'Registration failed';
+          if (e is DioException && e.response?.data is Map<String, dynamic>) {
+            final errorData = e.response?.data as Map<String, dynamic>;
+            if (errorData.containsKey('detail')) {
+              errorMessage = errorData['detail'].toString();
+            }
+          }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Registration failed: ${e.toString()}'),
+              content: Text(errorMessage),
               backgroundColor: Colors.red,
             ),
           );

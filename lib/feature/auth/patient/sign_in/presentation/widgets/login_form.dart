@@ -10,6 +10,7 @@ import '../../../../../../core/widgets/login_btn.dart';
 import '../../../../../../core/widgets/login_title.dart';
 import '../../../../../../core/widgets/sign_up_link.dart';
 import '../../../../../../core/widgets/social_media_btn.dart';
+import '../../../patient_resete_password/resete_password.dart';
 import 'form_field.dart';
 
 class LoginForm extends StatelessWidget {
@@ -59,7 +60,18 @@ class LoginForm extends StatelessWidget {
           RememberMeAndForgetPassword(
             isRememberMeSelected: isRememberMeSelected,
             onRememberMeChanged: onRememberMeChanged,
-          ),
+            onForgetPasswordTap: (){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PasswordResetScreen()));
+            }
+
+              ),
+           // isDoctor: false,
+          //  onForgetPasswordTap: ,
+
+            
+
           Gap(20.h),
 
           // Login Button

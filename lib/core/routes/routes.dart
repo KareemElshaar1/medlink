@@ -43,7 +43,6 @@ import '../../feature/doctor/appointments/presentation/screens/appointments_scre
 import '../../feature/pharmacy/presentation/product_page.dart';
 import '../../feature/pharmacy/presentation/cubit/product_cubit.dart';
 import '../../feature/google map/presentation/google_map_page.dart';
-import '../../feature/auth/patient/reset_password/presentation/pages/reset_password_screen.dart';
 
 class Routes {
   static Route onGeneratedRoute(RouteSettings settings) {
@@ -253,12 +252,6 @@ class Routes {
       case PageRouteNames.map:
         return _createRoute(
           (context) => const MapScreen(),
-          settings,
-        );
-
-      case PageRouteNames.resetPassword:
-        return _createRoute(
-          (context) => const ResetPasswordScreen(),
           settings,
         );
 

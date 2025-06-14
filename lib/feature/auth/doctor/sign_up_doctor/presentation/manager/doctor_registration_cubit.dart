@@ -1,6 +1,7 @@
 // lib/presentation/cubits/doctor_registration_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:dio/dio.dart';
 import 'package:medlink/core/helper/shared_pref_helper.dart';
 import '../../domain/use_cases/doctor_register_usecase.dart';
 
@@ -59,8 +60,17 @@ class DoctorRegistrationCubit extends Cubit<DoctorRegistrationState> {
       } else {
         emit(DoctorRegistrationError('Registration failed'));
       }
+    } on DioException catch (e) {
+      String errorMessage = 'Registration failed';
+      if (e.response?.data is Map<String, dynamic>) {
+        final errorData = e.response?.data as Map<String, dynamic>;
+        if (errorData.containsKey('detail')) {
+          errorMessage = errorData['detail'].toString();
+        }
+      }
+      emit(DoctorRegistrationError(errorMessage));
     } catch (e) {
-      emit(DoctorRegistrationError(e.toString()));
+      emit(DoctorRegistrationError('An unexpected error occurred'));
     }
   }
 

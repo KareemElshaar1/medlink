@@ -223,7 +223,22 @@ class _SignInScreenState extends State<SignInDoctor>
 
           if (state is LoginFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+                duration: const Duration(seconds: 3),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                action: SnackBarAction(
+                  label: 'Dismiss',
+                  textColor: Colors.white,
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
+                ),
+              ),
             );
           } else if (state is LoginSuccess) {
             // Navigate to home page
@@ -242,7 +257,7 @@ class _SignInScreenState extends State<SignInDoctor>
                 children: [
                   // Header
                   const MedLinkHeader(height: 250, showAnimation: true),
-                  Text("doctor"),
+                  const Text("doctor"),
 
                   // Login Form
                   LoginForm(

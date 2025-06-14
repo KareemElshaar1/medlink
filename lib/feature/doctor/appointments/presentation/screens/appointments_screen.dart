@@ -75,7 +75,7 @@ class AppointmentsScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(
+            const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(ColorsManager.primary),
               strokeWidth: 3,
             ),
@@ -95,6 +95,42 @@ class AppointmentsScreen extends StatelessWidget {
   }
 
   Widget _buildErrorView(String message) {
+    if (message.contains('404') || message.contains('Not Found')) {
+      return SizedBox(
+        height: 400.h,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.people_alt_rounded,
+                size: 64.sp,
+                color: ColorsManager.gray.withOpacity(0.5),
+              ),
+              SizedBox(height: 24.h),
+              Text(
+                'No Patients Yet',
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w600,
+                  color: ColorsManager.textDark,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                'Your patients will appear here once they book appointments',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: ColorsManager.gray,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return SizedBox(
       height: 400.h,
       child: Center(

@@ -6,11 +6,15 @@ import '../utils/color_manger.dart';
 class RememberMeAndForgetPassword extends StatelessWidget {
   final bool? isRememberMeSelected;
   final Function(bool?) onRememberMeChanged;
+  //final bool isDoctor;
+  final VoidCallback? onForgetPasswordTap;
 
   const RememberMeAndForgetPassword({
     super.key,
     required this.isRememberMeSelected,
     required this.onRememberMeChanged,
+    // required this.isDoctor,
+    this.onForgetPasswordTap,
   });
 
   @override
@@ -44,9 +48,7 @@ class RememberMeAndForgetPassword extends StatelessWidget {
         ),
         // Forget Password
         GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushNamed(PageRouteNames.resetPassword);
-          },
+          onTap: onForgetPasswordTap,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
             decoration: const BoxDecoration(

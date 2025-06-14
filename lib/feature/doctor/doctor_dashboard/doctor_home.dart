@@ -20,11 +20,14 @@ import 'package:medlink/feature/doctor/doctor_dashboard/widgets/drawer_header_wi
 import 'package:medlink/feature/doctor/doctor_dashboard/widgets/drawer_item_widget.dart';
 import 'package:medlink/feature/doctor/doctor_dashboard/widgets/welcome_card_widget.dart';
 import 'package:medlink/feature/doctor/doctor_dashboard/widgets/stats_section_widget.dart';
-import 'package:medlink/feature/doctor/doctor_dashboard/widgets/appointments_section_widget.dart';
-import 'package:medlink/feature/doctor/doctor_dashboard/widgets/recent_patients_section_widget.dart';
+import 'package:medlink/feature/doctor/doctor_dashboard/widgets/my_patient_section.dart';
+import 'package:medlink/feature/doctor/doctor_dashboard/widgets/my_schedule_section_widget.dart';
 import 'package:medlink/feature/doctor/doctor_dashboard/widgets/loading_state_widget.dart';
 import 'package:medlink/feature/doctor/doctor_dashboard/models/drawer_item_model.dart';
 import 'package:medlink/feature/Selection/select_screen.dart';
+import 'package:medlink/feature/doctor/appointments/presentation/cubit/appointment_cubit.dart';
+import 'package:medlink/feature/doctor/schedule/presentation/cubit/schedule_cubit.dart';
+import 'package:medlink/feature/doctor/schedule/presentation/screens/schedule_list_screen.dart';
 
 class DoctorHome extends StatefulWidget {
   const DoctorHome({super.key});
@@ -180,7 +183,7 @@ class _DoctorHomeState extends State<DoctorHome> {
       preferredSize: Size.fromHeight(120.h),
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
@@ -608,21 +611,182 @@ class _DoctorHomeState extends State<DoctorHome> {
   Widget _buildDashboardContent() {
     return FadeInUp(
       duration: const Duration(milliseconds: 1000),
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //  WelcomeCardWidget(doctorProfile: _doctorProfile),
-            //  SizedBox(height: 24.h),
-            //  const StatsSectionWidget(),
-            SizedBox(height: 24.h),
-            const MyPatientsSectionWidget(),
-            SizedBox(height: 24.h),
-            const MyScheduleSectionWidget(),
-          ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => GetIt.I<AppointmentCubit>()..getAppointments(),
+          ),
+          BlocProvider(
+            create: (context) => GetIt.I<ScheduleCubit>()..getSchedule(),
+          ),
+        ],
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 24.h),
+              BlocBuilder<AppointmentCubit, AppointmentState>(
+                builder: (context, state) {
+                  if (state is AppointmentError) {
+                    return _buildErrorState();
+                  }
+
+                  if (state is AppointmentLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (state is AppointmentLoaded) {
+                    final appointments = state.appointments;
+                    final totalPatients = appointments.isEmpty
+                        ? 0
+                        : appointments
+                            .map((appointment) => appointment.patient)
+                            .toSet()
+                            .length;
+
+                    return Column(
+                      children: [
+                        BlocBuilder<ScheduleCubit, ScheduleState>(
+                          builder: (context, scheduleState) {
+                            int todaySchedules = 0;
+                            if (scheduleState is SchedulesLoaded) {
+                              todaySchedules = scheduleState.schedules.length;
+                            }
+                            return StatsSectionWidget(
+                              totalPatients: totalPatients,
+                              todayAppointments: todaySchedules,
+                              rating:
+                                  4.5, // This should come from your rating system
+                            );
+                          },
+                        ),
+                        SizedBox(height: 24.h),
+                        if (appointments.isEmpty)
+                          _buildEmptyState()
+                        else ...[
+                          const MyPatientWidget(),
+                          SizedBox(height: 24.h),
+                        ],
+                        const MyScheduleSectionWidget(),
+                      ],
+                    );
+                  }
+
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      padding: EdgeInsets.all(20.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
+          BoxShadow(
+            color: ColorsManager.primary.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.people_alt_rounded,
+            size: 48.sp,
+            color: ColorsManager.textLight,
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            'No Patients Yet',
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              color: ColorsManager.textDark,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Your patients will appear here once they book appointments',
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: ColorsManager.textLight,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Container(
+      padding: EdgeInsets.all(20.r),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.red.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline_rounded,
+            size: 48.sp,
+            color: Colors.red,
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            'Error Loading Data',
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              color: ColorsManager.textDark,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Please try refreshing the page',
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: ColorsManager.textLight,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 16.h),
+          ElevatedButton.icon(
+            onPressed: refreshData,
+            icon: Icon(Icons.refresh_rounded, size: 20.sp),
+            label: Text(
+              'Refresh',
+              style: TextStyle(fontSize: 14.sp),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ColorsManager.primary,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

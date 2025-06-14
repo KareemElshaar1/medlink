@@ -27,6 +27,7 @@ class AppTextFormField extends StatefulWidget {
   final VoidCallback? onTap;
   final int? maxLines;
   final int? minLines;
+  final AutovalidateMode? autovalidateMode;
 
   const AppTextFormField({
     super.key,
@@ -52,6 +53,7 @@ class AppTextFormField extends StatefulWidget {
     this.onTap,
     this.maxLines = 1,
     this.minLines = 1,
+    this.autovalidateMode,
   });
 
   @override
@@ -70,6 +72,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       onTap: widget.onTap,
       maxLines: widget.maxLines,
       minLines: widget.minLines,
+      autovalidateMode: widget.autovalidateMode,
       decoration: InputDecoration(
         isDense: true,
         contentPadding: widget.contentPadding ??

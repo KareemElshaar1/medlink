@@ -22,3 +22,12 @@ class AuthDoctorAuthenticated extends AuthDoctorState {
 }
 
 class AuthDoctorUnauthenticated extends AuthDoctorState {}
+
+class AuthDoctorError extends AuthDoctorState {
+  final String message;
+
+  const AuthDoctorError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dio/dio.dart';
 
 import '../../../domain/entities/login_request.dart';
 import '../../../domain/use_cases/login_usecase.dart';
@@ -38,17 +39,40 @@ class LoginDoctorCubit extends Cubit<LoginDoctorState> {
   Future<void> login(String email, String password, bool rememberMe) async {
     emit(LoginLoading());
 
-    final loginRequest = LoginRequestDoctor(email: email, password: password);
-    final response = await loginUseCase(loginRequest);
+    try {
+      final loginRequest = LoginRequestDoctor(email: email, password: password);
+      final response = await loginUseCase(loginRequest);
 
-    if (response.isSuccess && response.data != null) {
-      await saveAuthDataUseCase(response.data!, rememberMe);
-      emit(LoginSuccess(response.data!));
-    } else {
-      final errorMessage = response.errors != null
-          ? response.errors.toString()
-          : 'Login failed. Please try again.';
+      if (response.isSuccess && response.data != null) {
+        await saveAuthDataUseCase(response.data!, rememberMe);
+        emit(LoginSuccess(response.data!));
+      } else {
+        String errorMessage = 'Login failed. Please try again.';
+        if (response.errors != null) {
+          if (response.errors is DioException) {
+            final dioError = response.errors as DioException;
+            if (dioError.response?.data is Map<String, dynamic>) {
+              final errorData = dioError.response?.data as Map<String, dynamic>;
+              if (errorData.containsKey('detail')) {
+                errorMessage = errorData['detail'].toString();
+              }
+            }
+          }
+        }
+        emit(LoginFailure(errorMessage));
+      }
+    } on DioException catch (e) {
+      String errorMessage = 'Login failed. Please try again.';
+      if (e.response?.data is Map<String, dynamic>) {
+        final errorData = e.response?.data as Map<String, dynamic>;
+        if (errorData.containsKey('detail')) {
+          errorMessage = errorData['detail'].toString();
+        }
+      }
       emit(LoginFailure(errorMessage));
+    } catch (e) {
+      emit(const LoginFailure(
+          'An unexpected error occurred. Please try again.'));
     }
   }
 }

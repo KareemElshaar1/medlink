@@ -5,11 +5,10 @@ import 'package:medlink/core/extensions/padding.dart';
 
 import '../../../../../../core/routes/page_routes_name.dart';
 import '../../../../../../core/widgets/Remember_Me_And_ForgetPassword.dart';
-import '../../../../../../core/widgets/divider.dart';
 import '../../../../../../core/widgets/login_btn.dart';
 import '../../../../../../core/widgets/login_title.dart';
 import '../../../../../../core/widgets/sign_up_link.dart';
-import '../../../../../../core/widgets/social_media_btn.dart';
+import '../../../doctor_reset_password/doctor_resete_password.dart';
 import 'form_field.dart';
 
 class LoginForm extends StatelessWidget {
@@ -57,9 +56,16 @@ class LoginForm extends StatelessWidget {
 
           // Remember Me and Forget Password
           RememberMeAndForgetPassword(
-            isRememberMeSelected: isRememberMeSelected,
-            onRememberMeChanged: onRememberMeChanged,
-          ),
+              isRememberMeSelected: isRememberMeSelected,
+              onRememberMeChanged: onRememberMeChanged,
+              onForgetPasswordTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PasswordResetDoctorScreen()));
+              }),
+          // isDoctor: true,
+
           Gap(20.h),
 
           // Login Button

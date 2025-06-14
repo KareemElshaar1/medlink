@@ -10,7 +10,7 @@ import 'package:medlink/core/widgets/buildHeader.dart' as header;
 import '../../../../../../core/routes/page_routes_name.dart';
 import '../../../../../../core/widgets/app_text_button.dart';
 import '../../../../../../core/widgets/custom_text_field.dart';
-  import '../../../../../patient/specilaity/domain/entities/speciality_entity.dart';
+import '../../../../../patient/specilaity/domain/entities/speciality_entity.dart';
 import '../../../../../patient/specilaity/manger/cubit/specialities_cubit.dart';
 import '../manager/doctor_registration_cubit.dart';
 import '../manager/controller/sign_up_doctor_controller.dart';
@@ -178,260 +178,237 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
     final horizontalPadding = isSmallScreen ? 16.0.w : 24.0.w;
     final verticalSpacing = isSmallScreen ? 16.h : 20.h;
 
-    // Adjust header height based on screen size
-    final headerHeight = isSmallScreen ? 180.0 : 220.0;
-
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  // Animated Header - Adjusted height
-                  header.MedLinkHeader(
-                      height: headerHeight, showAnimation: true),
-
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.r),
-                        topRight: Radius.circular(30.r),
-                      ),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: horizontalPadding, vertical: 24.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const SignUpTitle(),
-                        Gap(30.h),
-
-                        // Form Fields
-                        Form(
-                          key: _controller.formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              // First Name Field
-                              AppTextFormField(
-                                labelText: "First Name",
-                                controller: _controller.firstNameController,
-                                hintText: "Enter your first name",
-                                prefixIcon: Icon(
-                                  Icons.person_rounded,
-                                  color: ColorsManager.primary,
-                                  size: 20.sp,
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Please enter your first name";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              Gap(verticalSpacing),
-
-                              // Last Name Field
-                              AppTextFormField(
-                                labelText: "Last Name",
-                                controller: _controller.lastNameController,
-                                hintText: "Enter your last name",
-                                prefixIcon: Icon(
-                                  Icons.person_rounded,
-                                  color: ColorsManager.primary,
-                                  size: 20.sp,
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Please enter your last name";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              Gap(verticalSpacing),
-
-                              // Email Field
-                              AppTextFormField(
-                                labelText: "Email Address",
-                                controller: _controller.emailController,
-                                hintText: "doctor@example.com",
-                                keyboardType: TextInputType.emailAddress,
-                                prefixIcon: Icon(
-                                  Icons.email_rounded,
-                                  color: ColorsManager.primary,
-                                  size: 20.sp,
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Please enter your email";
-                                  }
-                                  if (!RegExp(
-                                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                                      .hasMatch(value)) {
-                                    return "Please enter a valid email";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              Gap(verticalSpacing),
-
-                              // Password Field
-                              PasswordField(
-                                label: "Password",
-                                controller: _controller.passwordController,
-                                hintText: "Enter your password",
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Please enter a password";
-                                  }
-                                  if (value.length < 6) {
-                                    return "Password must be at least 6 characters";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              Gap(verticalSpacing),
-
-                              // Confirm Password Field
-                              PasswordField(
-                                label: "Confirm Password",
-                                controller:
-                                    _controller.confirmPasswordController,
-                                hintText: "Re-enter your password",
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Please confirm your password";
-                                  }
-                                  if (value !=
-                                      _controller.passwordController.text) {
-                                    return "Passwords don't match";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              Gap(verticalSpacing),
-
-                              // Phone Number Field
-                              PhoneInputField(
-                                onPhoneChanged: _controller.onPhoneChanged,
-                              ),
-                              Gap(verticalSpacing),
-
-                              // Speciality Dropdown
-                              BlocBuilder<SpecialitiesCubit, SpecialitiesState>(
-                                builder: (context, state) {
-                                  if (state is SpecialitiesLoading) {
-                                    return _buildLoadingSpecialities();
-                                  } else if (state is SpecialitiesError) {
-                                    return _buildErrorSpecialities(
-                                        state.message);
-                                  } else if (state is SpecialitiesLoaded) {
-                                    return _buildSpecialitiesDropdown(
-                                      state.specialities,
-                                    );
-                                  }
-                                  return _buildLoadingSpecialities();
-                                },
-                              ),
-                              Gap(30.h),
-
-                              // Sign Up Button
-                              BlocBuilder<DoctorRegistrationCubit,
-                                  DoctorRegistrationState>(
-                                builder: (context, state) {
-                                  final isLoading =
-                                      state is DoctorRegistrationLoading;
-
-                                  return AppTextButton(
-                                    buttonText: "Sign Up",
-                                    buttonHeight: 50.h,
-                                    buttonWidth: double.infinity,
-                                    onPressed: isLoading
-                                        ? null
-                                        : () async {
-                                            if (_controller.formKey.currentState
-                                                    ?.validate() ??
-                                                false) {
-                                              setState(() {
-                                                _isNavigating = true;
-                                              });
-
-                                              // Add a slight delay to show loading
-                                              await Future.delayed(
-                                                  const Duration(
-                                                      milliseconds: 2000));
-
-                                              if (mounted) {
-                                                setState(() {
-                                                  _isNavigating = false;
-                                                });
-                                                _controller.handleSignUp();
-                                              }
-                                            }
-                                          },
-                                    backgroundColor: ColorsManager.primary,
-                                    disabledBackgroundColor:
-                                        ColorsManager.disabled,
-                                    isLoading: isLoading,
-                                    textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Gap(30.h),
-
-                        // Social Sign Up Section
-                        //  const SignUpAlternatives(),
-
-                        Gap(40.h), // Extra bottom space
-                      ],
-                    ),
-                  ),
-                ],
+    return BlocListener<DoctorRegistrationCubit, DoctorRegistrationState>(
+      listener: (context, state) {
+        if (state is DoctorRegistrationError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              action: SnackBarAction(
+                label: 'Dismiss',
+                textColor: Colors.white,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
               ),
             ),
-          ),
-        ),
-        if (_isNavigating)
-          Container(
-            color: Colors.black.withOpacity(0.5),
-            child: Center(
-              child: Container(
-                padding: EdgeInsets.all(24.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
+          );
+        }
+      },
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(
-                      width: 40.w,
-                      height: 40.w,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 3.w,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            ColorsManager.primary),
+                    const header.MedLinkHeader(
+                        height: 220.0, showAnimation: true),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.r),
+                          topRight: Radius.circular(30.r),
+                        ),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding, vertical: 24.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SignUpTitle(),
+                          Gap(30.h),
+                          Form(
+                            key: _controller.formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                // First Name Field
+                                AppTextFormField(
+                                  labelText: "First Name",
+                                  controller: _controller.firstNameController,
+                                  hintText: "Enter your first name",
+                                  prefixIcon: Icon(
+                                    Icons.person_rounded,
+                                    color: ColorsManager.primary,
+                                    size: 20.sp,
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Please enter your first name";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Gap(20.h),
+
+                                // Last Name Field
+                                AppTextFormField(
+                                  labelText: "Last Name",
+                                  controller: _controller.lastNameController,
+                                  hintText: "Enter your last name",
+                                  prefixIcon: Icon(
+                                    Icons.person_rounded,
+                                    color: ColorsManager.primary,
+                                    size: 20.sp,
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Please enter your last name";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Gap(20.h),
+
+                                // Email Field
+                                AppTextFormField(
+                                  labelText: "Email Address",
+                                  controller: _controller.emailController,
+                                  hintText: "doctor@example.com",
+                                  keyboardType: TextInputType.emailAddress,
+                                  prefixIcon: Icon(
+                                    Icons.email_rounded,
+                                    color: ColorsManager.primary,
+                                    size: 20.sp,
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Please enter your email";
+                                    }
+                                    if (!RegExp(
+                                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                        .hasMatch(value)) {
+                                      return "Please enter a valid email";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Gap(verticalSpacing),
+
+                                // Password Field
+                                PasswordField(
+                                  label: "Password",
+                                  controller: _controller.passwordController,
+                                  hintText: "Enter your password",
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Please enter a password";
+                                    }
+                                    if (value.length < 6) {
+                                      return "Password must be at least 6 characters";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Gap(verticalSpacing),
+
+                                // Confirm Password Field
+                                PasswordField(
+                                  label: "Confirm Password",
+                                  controller:
+                                      _controller.confirmPasswordController,
+                                  hintText: "Re-enter your password",
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Please confirm your password";
+                                    }
+                                    if (value !=
+                                        _controller.passwordController.text) {
+                                      return "Passwords don't match";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Gap(verticalSpacing),
+
+                                // Phone Number Field
+                                PhoneInputField(
+                                  onPhoneChanged: _controller.onPhoneChanged,
+                                ),
+                                Gap(verticalSpacing),
+
+                                // Speciality Dropdown
+                                BlocBuilder<SpecialitiesCubit,
+                                    SpecialitiesState>(
+                                  builder: (context, state) {
+                                    if (state is SpecialitiesLoading) {
+                                      return _buildLoadingSpecialities();
+                                    } else if (state is SpecialitiesError) {
+                                      return _buildErrorSpecialities(
+                                          state.message);
+                                    } else if (state is SpecialitiesLoaded) {
+                                      return _buildSpecialitiesDropdown(
+                                        state.specialities,
+                                      );
+                                    }
+                                    return _buildLoadingSpecialities();
+                                  },
+                                ),
+                                Gap(30.h),
+
+                                // Sign Up Button
+                                BlocBuilder<DoctorRegistrationCubit,
+                                    DoctorRegistrationState>(
+                                  builder: (context, state) {
+                                    final isLoading =
+                                        state is DoctorRegistrationLoading;
+
+                                    return AppTextButton(
+                                      buttonText: "Sign Up",
+                                      buttonHeight: 50.h,
+                                      buttonWidth: double.infinity,
+                                      onPressed: isLoading
+                                          ? null
+                                          : () async {
+                                              if (_controller
+                                                      .formKey.currentState
+                                                      ?.validate() ??
+                                                  false) {
+                                                setState(() {
+                                                  _isNavigating = true;
+                                                });
+
+                                                // Add a slight delay to show loading
+                                                await Future.delayed(
+                                                    const Duration(
+                                                        milliseconds: 2000));
+
+                                                if (mounted) {
+                                                  setState(() {
+                                                    _isNavigating = false;
+                                                  });
+                                                  _controller.handleSignUp();
+                                                }
+                                              }
+                                            },
+                                      backgroundColor: ColorsManager.primary,
+                                      disabledBackgroundColor:
+                                          ColorsManager.disabled,
+                                      isLoading: isLoading,
+                                      textStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -439,7 +416,42 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
               ),
             ),
           ),
-      ],
+          if (_isNavigating)
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: Container(
+                  padding: EdgeInsets.all(24.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 40.w,
+                        height: 40.w,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3.w,
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                              ColorsManager.primary),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -461,23 +473,25 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
         hintText: "Select your medical speciality",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: ColorsManager.disabled),
+          borderSide: const BorderSide(color: ColorsManager.disabled),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: ColorsManager.disabled, width: 1.5),
+          borderSide:
+              const BorderSide(color: ColorsManager.disabled, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: ColorsManager.primary, width: 2.0),
+          borderSide:
+              const BorderSide(color: ColorsManager.primary, width: 2.0),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: Colors.red, width: 1.5),
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: Colors.red, width: 2.0),
+          borderSide: const BorderSide(color: Colors.red, width: 2.0),
         ),
         filled: true,
         fillColor: Colors.white,
@@ -498,7 +512,7 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
       ),
       dropdownColor: Colors.white,
       borderRadius: BorderRadius.circular(12.r),
-      icon: SizedBox.shrink(), // Hide default dropdown icon
+      icon: const SizedBox.shrink(), // Hide default dropdown icon
       isExpanded: true,
       style: TextStyle(
         fontSize: 16.sp,

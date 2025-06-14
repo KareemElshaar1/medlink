@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.untitled6"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = "29.0.13113456"
 
     compileOptions {
@@ -22,12 +22,11 @@ android {
 
     defaultConfig {
         applicationId = "com.example.untitled6"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
-
-        // تفعيل MultiDex
+         minSdk = 23
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0"
+        
         multiDexEnabled = true
     }
 

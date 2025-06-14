@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:medlink/feature/auth/patient/sign_up/presentation/manager/cubit/patient_register_state.dart';
 import 'package:medlink/core/helper/shared_pref_helper.dart';
 
@@ -18,7 +19,16 @@ class PatientRegistrationCubit extends Cubit<PatientRegistrationState> {
       await registerPatientUseCase.execute(patient);
       emit(PatientRegistrationSuccess());
     } catch (e) {
-      emit(PatientRegistrationError(e.toString()));
+      String errorMessage = 'Registration failed';
+      if (e is DioException) {
+        if (e.response?.data is Map<String, dynamic>) {
+          final errorData = e.response?.data as Map<String, dynamic>;
+          if (errorData.containsKey('detail')) {
+            errorMessage = errorData['detail'].toString();
+          }
+        }
+      }
+      emit(PatientRegistrationError(errorMessage));
     }
   }
 

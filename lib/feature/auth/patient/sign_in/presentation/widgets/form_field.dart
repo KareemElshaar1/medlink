@@ -38,12 +38,13 @@ class FormFields extends StatelessWidget {
               if (!RegExp(
                 r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
               ).hasMatch(value)) {
-                return 'Please enter a valid email';
+                return 'Please enter a valid email address';
               }
               return null;
             },
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
         ),
         Gap(20.h),
@@ -61,6 +62,9 @@ class FormFields extends StatelessWidget {
               if (value == null || value.isEmpty) {
                 return 'Please enter your password';
               }
+              if (value.length < 6) {
+                return 'Password must be at least 6 characters';
+              }
               return null;
             },
             suffixIcon: GestureDetector(
@@ -74,6 +78,7 @@ class FormFields extends StatelessWidget {
             ),
             textInputAction: TextInputAction.done,
             keyboardType: TextInputType.visiblePassword,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
         ),
       ],

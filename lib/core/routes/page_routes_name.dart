@@ -22,5 +22,4 @@ class PageRouteNames {
   static const String pharmacy = '/pharmacy';
   static const String checkout = '/checkout';
   static const String map = '/map';
-  static const String resetPassword = '/reset-password';
 }

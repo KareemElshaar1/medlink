@@ -38,6 +38,20 @@ class DoctorRemoteDataSourceImpl implements DoctorRemoteDataSource {
       }
 
       return false;
+    } on DioException catch (e) {
+      if (e.response?.data != null) {
+        if (e.response?.data is Map<String, dynamic>) {
+          final errorData = e.response?.data as Map<String, dynamic>;
+          if (errorData.containsKey('detail')) {
+            throw DioException(
+              requestOptions: e.requestOptions,
+              response: e.response,
+              error: errorData['detail'].toString(),
+            );
+          }
+        }
+      }
+      rethrow;
     } catch (e) {
       throw Exception('Registration failed: $e');
     }

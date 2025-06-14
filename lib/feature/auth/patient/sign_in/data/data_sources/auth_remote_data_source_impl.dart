@@ -22,7 +22,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return LoginResponseModel(
           isSuccess: false,
           statusCode: e.response?.statusCode ?? 500,
-          errors: e.response?.data['errors'] ?? 'Unknown error occurred',
+          errors: e,
         );
       }
       return LoginResponseModel(

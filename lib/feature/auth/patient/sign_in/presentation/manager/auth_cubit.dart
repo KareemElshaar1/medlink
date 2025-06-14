@@ -12,28 +12,48 @@ class AuthCubit extends Cubit<AuthState> {
       : super(AuthInitial());
 
   Future<void> checkAuthStatus() async {
-    emit(AuthLoading());
+    if (!isClosed) {
+      emit(AuthLoading());
+    }
 
-    final isLoggedIn = await checkAuthStatusUseCase();
+    try {
+      final isLoggedIn = await checkAuthStatusUseCase();
 
-    if (isLoggedIn) {
-      final email = await authRepository.getEmail() ?? '';
-      emit(AuthAuthenticated(email));
-    } else {
-      emit(AuthUnauthenticated());
+      if (!isClosed) {
+        if (isLoggedIn) {
+          final email = await authRepository.getEmail() ?? '';
+          emit(AuthAuthenticated(email));
+        } else {
+          emit(AuthUnauthenticated());
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(AuthError(e.toString()));
+      }
     }
   }
 
   Future<void> logout() async {
-    emit(AuthLoading());
+    if (!isClosed) {
+      emit(AuthLoading());
+    }
 
-    // Delete token and other auth data
-    await authRepository.logout();
+    try {
+      // Delete token and other auth data
+      await authRepository.logout();
 
-    // Clear any cached data
-    await authRepository.clearCache();
+      // Clear any cached data
+      await authRepository.clearCache();
 
-    // Emit unauthenticated state
-    emit(AuthUnauthenticated());
+      // Emit unauthenticated state
+      if (!isClosed) {
+        emit(AuthUnauthenticated());
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(AuthError(e.toString()));
+      }
+    }
   }
 }

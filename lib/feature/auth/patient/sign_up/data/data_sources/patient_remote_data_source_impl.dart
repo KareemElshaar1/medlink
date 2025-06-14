@@ -21,6 +21,9 @@ class PatientRemoteDataSourceImpl implements patientRemoteDataSource {
       }
 
       throw Exception('Registration failed: ${response.data['errors']}');
+    } on DioException catch (e) {
+      // Pass through the DioException to be handled by the cubit
+      rethrow;
     } catch (e) {
       throw Exception('Registration failed: $e');
     }

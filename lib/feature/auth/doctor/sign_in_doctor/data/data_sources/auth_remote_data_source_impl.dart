@@ -10,7 +10,8 @@ class AuthRemoteDataSourceDoctorImpl implements AuthRemoteDataSourceDoctor {
   AuthRemoteDataSourceDoctorImpl(this.dio);
 
   @override
-  Future<LoginResponseDoctorModel> login(LoginRequestDoctorModel loginRequest) async {
+  Future<LoginResponseDoctorModel> login(
+      LoginRequestDoctorModel loginRequest) async {
     try {
       final response = await dio.post(
         '/Auth/doc/Login',
@@ -22,7 +23,7 @@ class AuthRemoteDataSourceDoctorImpl implements AuthRemoteDataSourceDoctor {
         return LoginResponseDoctorModel(
           isSuccess: false,
           statusCode: e.response?.statusCode ?? 500,
-          errors: e.response?.data['errors'] ?? 'Unknown error occurred',
+          errors: e,
         );
       }
       return LoginResponseDoctorModel(

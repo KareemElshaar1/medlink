@@ -12,28 +12,48 @@ class AuthDoctorCubit extends Cubit<AuthDoctorState> {
       : super(AuthDoctorInitial());
 
   Future<void> checkAuthStatus() async {
-    emit(AuthDoctorLoading());
+    if (!isClosed) {
+      emit(AuthDoctorLoading());
+    }
 
-    final isLoggedIn = await checkAuthStatusUseCase();
+    try {
+      final isLoggedIn = await checkAuthStatusUseCase();
 
-    if (isLoggedIn) {
-      final email = await authRepository.getEmail() ?? '';
-      emit(AuthDoctorAuthenticated(email));
-    } else {
-      emit(AuthDoctorUnauthenticated());
+      if (!isClosed) {
+        if (isLoggedIn) {
+          final email = await authRepository.getEmail() ?? '';
+          emit(AuthDoctorAuthenticated(email));
+        } else {
+          emit(AuthDoctorUnauthenticated());
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(AuthDoctorError(e.toString()));
+      }
     }
   }
 
   Future<void> logout() async {
-    emit(AuthDoctorLoading());
+    if (!isClosed) {
+      emit(AuthDoctorLoading());
+    }
 
-    // Delete token and other auth data
-    await authRepository.logout();
+    try {
+      // Delete token and other auth data
+      await authRepository.logout();
 
-    // Clear any cached data
-    await authRepository.clearCache();
+      // Clear any cached data
+      await authRepository.clearCache();
 
-    // Emit unauthenticated state
-    emit(AuthDoctorUnauthenticated());
+      // Emit unauthenticated state
+      if (!isClosed) {
+        emit(AuthDoctorUnauthenticated());
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(AuthDoctorError(e.toString()));
+      }
+    }
   }
 }

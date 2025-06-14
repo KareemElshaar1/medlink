@@ -109,6 +109,7 @@ class _ProductPageState extends State<ProductPage> {
                   onPressed: () {
                     _searchController.clear();
                     setState(() => _isSearching = false);
+                    _searchRandomProduct(); // Reset to random search
                   },
                 )
               : null,
@@ -123,14 +124,28 @@ class _ProductPageState extends State<ProductPage> {
         ),
         onChanged: (value) {
           setState(() => _isSearching = value.isNotEmpty);
-        },
-        onSubmitted: (value) {
           if (value.isNotEmpty) {
             context.read<ProductCubit>().searchProducts(value);
           }
         },
       ),
     ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2);
+  }
+
+  Widget _buildProductGrid(List<Product> products) {
+    return GridView.builder(
+      padding: EdgeInsets.all(16.w),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.75,
+        crossAxisSpacing: 16.w,
+        mainAxisSpacing: 16.h,
+      ),
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        return _buildProductCard(products[index], index);
+      },
+    );
   }
 
   Widget _buildProductCard(Product product, int index) {
@@ -251,43 +266,23 @@ class _ProductPageState extends State<ProductPage> {
         children: [
           Icon(
             Icons.error_outline,
-            size: 64.w,
+            size: 48.w,
             color: ColorsManager.error,
-          )
-              .animate()
-              .fadeIn(duration: 600.ms)
-              .scale(begin: const Offset(0.8, 0.8)),
+          ),
           SizedBox(height: 16.h),
           Text(
             message,
             style: TextStyle(
-              color: ColorsManager.error,
+              color: ColorsManager.textDark,
               fontSize: 16.sp,
             ),
             textAlign: TextAlign.center,
-          ).animate().fadeIn(delay: 200.ms),
+          ),
           SizedBox(height: 16.h),
           ElevatedButton(
             onPressed: _searchRandomProduct,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ColorsManager.primary,
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-            ),
-            child: Text(
-              'حاول مرة أخرى',
-              style: TextStyle(
-                color: ColorsManager.background,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          )
-              .animate()
-              .fadeIn(delay: 400.ms)
-              .scale(begin: const Offset(0.8, 0.8)),
+            child: const Text('Try Again'),
+          ),
         ],
       ),
     );
@@ -295,114 +290,92 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GetIt.instance<ProductCubit>(),
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
-            backgroundColor: ColorsManager.background,
-            appBar: AppBar(
-              title: Text(
-                'الصيدلية',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: ColorsManager.background,
-                  fontSize: 20.sp,
+    return Scaffold(
+      backgroundColor: ColorsManager.background,
+      appBar: AppBar(
+        backgroundColor: ColorsManager.background,
+        elevation: 0,
+        title: Text(
+          'Products',
+          style: TextStyle(
+            color: ColorsManager.textDark,
+            fontSize: 20.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          Stack(
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.shopping_cart_outlined,
+                  color: ColorsManager.primary,
+                  size: 24.w,
                 ),
-              ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.2),
-              backgroundColor: ColorsManager.primary,
-              elevation: 0,
-              centerTitle: true,
-              iconTheme: const IconThemeData(color: ColorsManager.background),
-              actions: [
-                Stack(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.shopping_cart,
-                        size: 24.w,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CartPage(),
-                          ),
-                        ).then((_) => _loadCartItemCount());
-                      },
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CartPage()),
+                  );
+                },
+              ),
+              if (cartItemCount > 0)
+                Positioned(
+                  right: 8.w,
+                  top: 8.h,
+                  child: Container(
+                    padding: EdgeInsets.all(4.w),
+                    decoration: const BoxDecoration(
+                      color: ColorsManager.error,
+                      shape: BoxShape.circle,
                     ),
-                    if (cartItemCount > 0)
-                      Positioned(
-                        right: 8.w,
-                        top: 8.h,
-                        child: Container(
-                          padding: EdgeInsets.all(4.w),
-                          decoration: BoxDecoration(
-                            color: ColorsManager.error,
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          constraints: BoxConstraints(
-                            minWidth: 16.w,
-                            minHeight: 16.h,
-                          ),
-                          child: Text(
-                            '$cartItemCount',
-                            style: TextStyle(
-                              color: ColorsManager.background,
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                    child: Text(
+                      cartItemCount.toString(),
+                      style: TextStyle(
+                        color: ColorsManager.background,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
                       ),
-                  ],
-                )
-                    .animate()
-                    .fadeIn(duration: 600.ms)
-                    .scale(begin: const Offset(0.8, 0.8)),
-              ],
-            ),
-            body: BlocBuilder<ProductCubit, ProductState>(
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          SizedBox(width: 8.w),
+        ],
+      ),
+      body: Column(
+        children: [
+          _buildSearchBar(),
+          Expanded(
+            child: BlocBuilder<ProductCubit, ProductState>(
               builder: (context, state) {
-                return CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(child: _buildSearchBar()),
-                    if (state is ProductLoading)
-                      const SliverFillRemaining(
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: ColorsManager.primary,
-                          ),
-                        ),
-                      )
-                    else if (state is ProductError)
-                      SliverFillRemaining(
-                          child: _buildErrorState(state.message))
-                    else if (state is ProductSuccess)
-                      SliverPadding(
-                        padding: EdgeInsets.all(16.w),
-                        sliver: SliverGrid(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.75,
-                            crossAxisSpacing: 16.w,
-                            mainAxisSpacing: 16.h,
-                          ),
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) =>
-                                _buildProductCard(state.products[index], index),
-                            childCount: state.products.length,
-                          ),
+                if (state is ProductLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is ProductSuccess) {
+                  if (state.products.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No products found',
+                        style: TextStyle(
+                          color: ColorsManager.textMedium,
+                          fontSize: 16.sp,
                         ),
                       ),
-                  ],
-                );
+                    );
+                  }
+                  return _buildProductGrid(state.products);
+                } else if (state is ProductError) {
+                  return _buildErrorState(state.message);
+                }
+                return const SizedBox.shrink();
               },
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
