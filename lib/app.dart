@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/routes/page_routes_name.dart';
 import 'core/routes/routes.dart';
- 
+
 class Medlink extends StatelessWidget {
   const Medlink({super.key});
 
@@ -21,7 +21,7 @@ class Medlink extends StatelessWidget {
             elevation: 0,
           ),
         ),
-       // home: const ProductPage(),
+        // home: const ProductPage(),
         initialRoute: PageRouteNames.initial,
         onGenerateRoute: Routes.onGeneratedRoute,
       ),

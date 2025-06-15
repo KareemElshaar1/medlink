@@ -96,14 +96,14 @@ class _CartPageState extends State<CartPage> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('تم حذف المنتج من السلة'),
+          content: const Text('Product removed from cart'),
           backgroundColor: ColorsManager.primary,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
           ),
           action: SnackBarAction(
-            label: 'تراجع',
+            label: 'Undo',
             textColor: ColorsManager.background,
             onPressed: () async {
               setState(() {
@@ -138,7 +138,7 @@ class _CartPageState extends State<CartPage> {
             borderRadius: BorderRadius.circular(16.r),
           ),
           title: Text(
-            'تأكيد الحذف',
+            'Confirm Delete',
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
@@ -146,7 +146,7 @@ class _CartPageState extends State<CartPage> {
             ),
           ),
           content: Text(
-            'هل أنت متأكد من حذف جميع المنتجات من السلة؟',
+            'Are you sure you want to delete all products from the cart?',
             style: TextStyle(
               fontSize: 16.sp,
               color: ColorsManager.textMedium,
@@ -156,7 +156,7 @@ class _CartPageState extends State<CartPage> {
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
               child: Text(
-                'إلغاء',
+                'Cancel',
                 style: TextStyle(
                   color: ColorsManager.primary,
                   fontSize: 16.sp,
@@ -166,7 +166,7 @@ class _CartPageState extends State<CartPage> {
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
               child: Text(
-                'حذف الكل',
+                'Delete All',
                 style: TextStyle(
                   color: ColorsManager.error,
                   fontSize: 16.sp,
@@ -190,14 +190,14 @@ class _CartPageState extends State<CartPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('تم حذف جميع المنتجات من السلة'),
+            content: const Text('All products removed from cart'),
             backgroundColor: ColorsManager.primary,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.r),
             ),
             action: SnackBarAction(
-              label: 'تراجع',
+              label: 'Undo',
               textColor: ColorsManager.background,
               onPressed: () async {
                 await _loadCartItems();
@@ -223,7 +223,7 @@ class _CartPageState extends State<CartPage> {
         backgroundColor: ColorsManager.background,
         elevation: 0,
         title: Text(
-          'سلة المشتريات',
+          'Shopping Cart',
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
@@ -239,7 +239,7 @@ class _CartPageState extends State<CartPage> {
                 size: 24.w,
               ),
               onPressed: _deleteAllItems,
-              tooltip: 'حذف الكل',
+              tooltip: 'Delete All',
             ),
         ],
       ),
@@ -261,7 +261,7 @@ class _CartPageState extends State<CartPage> {
                       ),
                       SizedBox(height: 16.h),
                       Text(
-                        'السلة فارغة',
+                        'Cart is Empty',
                         style: TextStyle(
                           fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
@@ -270,7 +270,7 @@ class _CartPageState extends State<CartPage> {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        'أضف بعض المنتجات إلى سلة المشتريات',
+                        'Add some products to your cart',
                         style: TextStyle(
                           fontSize: 16.sp,
                           color: ColorsManager.textMedium,
@@ -314,7 +314,7 @@ class _CartPageState extends State<CartPage> {
                                             BorderRadius.circular(16.r),
                                       ),
                                       title: Text(
-                                        'تأكيد الحذف',
+                                        'Confirm Delete',
                                         style: TextStyle(
                                           fontSize: 18.sp,
                                           fontWeight: FontWeight.bold,
@@ -322,7 +322,7 @@ class _CartPageState extends State<CartPage> {
                                         ),
                                       ),
                                       content: Text(
-                                        'هل أنت متأكد من حذف هذا المنتج؟',
+                                        'Are you sure you want to delete this product?',
                                         style: TextStyle(
                                           fontSize: 16.sp,
                                           color: ColorsManager.textMedium,
@@ -333,7 +333,7 @@ class _CartPageState extends State<CartPage> {
                                           onPressed: () =>
                                               Navigator.of(context).pop(false),
                                           child: Text(
-                                            'إلغاء',
+                                            'Cancel',
                                             style: TextStyle(
                                               color: ColorsManager.primary,
                                               fontSize: 16.sp,
@@ -344,7 +344,7 @@ class _CartPageState extends State<CartPage> {
                                           onPressed: () =>
                                               Navigator.of(context).pop(true),
                                           child: Text(
-                                            'حذف',
+                                            'Delete',
                                             style: TextStyle(
                                               color: ColorsManager.error,
                                               fontSize: 16.sp,
@@ -405,7 +405,7 @@ class _CartPageState extends State<CartPage> {
                                           ),
                                           SizedBox(height: 4.h),
                                           Text(
-                                            '${item.price} ج.م',
+                                            '${item.price} EGP',
                                             style: TextStyle(
                                               fontSize: 14.sp,
                                               color: ColorsManager.primary,
@@ -475,7 +475,7 @@ class _CartPageState extends State<CartPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'المجموع:',
+                                'Total:',
                                 style: TextStyle(
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.bold,
@@ -483,7 +483,7 @@ class _CartPageState extends State<CartPage> {
                                 ),
                               ),
                               Text(
-                                '${total.toStringAsFixed(2)} ج.م',
+                                '${total.toStringAsFixed(2)} EGP',
                                 style: TextStyle(
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.bold,
@@ -506,7 +506,7 @@ class _CartPageState extends State<CartPage> {
                                 elevation: 0,
                               ),
                               child: Text(
-                                'الدفع',
+                                'Checkout',
                                 style: TextStyle(
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.bold,

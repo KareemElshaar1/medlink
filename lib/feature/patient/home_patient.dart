@@ -57,6 +57,8 @@ class AutoScrollDoctorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        'AutoScrollDoctorCard profile pic: ${doctor.profilePic}'); // Debug log
     return GestureDetector(
       onTap: () {
         final doctorModel = DoctorBySpecialtyModel(
@@ -79,342 +81,306 @@ class AutoScrollDoctorCard extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
               Colors.white,
-              Color(0xFFF8FAFC),
+              const Color(0xFFF8FAFC),
+              ColorsManager.primary.withOpacity(0.05),
             ],
           ),
-          borderRadius: BorderRadius.circular(24.r),
+          borderRadius: BorderRadius.circular(28.r),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF6366F1).withOpacity(0.08),
-              blurRadius: 24,
+              color: ColorsManager.primary.withOpacity(0.15),
+              blurRadius: 25,
               offset: const Offset(0, 12),
               spreadRadius: 0,
             ),
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
               spreadRadius: 0,
             ),
           ],
-          border: Border.all(
-            color: const Color(0xFFE2E8F0),
-            width: 1,
-          ),
         ),
-        child: Padding(
-          padding: EdgeInsets.all(20.w),
-          child: Row(
-            children: [
-              // Enhanced Profile Picture Section
-              Stack(
+        child: Stack(
+          children: [
+            // Decorative background elements
+            Positioned(
+              right: -40.w,
+              top: -40.h,
+              child: Container(
+                width: 180.w,
+                height: 180.h,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      ColorsManager.primary.withOpacity(0.1),
+                      ColorsManager.primary.withOpacity(0.05),
+                      ColorsManager.primary.withOpacity(0),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: -30.w,
+              bottom: -30.h,
+              child: Container(
+                width: 140.w,
+                height: 140.h,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      ColorsManager.secondary.withOpacity(0.1),
+                      ColorsManager.secondary.withOpacity(0.05),
+                      ColorsManager.secondary.withOpacity(0),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // Main content
+            Padding(
+              padding: EdgeInsets.all(24.w),
+              child: Row(
                 children: [
-                  // Gradient background circle
-                  Container(
-                    width: 88.w,
-                    height: 88.h,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFF6366F1),
-                          Color(0xFF8B5CF6),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Profile picture or avatar
-                  Container(
-                    width: 88.w,
-                    height: 88.h,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 3,
-                      ),
-                    ),
-                    child: ClipOval(
-                      child: doctor.profilePic != null
-                          ? Image.network(
-                              'http://medlink.runasp.net${doctor.profilePic}',
-                              width: 88.w,
-                              height: 88.h,
-                              fit: BoxFit.cover,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  width: 88.w,
-                                  height: 88.h,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.grey[100],
-                                  ),
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      value:
-                                          loadingProgress.expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                      strokeWidth: 2,
-                                      valueColor:
-                                          const AlwaysStoppedAnimation<Color>(
-                                        Color(0xFF6366F1),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return _buildAvatarFallback();
-                              },
-                            )
-                          : _buildAvatarFallback(),
-                    ),
-                  ),
-                  // Online status indicator
-                  Positioned(
-                    bottom: 4.h,
-                    right: 4.w,
-                    child: Container(
-                      width: 20.w,
-                      height: 20.h,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF10B981),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2,
+                  // Enhanced 3D Profile Picture Section
+                  Stack(
+                    children: [
+                      // Bottom shadow layer
+                      Transform(
+                        transform: Matrix4.identity()
+                          ..setEntry(3, 2, 0.001)
+                          ..rotateY(0.05)
+                          ..translate(0.0, 8.0, 0.0),
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 130.w,
+                          height: 130.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
+                      // Middle accent layer
+                      Transform(
+                        transform: Matrix4.identity()
+                          ..setEntry(3, 2, 0.001)
+                          ..rotateY(0.05)
+                          ..translate(0.0, 4.0, 0.0),
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 130.w,
+                          height: 130.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.r),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                ColorsManager.primary.withOpacity(0.2),
+                                ColorsManager.secondary.withOpacity(0.2),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Main image layer
+                      Transform(
+                        transform: Matrix4.identity()
+                          ..setEntry(3, 2, 0.001)
+                          ..rotateY(0.05),
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 130.w,
+                          height: 130.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: ColorsManager.primary.withOpacity(0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                                spreadRadius: 2,
+                              ),
+                              const BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 12,
+                                offset: Offset(-6, -6),
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24.r),
+                            child: doctor.profilePic != null
+                                ? CachedNetworkImage(
+                                    imageUrl: doctor.profilePic!
+                                            .startsWith('http')
+                                        ? doctor.profilePic!
+                                        : 'http://medlink.runasp.net${doctor.profilePic}',
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            ColorsManager.primary
+                                                .withOpacity(0.1),
+                                            ColorsManager.secondary
+                                                .withOpacity(0.1),
+                                          ],
+                                        ),
+                                      ),
+                                      child: const Center(
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  ColorsManager.primary),
+                                        ),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) {
+                                      print(
+                                          'Error loading image: $error'); // Debug log
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              ColorsManager.primary
+                                                  .withOpacity(0.1),
+                                              ColorsManager.secondary
+                                                  .withOpacity(0.1),
+                                            ],
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.person,
+                                          size: 70.w,
+                                          color: ColorsManager.primary,
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          ColorsManager.primary
+                                              .withOpacity(0.1),
+                                          ColorsManager.secondary
+                                              .withOpacity(0.1),
+                                        ],
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.person,
+                                      size: 70.w,
+                                      color: ColorsManager.primary,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(width: 24.w),
+                  // Doctor Information Section
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Dr. ${doctor.firstName} ${doctor.lastName}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22.sp,
+                            color: ColorsManager.textDark,
+                            height: 1.2,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 14.w, vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color: ColorsManager.primary.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(14.r),
+                            border: Border.all(
+                              color: ColorsManager.primary.withOpacity(0.2),
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            doctor.speciality,
+                            style: TextStyle(
+                              color: ColorsManager.primary,
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 14.h),
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(8.w),
+                              decoration: BoxDecoration(
+                                color: Colors.amber.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(10.r),
+                                border: Border.all(
+                                  color: Colors.amber.withOpacity(0.2),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.star_rounded,
+                                color: Colors.amber,
+                                size: 22.sp,
+                              ),
+                            ),
+                            SizedBox(width: 10.w),
+                            Text(
+                              doctor.rate?.toString() ?? 'N/A',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.sp,
+                                color: ColorsManager.textDark,
+                                letterSpacing: -0.3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-
-              SizedBox(width: 20.w),
-
-              // Doctor Information Section
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Doctor Name
-                    Text(
-                      'Dr. ${doctor.firstName} ${doctor.lastName}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 18.sp,
-                        color: const Color(0xFF1E293B),
-                        letterSpacing: -0.5,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    SizedBox(height: 8.h),
-
-                    // Specialty with icon
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 6.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF6366F1).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(
-                          color: const Color(0xFF6366F1).withOpacity(0.2),
-                          width: 1,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.medical_services_rounded,
-                            size: 14.sp,
-                            color: const Color(0xFF6366F1),
-                          ),
-                          SizedBox(width: 6.w),
-                          Flexible(
-                            child: Text(
-                              doctor.speciality,
-                              style: TextStyle(
-                                color: const Color(0xFF6366F1),
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: 12.h),
-
-                    // Rating and additional info
-                    Row(
-                      children: [
-                        // Rating
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                            vertical: 4.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFBBF24).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.star_rounded,
-                                color: const Color(0xFFFBBF24),
-                                size: 16.sp,
-                              ),
-                              SizedBox(width: 4.w),
-                              Text(
-                                doctor.rate?.toStringAsFixed(1) ?? 'N/A',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 13.sp,
-                                  color: const Color(0xFF92400E),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        SizedBox(width: 12.w),
-
-                        // Experience indicator
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                            vertical: 4.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF10B981).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.verified_rounded,
-                                color: const Color(0xFF10B981),
-                                size: 14.sp,
-                              ),
-                              SizedBox(width: 4.w),
-                              Text(
-                                'Verified',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 11.sp,
-                                  color: const Color(0xFF065F46),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(width: 16.w),
-
-              // Action Button
-              Container(
-                width: 44.w,
-                height: 44.h,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF6366F1),
-                      Color(0xFF8B5CF6),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF6366F1).withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.arrow_forward_rounded,
-                  color: Colors.white,
-                  size: 20.sp,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAvatarFallback() {
-    // Create initials from first and last name
-    String initials = '';
-    if (doctor.firstName.isNotEmpty) {
-      initials += doctor.firstName[0].toUpperCase();
-    }
-    if (doctor.lastName.isNotEmpty) {
-      initials += doctor.lastName[0].toUpperCase();
-    }
-
-    return Container(
-      width: 88.w,
-      height: 88.h,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF6366F1),
-            Color(0xFF8B5CF6),
+            ),
           ],
         ),
-      ),
-      child: Center(
-        child: initials.isNotEmpty
-            ? Text(
-                initials,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32.sp,
-                  fontWeight: FontWeight.w700,
-                ),
-              )
-            : Icon(
-                Icons.person_rounded,
-                size: 44.sp,
-                color: Colors.white,
-              ),
       ),
     );
   }
@@ -544,7 +510,7 @@ class _HomePatientContentState extends State<HomePatientContent> {
                                   child: profile?.profilePic != null
                                       ? CachedNetworkImage(
                                           imageUrl:
-                                              'http://medlink.runasp.net${profile!.profilePic}',
+                                              'http://medlink.runasp.net/UserProfilePic/${profile!.profilePic!.split('/').last}',
                                           width: 48.w,
                                           height: 48.w,
                                           fit: BoxFit.cover,
@@ -859,6 +825,7 @@ class _HomePatientContentState extends State<HomePatientContent> {
   }
 
   Widget _doctorCard(RecommendationDoctor doctor) {
+    print('Doctor profile pic: ${doctor.profilePic}'); // Debug log
     return Builder(
       builder: (context) => GestureDetector(
         onTap: () {
@@ -895,33 +862,51 @@ class _HomePatientContentState extends State<HomePatientContent> {
           ),
           child: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(14.r),
-                child: doctor.profilePic != null
-                    ? Image.network(
-                        'http://medlink.runasp.net${doctor.profilePic}',
-                        width: 72.w,
-                        height: 72.w,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            width: 72.w,
-                            height: 72.w,
-                            color: Colors.grey[200],
-                            child: Icon(Icons.person,
-                                size: 36.sp, color: Colors.grey[400]),
-                          );
-                        },
-                      )
-                    : Container(
-                        width: 72.w,
-                        height: 72.w,
-                        color: Colors.grey[200],
-                        child: Icon(Icons.person,
-                            size: 36.sp, color: Colors.grey[400]),
-                      ),
+              Container(
+                width: 80.w,
+                height: 80.w,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      ColorsManager.primary.withOpacity(0.1),
+                      ColorsManager.secondary.withOpacity(0.1),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.r),
+                  child: doctor.profilePic != null
+                      ? CachedNetworkImage(
+                          imageUrl: doctor.profilePic!.startsWith('http')
+                              ? doctor.profilePic!
+                              : 'http://medlink.runasp.net${doctor.profilePic}',
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  ColorsManager.primary),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) {
+                            print('Error loading image: $error'); // Debug log
+                            return Icon(
+                              Icons.person,
+                              size: 40.w,
+                              color: ColorsManager.primary,
+                            );
+                          },
+                        )
+                      : Icon(
+                          Icons.person,
+                          size: 40.w,
+                          color: ColorsManager.primary,
+                        ),
+                ),
               ),
-              SizedBox(width: 20.w),
+              SizedBox(width: 16.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -929,37 +914,38 @@ class _HomePatientContentState extends State<HomePatientContent> {
                     Text(
                       'Dr. ${doctor.firstName} ${doctor.lastName}',
                       style: TextStyle(
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18.sp,
                       ),
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: 4.h),
                     Text(
                       doctor.speciality,
                       style: TextStyle(
-                        color: Colors.grey[600],
                         fontSize: 14.sp,
+                        color: Colors.grey[600],
                       ),
                     ),
-                    SizedBox(height: 12.h),
+                    SizedBox(height: 8.h),
                     Row(
                       children: [
-                        Icon(Icons.star, color: Colors.amber, size: 20.sp),
-                        SizedBox(width: 6.w),
+                        Icon(
+                          Icons.star,
+                          size: 16.w,
+                          color: Colors.amber,
+                        ),
+                        SizedBox(width: 4.w),
                         Text(
-                          doctor.rate?.toString() ?? 'N/A',
+                          doctor.rate?.toStringAsFixed(1) ?? '0.0',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 14.sp),
+                            fontSize: 14.sp,
+                            color: Colors.grey[600],
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
-              ),
-              Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: Colors.grey[400],
-                size: 18.sp,
               ),
             ],
           ),
@@ -1384,6 +1370,8 @@ class _AutoScrollDoctorListState extends State<AutoScrollDoctorList> {
   }
 
   Widget _buildDoctorCard(RecommendationDoctor doctor) {
+    print(
+        'AutoScrollDoctorList - Doctor profile pic: ${doctor.profilePic}'); // Debug log
     return GestureDetector(
       onTap: () {
         final doctorModel = DoctorBySpecialtyModel(
@@ -1414,72 +1402,209 @@ class _AutoScrollDoctorListState extends State<AutoScrollDoctorList> {
               ColorsManager.secondary.withOpacity(0.1),
             ],
           ),
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(24.r),
           boxShadow: [
             BoxShadow(
-              color: ColorsManager.primary.withOpacity(0.1),
-              blurRadius: 16,
-              offset: const Offset(0, 8),
+              color: ColorsManager.primary.withOpacity(0.15),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+              spreadRadius: 0,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+              spreadRadius: 0,
             ),
           ],
         ),
         child: Stack(
           children: [
+            // Decorative background elements
             Positioned(
-              right: -20.w,
-              top: -20.h,
+              right: -30.w,
+              top: -30.h,
               child: Container(
-                width: 100.w,
-                height: 100.h,
+                width: 150.w,
+                height: 150.h,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: ColorsManager.primary.withOpacity(0.1),
                 ),
               ),
             ),
+            Positioned(
+              left: -20.w,
+              bottom: -20.h,
+              child: Container(
+                width: 100.w,
+                height: 100.h,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: ColorsManager.secondary.withOpacity(0.1),
+                ),
+              ),
+            ),
+            // Main content
             Padding(
-              padding: EdgeInsets.all(16.w),
+              padding: EdgeInsets.all(20.w),
               child: Row(
                 children: [
-                  Container(
-                    width: 80.w,
-                    height: 80.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: ColorsManager.primary.withOpacity(0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
+                  // Enhanced Profile Picture Section
+                  Stack(
+                    children: [
+                      // Bottom shadow layer
+                      Transform(
+                        transform: Matrix4.identity()
+                          ..setEntry(3, 2, 0.001)
+                          ..rotateY(0.05)
+                          ..translate(0.0, 8.0, 0.0),
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 130.w,
+                          height: 130.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(14.r),
-                      child: doctor.profilePic != null
-                          ? Image.network(
-                              'http://medlink.runasp.net${doctor.profilePic}',
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  color: Colors.grey[200],
-                                  child: Icon(Icons.person,
-                                      size: 36.sp, color: Colors.grey[400]),
-                                );
-                              },
-                            )
-                          : Container(
-                              color: Colors.grey[200],
-                              child: Icon(Icons.person,
-                                  size: 36.sp, color: Colors.grey[400]),
+                      ),
+                      // Middle accent layer
+                      Transform(
+                        transform: Matrix4.identity()
+                          ..setEntry(3, 2, 0.001)
+                          ..rotateY(0.05)
+                          ..translate(0.0, 4.0, 0.0),
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 130.w,
+                          height: 130.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.r),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                ColorsManager.primary.withOpacity(0.2),
+                                ColorsManager.secondary.withOpacity(0.2),
+                              ],
                             ),
-                    ),
+                          ),
+                        ),
+                      ),
+                      // Main image layer
+                      Transform(
+                        transform: Matrix4.identity()
+                          ..setEntry(3, 2, 0.001)
+                          ..rotateY(0.05),
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: 130.w,
+                          height: 130.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: ColorsManager.primary.withOpacity(0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                                spreadRadius: 2,
+                              ),
+                              const BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 12,
+                                offset: Offset(-6, -6),
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24.r),
+                            child: doctor.profilePic != null
+                                ? CachedNetworkImage(
+                                    imageUrl: doctor.profilePic!
+                                            .startsWith('http')
+                                        ? doctor.profilePic!
+                                        : 'http://medlink.runasp.net${doctor.profilePic}',
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            ColorsManager.primary
+                                                .withOpacity(0.1),
+                                            ColorsManager.secondary
+                                                .withOpacity(0.1),
+                                          ],
+                                        ),
+                                      ),
+                                      child: const Center(
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  ColorsManager.primary),
+                                        ),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) {
+                                      print(
+                                          'Error loading image: $error'); // Debug log
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              ColorsManager.primary
+                                                  .withOpacity(0.1),
+                                              ColorsManager.secondary
+                                                  .withOpacity(0.1),
+                                            ],
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.person,
+                                          size: 70.w,
+                                          color: ColorsManager.primary,
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          ColorsManager.primary
+                                              .withOpacity(0.1),
+                                          ColorsManager.secondary
+                                              .withOpacity(0.1),
+                                        ],
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.person,
+                                      size: 70.w,
+                                      color: ColorsManager.primary,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 16.w),
+                  SizedBox(width: 20.w),
+                  // Doctor Information Section
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1489,37 +1614,49 @@ class _AutoScrollDoctorListState extends State<AutoScrollDoctorList> {
                           'Dr. ${doctor.firstName} ${doctor.lastName}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18.sp,
+                            fontSize: 20.sp,
                             color: ColorsManager.textDark,
+                            height: 1.2,
                           ),
                         ),
-                        SizedBox(height: 6.h),
+                        SizedBox(height: 8.h),
                         Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 8.w, vertical: 4.h),
+                              horizontal: 12.w, vertical: 6.h),
                           decoration: BoxDecoration(
                             color: ColorsManager.primary.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8.r),
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: Text(
                             doctor.speciality,
                             style: TextStyle(
                               color: ColorsManager.primary,
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
                         SizedBox(height: 12.h),
                         Row(
                           children: [
-                            Icon(Icons.star, color: Colors.amber, size: 18.sp),
-                            SizedBox(width: 4.w),
+                            Container(
+                              padding: EdgeInsets.all(6.w),
+                              decoration: BoxDecoration(
+                                color: Colors.amber.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Icon(
+                                Icons.star_rounded,
+                                color: Colors.amber,
+                                size: 20.sp,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
                             Text(
                               doctor.rate?.toString() ?? 'N/A',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14.sp,
+                                fontSize: 16.sp,
                                 color: ColorsManager.textDark,
                               ),
                             ),

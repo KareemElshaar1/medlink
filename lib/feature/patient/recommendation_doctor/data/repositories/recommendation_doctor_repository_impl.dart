@@ -16,6 +16,7 @@ class RecommendationDoctorRepositoryImpl
       final response = await remoteDataSource.getRecommendationDoctors();
       if (response.statusCode == 200) {
         final List<dynamic> doctorsJson = response.data;
+        print('API Response for doctors: $doctorsJson'); // Debug log
         return doctorsJson
             .map((json) => RecommendationDoctorModel.fromJson(json))
             .toList();

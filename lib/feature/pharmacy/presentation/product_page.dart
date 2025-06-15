@@ -89,7 +89,7 @@ class _ProductPageState extends State<ProductPage> {
       child: TextField(
         controller: _searchController,
         decoration: InputDecoration(
-          hintText: 'ابحث عن دواء...',
+          hintText: 'Search for medicine...',
           hintStyle: TextStyle(
             color: ColorsManager.textMedium,
             fontSize: 16.sp,
@@ -109,7 +109,7 @@ class _ProductPageState extends State<ProductPage> {
                   onPressed: () {
                     _searchController.clear();
                     setState(() => _isSearching = false);
-                    _searchRandomProduct(); // Reset to random search
+                    _searchRandomProduct();
                   },
                 )
               : null,

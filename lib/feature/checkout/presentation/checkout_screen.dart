@@ -67,7 +67,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         backgroundColor: ColorsManager.background,
         elevation: 0,
         title: Text(
-          'تأكيد الطلب',
+          'Confirm Order',
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
@@ -147,7 +147,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
                 Gap(8.w),
                 Text(
-                  'عنوان التوصيل',
+                  'Delivery Address',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
@@ -163,7 +163,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     size: 20.w,
                   ),
                   label: Text(
-                    'تغيير',
+                    'Change',
                     style: TextStyle(
                       color: ColorsManager.primary,
                       fontSize: 14.sp,
@@ -174,7 +174,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ),
             Gap(8.h),
             Text(
-              _savedAddress ?? 'لا يوجد عنوان محدد',
+              _savedAddress ?? 'No address selected',
               style: TextStyle(
                 fontSize: 16.sp,
                 color: ColorsManager.textMedium,
@@ -191,7 +191,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'ملخص الطلب',
+          'Order Summary',
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -217,18 +217,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             child: Column(
               children: [
                 _buildOrderItem(
-                  'تكلفة المنتجات',
-                  '${_total.toStringAsFixed(2)} ج.م',
+                  'Products Cost',
+                  '${_total.toStringAsFixed(2)} EGP',
                 ),
                 const Divider(color: ColorsManager.border),
                 _buildOrderItem(
-                  'تكلفة التوصيل',
-                  '20 ج.م',
+                  'Delivery Cost',
+                  '20 EGP',
                 ),
                 const Divider(color: ColorsManager.border),
                 _buildOrderItem(
-                  'المجموع',
-                  '${(_total + 20).toStringAsFixed(2)} ج.م',
+                  'Total',
+                  '${(_total + 20).toStringAsFixed(2)} EGP',
                   isTotal: true,
                 ),
               ],
@@ -244,7 +244,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'طريقة الدفع',
+          'Payment Method',
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -270,7 +270,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             child: Column(
               children: [
                 _buildPaymentMethodItem(
-                  'الدفع ببطاقة الائتمان',
+                  'Credit Card Payment',
                   Icons.credit_card,
                   isSelected: true,
                   onTap: () {
@@ -284,7 +284,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
                 const Divider(color: ColorsManager.border),
                 _buildPaymentMethodItem(
-                  'الدفع عند الاستلام',
+                  'Cash on Delivery',
                   Icons.money,
                   onTap: () {},
                 ),
@@ -306,7 +306,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ? () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: const Text('يجب تحديد عنوان التوصيل أولاً'),
+                        content: const Text(
+                            'Please select a delivery address first'),
                         backgroundColor: ColorsManager.error,
                         behavior: SnackBarBehavior.floating,
                         shape: RoundedRectangleBorder(
@@ -335,7 +336,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               )
             : Text(
-                'تأكيد الطلب',
+                'Confirm Order',
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
@@ -430,7 +431,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('تم تأكيد الطلب بنجاح'),
+          content: const Text('Order confirmed successfully'),
           backgroundColor: ColorsManager.success,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -448,7 +449,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('حدث خطأ أثناء تأكيد الطلب'),
+          content: const Text('Error confirming order'),
           backgroundColor: ColorsManager.error,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(

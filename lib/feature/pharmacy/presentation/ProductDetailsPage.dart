@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:gap/gap.dart';
 import 'dart:convert';
 
 import '../../../core/utils/color_manger.dart';
@@ -38,7 +39,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     );
 
     try {
-      // Get existing cart items
       String cartJson = await SharedPrefHelper.getString('cart_items');
       List<dynamic> cartList = [];
 
@@ -46,16 +46,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         cartList = json.decode(cartJson);
       }
 
-      // Add new item
       cartList.add(cartItem.toJson());
 
-      // Save updated cart
       await SharedPrefHelper.setData('cart_items', json.encode(cartList));
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('تم إضافة ${widget.name} إلى السلة'),
+            content: Text('${widget.name} added to cart'),
             backgroundColor: ColorsManager.primary,
             duration: const Duration(seconds: 2),
           ),
@@ -72,7 +70,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('حدث خطأ أثناء إضافة المنتج للسلة'),
+            content: Text('Error adding product to cart'),
             backgroundColor: Colors.red,
             duration: Duration(seconds: 2),
           ),
@@ -90,36 +88,31 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     );
 
     try {
-      // Save single item for checkout
       List<Map<String, dynamic>> cartList = [cartItem.toJson()];
       await SharedPrefHelper.setData('cart_items', json.encode(cartList));
 
-      // Calculate and save total
       double total =
           double.parse(widget.price.replaceAll(RegExp(r'[^0-9.]'), '')) *
               quantity;
       await SharedPrefHelper.setData('cart_total', total);
 
       if (mounted) {
-        // Check if user has a saved address
         final savedAddress = await SharedPrefHelper.getString('user_address');
 
         if (savedAddress == null || savedAddress.isEmpty) {
-          // Show message about selecting address
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('يجب تحديد عنوان التوصيل أولاً'),
+              content: const Text('Please select a delivery address first'),
               backgroundColor: ColorsManager.primary,
               duration: const Duration(seconds: 2),
               action: SnackBarAction(
-                label: 'حسناً',
+                label: 'OK',
                 textColor: Colors.white,
                 onPressed: () {},
               ),
             ),
           );
 
-          // Navigate to map page
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -127,7 +120,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             ),
           );
         } else {
-          // If address exists, go directly to checkout
           Navigator.pushNamed(context, PageRouteNames.checkout);
         }
       }
@@ -135,7 +127,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('حدث خطأ أثناء إضافة المنتج للسلة'),
+            content: Text('Error adding product to cart'),
             backgroundColor: Colors.red,
             duration: Duration(seconds: 2),
           ),
@@ -187,7 +179,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Product Image
                   Container(
                     width: double.infinity,
                     height: 300.h,
@@ -230,7 +221,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                 borderRadius: BorderRadius.circular(20.r),
                               ),
                               child: Text(
-                                '${widget.price} جنيه',
+                                '${widget.price} EGP',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16.sp,
@@ -246,10 +237,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       .animate()
                       .fadeIn(duration: 600.ms)
                       .scale(begin: const Offset(0.9, 0.9)),
-
                   SizedBox(height: 24.h),
-
-                  // Product Name
                   Text(
                     widget.name,
                     style: TextStyle(
@@ -258,14 +246,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       color: Colors.black87,
                     ),
                   ).animate().fadeIn(delay: 200.ms).slideX(begin: -0.2),
-
                   SizedBox(height: 16.h),
-
-                  // Price
                   Row(
                     children: [
                       Text(
-                        '${widget.price} ج.م',
+                        '${widget.price} EGP',
                         style: TextStyle(
                           fontSize: 28.sp,
                           fontWeight: FontWeight.bold,
@@ -277,7 +262,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           .scale(begin: const Offset(0.8, 0.8)),
                       SizedBox(width: 8.w),
                       Text(
-                        '${(productPrice * 1.2).toStringAsFixed(0)} ج.م',
+                        '${(productPrice * 1.2).toStringAsFixed(0)} EGP',
                         style: TextStyle(
                           fontSize: 18.sp,
                           decoration: TextDecoration.lineThrough,
@@ -286,10 +271,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       ).animate().fadeIn(delay: 400.ms),
                     ],
                   ),
-
                   SizedBox(height: 24.h),
-
-                  // Quantity Selector
                   Container(
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
@@ -306,7 +288,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     child: Row(
                       children: [
                         Text(
-                          'الكمية:',
+                          'Quantity:',
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w600,
@@ -354,10 +336,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       ],
                     ),
                   ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.2),
-
                   SizedBox(height: 32.h),
-
-                  // Product Description
                   Container(
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
@@ -375,7 +354,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'وصف المنتج',
+                          'Product Description',
                           style: TextStyle(
                             fontSize: 20.sp,
                             fontWeight: FontWeight.bold,
@@ -383,7 +362,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          'هذا منتج عالي الجودة يتميز بالمتانة والأداء الممتاز. مناسب للاستخدام اليومي ويأتي بضمان شامل.',
+                          'This is a high-quality product known for its durability and excellent performance. Suitable for daily use and comes with a comprehensive warranty.',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: ColorsManager.gray,
@@ -397,8 +376,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               ),
             ),
           ),
-
-          // Bottom Action Buttons
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
@@ -414,19 +391,18 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             ),
             child: Column(
               children: [
-                // Total Price
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'المجموع:',
+                      'Total:',
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
-                      '${(productPrice * quantity).toStringAsFixed(0)} ج.م',
+                      '${(productPrice * quantity).toStringAsFixed(0)} EGP',
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
@@ -435,17 +411,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
                   ],
                 ).animate().fadeIn(delay: 700.ms),
-
                 SizedBox(height: 16.h),
-
-                // Action Buttons
                 Row(
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: _addToCart,
                         icon: const Icon(Icons.shopping_cart_outlined),
-                        label: const Text('إضافة للسلة'),
+                        label: const Text('Add to Cart'),
                         style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.symmetric(vertical: 16.h),
                           side: const BorderSide(
@@ -466,7 +439,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       child: ElevatedButton.icon(
                         onPressed: _buyNow,
                         icon: const Icon(Icons.payment),
-                        label: const Text('اشتري الآن'),
+                        label: const Text('Buy Now'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ColorsManager.primary,
                           foregroundColor: Colors.white,
@@ -487,6 +460,51 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               ],
             ),
           ),
+          Gap(16.h),
+          Container(
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: ColorsManager.background,
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(
+                color: ColorsManager.border,
+                width: 1,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: ColorsManager.primary,
+                      size: 24.w,
+                    ),
+                    Gap(8.w),
+                    Text(
+                      'Important Note',
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: ColorsManager.textDark,
+                      ),
+                    ),
+                  ],
+                ),
+                Gap(8.h),
+                Text(
+                  'You must consult your doctor first before taking this treatment for your safety.',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: ColorsManager.textMedium,
+                    height: 1.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Gap(24.h),
         ],
       ),
     );

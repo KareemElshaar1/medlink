@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import '../../../../../core/utils/color_manger.dart';
 import '../../../../../../core/routes/page_routes_name.dart';
+import '../../../../../../core/helper/shared_pref_helper.dart';
 import '../cubit/schedule_cubit.dart';
 import '../../data/models/schedule_model.dart';
 import '../widgets/schedule_loading_widget.dart';
@@ -106,6 +107,9 @@ class _ScheduleListContentState extends State<_ScheduleListContent> {
           }
 
           if (state is SchedulesLoaded) {
+            // Save schedule count
+            SharedPrefHelper.setData('schedule_count', state.schedules.length);
+
             if (state.schedules.isEmpty) {
               return ScheduleEmptyWidget(
                 onAddSchedule: () {

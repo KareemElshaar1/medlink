@@ -53,34 +53,40 @@ class _DoctorDetailsView extends StatelessWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // Background Image
+                  // Simple Background Image
                   doctor.profilePic != null
                       ? CachedNetworkImage(
                           imageUrl:
                               'http://medlink.runasp.net${doctor.profilePic}',
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
-                            color: Colors.grey[200],
-                            child: Center(
+                            color: Colors.grey[100],
+                            child: const Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                    const Color(0xFF3B82F6)),
+                                    Color(0xFF3B82F6)),
                               ),
                             ),
                           ),
                           errorWidget: (context, url, error) => Container(
-                            color: Colors.grey[200],
-                            child: Icon(Icons.person,
-                                size: 80.sp, color: Colors.grey[400]),
+                            color: Colors.grey[100],
+                            child: Icon(
+                              Icons.person,
+                              size: 80.sp,
+                              color: Colors.grey[400],
+                            ),
                           ),
                         )
                       : Container(
-                          color: Colors.grey[200],
-                          child: Icon(Icons.person,
-                              size: 80.sp, color: Colors.grey[400]),
+                          color: Colors.grey[100],
+                          child: Icon(
+                            Icons.person,
+                            size: 80.sp,
+                            color: Colors.grey[400],
+                          ),
                         ),
-                  // Gradient Overlay
+                  // Simple Gradient Overlay
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -93,7 +99,7 @@ class _DoctorDetailsView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Doctor Info Overlay
+                  // Doctor Info
                   Positioned(
                     bottom: 20.h,
                     left: 20.w,
@@ -121,29 +127,15 @@ class _DoctorDetailsView extends StatelessWidget {
                           SizedBox(height: 8.h),
                           Row(
                             children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12.w,
-                                  vertical: 6.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(20.r),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.star,
-                                        color: Colors.amber, size: 20.sp),
-                                    SizedBox(width: 4.w),
-                                    Text(
-                                      doctor.rate.toString(),
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                              Icon(Icons.star,
+                                  color: Colors.amber, size: 20.sp),
+                              SizedBox(width: 4.w),
+                              Text(
+                                doctor.rate.toString(),
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ],

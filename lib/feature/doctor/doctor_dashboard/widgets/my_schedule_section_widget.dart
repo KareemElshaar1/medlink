@@ -6,92 +6,111 @@ import 'package:medlink/core/routes/page_routes_name.dart';
 import 'package:medlink/feature/doctor/schedule/presentation/cubit/schedule_cubit.dart';
 import 'package:medlink/feature/doctor/schedule/data/models/schedule_model.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
+
+class MyScheduleProvider extends ChangeNotifier {
+  int _scheduleCount = 0;
+  int get scheduleCount => _scheduleCount;
+
+  void updateScheduleCount(int count) {
+    _scheduleCount = count;
+    notifyListeners();
+  }
+}
 
 class MyScheduleSectionWidget extends StatelessWidget {
   const MyScheduleSectionWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GetIt.I<ScheduleCubit>()..getSchedule(),
-      child: BlocBuilder<ScheduleCubit, ScheduleState>(
-        builder: (context, state) {
-          if (state is ScheduleLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return ChangeNotifierProvider(
+      create: (_) => MyScheduleProvider(),
+      child: Consumer<MyScheduleProvider>(
+        builder: (context, provider, child) {
+          return BlocProvider(
+            create: (context) => GetIt.I<ScheduleCubit>()..getSchedule(),
+            child: BlocBuilder<ScheduleCubit, ScheduleState>(
+              builder: (context, state) {
+                if (state is ScheduleLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          if (state is ScheduleError) {
-            return Center(
-              child: Text(
-                'Error loading schedules',
-                style: TextStyle(
-                  color: ColorsManager.error,
-                  fontSize: 14.sp,
-                ),
-              ),
-            );
-          }
+                if (state is ScheduleError) {
+                  return Center(
+                    child: Text(
+                      'Error loading schedules',
+                      style: TextStyle(
+                        color: ColorsManager.error,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  );
+                }
 
-          if (state is SchedulesLoaded) {
-            final recentSchedules = state.schedules.take(2).toList();
+                if (state is SchedulesLoaded) {
+                  final recentSchedules = state.schedules.take(2).toList();
+                  provider.updateScheduleCount(state.schedules.length);
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'My Schedule',
-                        style: TextStyle(
-                          color: ColorsManager.textDark,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'My Schedule',
+                              style: TextStyle(
+                                color: ColorsManager.textDark,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextButton.icon(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, PageRouteNames.scheduleList);
+                              },
+                              icon: Icon(
+                                Icons.arrow_forward_rounded,
+                                size: 18.sp,
+                                color: ColorsManager.primary,
+                              ),
+                              label: Text(
+                                'View All',
+                                style: TextStyle(
+                                  color: ColorsManager.primary,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      TextButton.icon(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                              context, PageRouteNames.scheduleList);
-                        },
-                        icon: Icon(
-                          Icons.arrow_forward_rounded,
-                          size: 18.sp,
-                          color: ColorsManager.primary,
-                        ),
-                        label: Text(
-                          'View All',
-                          style: TextStyle(
-                            color: ColorsManager.primary,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 16.h),
-                if (recentSchedules.isEmpty)
-                  _buildNoSchedules()
-                else
-                  Column(
-                    children: [
-                      for (var schedule in recentSchedules)
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16.w, vertical: 8.h),
-                          child: _buildScheduleCard(schedule),
+                      SizedBox(height: 16.h),
+                      if (recentSchedules.isEmpty)
+                        _buildNoSchedules()
+                      else
+                        Column(
+                          children: [
+                            for (var schedule in recentSchedules)
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w, vertical: 8.h),
+                                child: _buildScheduleCard(schedule),
+                              ),
+                          ],
                         ),
                     ],
-                  ),
-              ],
-            );
-          }
+                  );
+                }
 
-          return _buildNoSchedules();
+                return _buildNoSchedules();
+              },
+            ),
+          );
         },
       ),
     );
