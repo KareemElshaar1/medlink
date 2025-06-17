@@ -15,6 +15,7 @@ import 'package:medlink/feature/patient/specilaity/manger/cubit/specialities_cub
 import 'package:medlink/feature/patient/specilaity/presentation/pages/all_specialties_page.dart';
 import 'package:medlink/feature/pharmacy/presentation/product_page.dart';
 import 'package:medlink/feature/pharmacy/presentation/cubit/product_cubit.dart';
+import 'package:medlink/features/ml_service/presentation/screens/dosage_prediction_screen.dart';
 
 import '../../../../../core/utils/color_manger.dart';
 import 'doctors_by_specialty/data/models/doctor_by_specialty_model.dart';
@@ -978,8 +979,18 @@ class _HomePatientContentState extends State<HomePatientContent> {
               children: [
                 Icon(Icons.home_rounded,
                     color: const Color(0xFF3B82F6), size: 30.sp),
-                Icon(Icons.chat_bubble_outline_rounded,
-                    color: Colors.grey, size: 28.sp),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DosagePredictionScreen(),
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.chat_bubble_outline_rounded,
+                      color: Colors.grey, size: 28.sp),
+                ),
                 SizedBox(width: 36.sp), // Placeholder for search icon
                 GestureDetector(
                   onTap: () {
