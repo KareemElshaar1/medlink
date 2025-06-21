@@ -5,7 +5,6 @@ import 'package:medlink/feature/onboarding/ui/widgets/Dot_Indicator.dart';
 import 'package:medlink/feature/onboarding/ui/widgets/Onboarding_Button.dart';
 import 'package:medlink/feature/onboarding/ui/widgets/Onboarding_Page_Widget.dart';
 
-
 import '../data/on_boarding_model.dart';
 
 class OnboardingScreen extends StatefulWidget {

@@ -114,11 +114,10 @@ class Routes {
       case PageRouteNames.confirm_doctor_code:
         final args = settings.arguments as Map<String, dynamic>;
         return _createRoute(
-          (context) => ConfirmDoctorCodeScreen(
+          (context) => ConfirmCodeScreen(
             correctCode: args['code'] as String,
             cubit: args['cubit'] as DoctorRegistrationCubit,
-            registrationData: args['registrationData'] as Map<String, dynamic>,
-          ),
+           ),
           settings,
         );
 

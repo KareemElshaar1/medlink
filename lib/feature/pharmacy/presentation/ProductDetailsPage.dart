@@ -1,15 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:gap/gap.dart';
 import 'dart:convert';
 
-import '../../../core/utils/color_manger.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+
 import '../../../core/helper/shared_pref_helper.dart';
 import '../../../core/routes/page_routes_name.dart';
-import '../domain/models/cart_item.dart';
-import '../../../feature/pharmacy/presentation/CartPage.dart';
+import '../../../core/utils/color_manger.dart';
 import '../../../feature/google map/presentation/google_map_page.dart';
+import '../../../feature/pharmacy/presentation/CartPage.dart';
+import '../domain/models/cart_item.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final String name;

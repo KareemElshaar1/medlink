@@ -3,17 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:medlink/core/extensions/padding.dart';
 import 'package:medlink/core/utils/color_manger.dart';
 import 'package:medlink/core/widgets/buildHeader.dart' as header;
 
-import '../../../../../../core/routes/page_routes_name.dart';
 import '../../../../../../core/widgets/app_text_button.dart';
 import '../../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../patient/specilaity/domain/entities/speciality_entity.dart';
 import '../../../../../patient/specilaity/manger/cubit/specialities_cubit.dart';
-import '../manager/doctor_registration_cubit.dart';
 import '../manager/controller/sign_up_doctor_controller.dart';
+import '../manager/doctor_registration_cubit.dart';
 
 // Password Field Widget
 class PasswordField extends StatefulWidget {
@@ -389,7 +387,9 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
                                                   setState(() {
                                                     _isNavigating = false;
                                                   });
-                                                  _controller.handleSignUp();
+                                                  // Call handleSignUp and navigate if successful
+                                                  await _controller
+                                                      .handleSignUp();
                                                 }
                                               }
                                             },
@@ -512,7 +512,8 @@ class _SignUpDoctorState extends State<SignUpDoctor> {
       ),
       dropdownColor: Colors.white,
       borderRadius: BorderRadius.circular(12.r),
-      icon: const SizedBox.shrink(), // Hide default dropdown icon
+      icon: const SizedBox.shrink(),
+      // Hide default dropdown icon
       isExpanded: true,
       style: TextStyle(
         fontSize: 16.sp,

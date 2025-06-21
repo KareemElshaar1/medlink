@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import this package
 
 import 'app.dart';
-import 'core/helper/constants.dart';
 import 'core/helper/shared_pref_helper.dart';
 import 'di.dart';
 

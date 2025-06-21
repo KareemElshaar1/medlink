@@ -109,10 +109,7 @@ class _BookingConfirmationPageState extends State<BookingConfirmationPage> {
       initialDate: selectedDate,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
-      selectableDayPredicate: (DateTime date) {
-        final dayName = DateFormat('EEEE').format(date);
-        return dayName == widget.schedule.day;
-      },
+      // Allow user to pick any date
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -403,17 +400,7 @@ class _BookingConfirmationPageState extends State<BookingConfirmationPage> {
                             ),
                           ),
                           SizedBox(height: 16.h),
-                          // Date Selection
-                          ListTile(
-                            leading: const Icon(Icons.calendar_today),
-                            title: const Text('Select Date'),
-                            subtitle: Text(
-                              DateFormat('EEEE, MMMM d, yyyy')
-                                  .format(selectedDate),
-                            ),
-                            onTap: () => _selectDate(context),
-                          ),
-                          const Divider(),
+                          // Date selection hidden as requested
                           // Time Selection
                           ListTile(
                             leading: const Icon(Icons.access_time),

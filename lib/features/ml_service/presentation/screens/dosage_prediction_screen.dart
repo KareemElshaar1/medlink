@@ -51,7 +51,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
     final dio = Dio();
     final dataSource = MLServiceRemoteDataSourceImpl(
       dio: dio,
-      baseUrl: 'http://192.168.251.133:8000',
+      baseUrl: 'http://192.168.239.133:8000',
     );
     final repository = MLServiceRepositoryImpl(
       remoteDataSource: dataSource,
@@ -328,7 +328,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                   ),
                   SizedBox(height: 16.h),
                   Text(
-                    'Dosage Prediction Result',
+                    'نتيجة توقع الجرعة',
                     style: TextStyle(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.bold,
@@ -337,7 +337,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    'AI-Powered Analysis',
+                    'تحليل بواسطة الذكاء الاصطناعي',
                     style: TextStyle(
                       fontSize: 16.sp,
                       color: ColorsManager.background.withOpacity(0.9),
@@ -359,16 +359,16 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildResultSection(
-                              'Dosage Information',
+                              'معلومات الجرعة',
                               [
                                 _buildResultItem(
-                                  'Dosage Class',
+                                  'فئة الجرعة',
                                   state.prediction.dosageClass.toString(),
                                   Icons.category,
                                 ),
                                 SizedBox(height: 16.h),
                                 _buildResultItem(
-                                  'Dosage Label',
+                                  'وصف الجرعة',
                                   state.prediction.dosageLabel,
                                   Icons.label,
                                 ),
@@ -376,17 +376,17 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                             ),
                             SizedBox(height: 24.h),
                             _buildResultSection(
-                              'Clinical Details',
+                              'تفاصيل سريرية',
                               [
                                 _buildResultItem(
-                                  'Recommendation',
+                                  'التوصية',
                                   state.prediction.recommendation,
                                   Icons.recommend,
                                 ),
                                 if (state.prediction.normalRange != null) ...[
                                   SizedBox(height: 16.h),
                                   _buildResultItem(
-                                    'Normal Range',
+                                    'النطاق الطبيعي',
                                     state.prediction.normalRange!,
                                     Icons.timeline,
                                   ),
@@ -415,7 +415,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                           child: Column(
                             children: [
                               Text(
-                                'Confidence Score',
+                                'درجة الثقة',
                                 style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.bold,
@@ -449,7 +449,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Prediction Metrics',
+                          'مقاييس التوقع',
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
@@ -466,7 +466,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                     children: [
                       Expanded(
                         child: AppTextButton(
-                          buttonText: 'New Prediction',
+                          buttonText: 'توقع جديد',
                           leadingIcon: const Icon(Icons.refresh,
                               color: ColorsManager.background),
                           onPressed: _resetForm,
@@ -475,7 +475,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                       SizedBox(width: 16.w),
                       Expanded(
                         child: AppTextButton(
-                          buttonText: 'Save Result',
+                          buttonText: 'حفظ النتيجة',
                           leadingIcon: const Icon(Icons.save,
                               color: ColorsManager.background),
                           onPressed: () {
@@ -575,7 +575,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
         backgroundColor: ColorsManager.background,
         appBar: AppBar(
           title: Text(
-            'AI Dosage Prediction',
+            'توقع الجرعة بالذكاء الاصطناعي',
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
@@ -598,7 +598,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                     ),
                     SizedBox(height: 16.h),
                     Text(
-                      'Processing prediction...',
+                      'جاري معالجة التوقع...',
                       style: TextStyle(
                         fontSize: 16.sp,
                         color: ColorsManager.textDark,
@@ -625,7 +625,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                         ),
                         SizedBox(height: 16.h),
                         Text(
-                          'Error',
+                          'خطأ',
                           style: TextStyle(
                             fontSize: 20.sp,
                             fontWeight: FontWeight.bold,
@@ -643,7 +643,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                         ),
                         SizedBox(height: 16.h),
                         AppTextButton(
-                          buttonText: 'Retry',
+                          buttonText: 'إعادة المحاولة',
                           onPressed: () => _cubit.getAvailableDrugs(),
                         ),
                       ],
@@ -675,7 +675,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _buildInputCard(
-                      title: 'Patient Information',
+                      title: 'معلومات المريض',
                       icon: Icons.person,
                       child: Column(
                         children: [
@@ -684,14 +684,14 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                               Expanded(
                                 child: AppTextFormField(
                                   controller: _ageController,
-                                  hintText: 'Age',
-                                  labelText: 'Age',
+                                  hintText: 'العمر',
+                                  labelText: 'العمر',
                                   keyboardType: TextInputType.number,
                                   prefixIcon: const Icon(Icons.cake,
                                       color: ColorsManager.primary),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter age';
+                                      return 'يرجى إدخال العمر';
                                     }
                                     return null;
                                   },
@@ -701,8 +701,8 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                               Expanded(
                                 child: AppTextFormField(
                                   controller: _weightController,
-                                  hintText: 'Weight (kg)',
-                                  labelText: 'Weight (kg)',
+                                  hintText: 'الوزن (كجم)',
+                                  labelText: 'الوزن (كجم)',
                                   keyboardType: TextInputType.number,
                                   prefixIcon: const Icon(Icons.monitor_weight,
                                       color: ColorsManager.primary),
@@ -714,7 +714,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                           DropdownButtonFormField<String>(
                             value: _selectedGender,
                             decoration: InputDecoration(
-                              labelText: 'Gender',
+                              labelText: 'الجنس',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
@@ -722,9 +722,8 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                                   color: ColorsManager.primary),
                             ),
                             items: const [
-                              DropdownMenuItem(value: 'M', child: Text('Male')),
-                              DropdownMenuItem(
-                                  value: 'F', child: Text('Female')),
+                              DropdownMenuItem(value: 'M', child: Text('ذكر')),
+                              DropdownMenuItem(value: 'F', child: Text('أنثى')),
                             ],
                             onChanged: (value) {
                               setState(() {
@@ -737,7 +736,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                     ),
                     SizedBox(height: 16.h),
                     _buildInputCard(
-                      title: 'Medication Details',
+                      title: 'تفاصيل الدواء',
                       icon: Icons.medication,
                       child: Column(
                         children: [
@@ -746,7 +745,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                               value:
                                   _selectedDrug.isEmpty ? null : _selectedDrug,
                               decoration: InputDecoration(
-                                labelText: 'Drug',
+                                labelText: 'الدواء',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
@@ -766,7 +765,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                               },
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please select a drug';
+                                  return 'يرجى اختيار الدواء';
                                 }
                                 return null;
                               },
@@ -775,7 +774,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                           DropdownButtonFormField<String>(
                             value: _selectedRoute,
                             decoration: InputDecoration(
-                              labelText: 'Administration Route',
+                              labelText: 'طريقة الإعطاء',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
@@ -785,7 +784,15 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                             items: ['Oral', 'IV', 'IM', 'SC'].map((route) {
                               return DropdownMenuItem(
                                 value: route,
-                                child: Text(route),
+                                child: Text(route == 'Oral'
+                                    ? 'عن طريق الفم'
+                                    : route == 'IV'
+                                        ? 'وريدي'
+                                        : route == 'IM'
+                                            ? 'عضلي'
+                                            : route == 'SC'
+                                                ? 'تحت الجلد'
+                                                : route),
                               );
                             }).toList(),
                             onChanged: (value) {
@@ -799,14 +806,14 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                     ),
                     SizedBox(height: 16.h),
                     _buildInputCard(
-                      title: 'Clinical Information',
+                      title: 'معلومات سريرية',
                       icon: Icons.local_hospital,
                       child: Column(
                         children: [
                           DropdownButtonFormField<String>(
                             value: _selectedAdmissionType,
                             decoration: InputDecoration(
-                              labelText: 'Admission Type',
+                              labelText: 'نوع الدخول',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
@@ -815,9 +822,14 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                             ),
                             items:
                                 ['EMERGENCY', 'ELECTIVE', 'URGENT'].map((type) {
+                              String label = type == 'EMERGENCY'
+                                  ? 'طارئ'
+                                  : type == 'ELECTIVE'
+                                      ? 'اختياري'
+                                      : 'عاجل';
                               return DropdownMenuItem(
                                 value: type,
-                                child: Text(type),
+                                child: Text(label),
                               );
                             }).toList(),
                             onChanged: (value) {
@@ -829,8 +841,8 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                           SizedBox(height: 16.h),
                           AppTextFormField(
                             controller: _diagnosisController,
-                            hintText: 'Diagnosis (Optional)',
-                            labelText: 'Diagnosis (Optional)',
+                            hintText: 'التشخيص (اختياري)',
+                            labelText: 'التشخيص (اختياري)',
                             prefixIcon: const Icon(Icons.assignment,
                                 color: ColorsManager.primary),
                             maxLines: 3,
@@ -840,7 +852,7 @@ class _DosagePredictionScreenState extends State<DosagePredictionScreen>
                     ),
                     SizedBox(height: 24.h),
                     AppTextButton(
-                      buttonText: 'Generate Prediction',
+                      buttonText: 'توليد التوقع',
                       leadingIcon: const Icon(Icons.analytics,
                           color: ColorsManager.background),
                       onPressed: _submitForm,

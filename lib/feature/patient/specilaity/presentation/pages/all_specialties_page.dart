@@ -2,11 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
- import '../../../doctors_by_specialty/presentation/pages/doctors_by_specialty_page.dart';
+import '../../../doctors_by_specialty/presentation/pages/doctors_by_specialty_page.dart';
 import '../../manger/cubit/specialities_cubit.dart';
 
 class AllSpecialtiesPage extends StatelessWidget {
   const AllSpecialtiesPage({super.key});
+
+  static final Map<String, String> specialtyImages = {
+    'general':
+        'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
+    'neurologic':
+        'https://images.unsplash.com/photo-1511174511562-5f97f4f4e0c8?auto=format&fit=crop&w=400&q=80',
+    'pediatric':
+        'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80',
+    'radiology':
+        'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd7c?auto=format&fit=crop&w=400&q=80',
+    'cardiology':
+        'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80',
+  };
+  static const String defaultImage =
+      'https://images.unsplash.com/photo-1504439468489-c8920d796a29?auto=format&fit=crop&w=400&q=80';
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +84,7 @@ class AllSpecialtiesPage extends StatelessWidget {
   }
 
   Widget _specialtyCard(String name) {
+    final imageUrl = specialtyImages[name.toLowerCase()];
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -84,15 +100,31 @@ class AllSpecialtiesPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircleAvatar(
-            radius: 30.r,
-            backgroundColor: const Color(0xFF3B82F6).withOpacity(0.1),
-            child: Icon(
-              _getIconData(name),
-              color: const Color(0xFF3B82F6),
-              size: 32.sp,
+          if (imageUrl != null)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(40.r),
+              child: Image.network(
+                imageUrl,
+                width: 60.r,
+                height: 60.r,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Icon(
+                  _getIconData(name),
+                  color: const Color(0xFF3B82F6),
+                  size: 32.sp,
+                ),
+              ),
+            )
+          else
+            CircleAvatar(
+              radius: 30.r,
+              backgroundColor: const Color(0xFF3B82F6).withOpacity(0.1),
+              child: Icon(
+                _getIconData(name),
+                color: const Color(0xFF3B82F6),
+                size: 32.sp,
+              ),
             ),
-          ),
           SizedBox(height: 12.h),
           Text(
             name,

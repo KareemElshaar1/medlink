@@ -1,17 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
-import 'cubit/product_cubit.dart';
-import '../../../core/utils/color_manger.dart';
-import '../../../core/helper/shared_pref_helper.dart';
-import '../../../di.dart';
-import '../domain/entities/product.dart';
-import 'ProductDetailsPage.dart';
-import 'CartPage.dart';
 import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../core/helper/shared_pref_helper.dart';
+import '../../../core/utils/color_manger.dart';
+import '../domain/entities/product.dart';
+import 'CartPage.dart';
+import 'ProductDetailsPage.dart';
+import 'cubit/product_cubit.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});

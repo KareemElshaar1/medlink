@@ -1,37 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:medlink/core/helper/shared_pref_helper.dart';
-import 'package:get_it/get_it.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medlink/feature/doctor/appointments/presentation/cubit/appointment_cubit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class MyPatientProvider extends ChangeNotifier {
-  int _totalPatients = 0;
-  int get totalPatients => _totalPatients;
+import '../../../../core/utils/color_manger.dart';
 
-  void updateTotalPatients(int count) {
-    _totalPatients = count;
-    notifyListeners();
-  }
-}
-
-class MyPatientWidget extends StatelessWidget {
-  const MyPatientWidget({super.key});
+class NotificationsPage extends StatelessWidget {
+  final List<String> messages;
+  const NotificationsPage({Key? key, required this.messages}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GetIt.I<AppointmentCubit>()..getAppointments(),
-      child: BlocBuilder<AppointmentCubit, AppointmentState>(
-        builder: (context, state) {
-          if (state is AppointmentLoaded) {
-            // Save total patients count
-            SharedPrefHelper.setData(
-                'total_patients', state.appointments.length);
-          }
-          // Rest of your widget code...
-          return Container();
-        },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Notifications'),
+        backgroundColor: ColorsManager.primary,
+        foregroundColor: Colors.white,
+      ),
+      body: ListView.separated(
+        padding: EdgeInsets.all(16.w),
+        itemCount: messages.length,
+        separatorBuilder: (context, index) => const Divider(),
+        itemBuilder: (context, index) => ListTile(
+          title: Text(
+            messages[index],
+            style: TextStyle(fontSize: 16.sp),
+          ),
+        ),
       ),
     );
   }

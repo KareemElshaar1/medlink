@@ -1,7 +1,8 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:animate_do/animate_do.dart';
+import 'package:medlink/core/utils/color_manger.dart';
 
 class FakeVisaPaymentScreen extends StatefulWidget {
   const FakeVisaPaymentScreen({super.key});
@@ -26,12 +27,32 @@ class _FakeVisaPaymentScreenState extends State<FakeVisaPaymentScreen> {
     super.dispose();
   }
 
+  // Luhn algorithm for card number validation
+  bool _isValidCardNumber(String input) {
+    String number = input.replaceAll(' ', '');
+    if (number.length != 16) return false;
+    int sum = 0;
+    for (int i = 0; i < number.length; i++) {
+      int digit = int.parse(number[number.length - 1 - i]);
+      if (i % 2 == 1) {
+        digit *= 2;
+        if (digit > 9) digit -= 9;
+      }
+      sum += digit;
+    }
+    return sum % 10 == 0;
+  }
+
   String? _validateCardNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Card number is required';
     }
-    if (value.replaceAll(' ', '').length != 16) {
+    String digits = value.replaceAll(' ', '');
+    if (digits.length != 16) {
       return 'Card number must be 16 digits';
+    }
+    if (!_isValidCardNumber(value)) {
+      return 'Invalid card number';
     }
     return null;
   }
@@ -40,13 +61,20 @@ class _FakeVisaPaymentScreenState extends State<FakeVisaPaymentScreen> {
     if (value == null || value.isEmpty) {
       return 'Expiry date is required';
     }
-    if (!RegExp(r'^\d{2}/\d{2}$').hasMatch(value)) {
+    if (!RegExp(r'^\d{2}/\d{2}').hasMatch(value)) {
       return 'Use MM/YY format';
     }
     final parts = value.split('/');
-    final month = int.parse(parts[0]);
+    final month = int.tryParse(parts[0]) ?? 0;
+    final year = int.tryParse(parts[1]) ?? 0;
     if (month < 1 || month > 12) {
       return 'Invalid month';
+    }
+    final now = DateTime.now();
+    final fourDigitYear = 2000 + year;
+    final expiry = DateTime(fourDigitYear, month + 1, 0);
+    if (expiry.isBefore(DateTime(now.year, now.month))) {
+      return 'Card expired';
     }
     return null;
   }
@@ -55,8 +83,8 @@ class _FakeVisaPaymentScreenState extends State<FakeVisaPaymentScreen> {
     if (value == null || value.isEmpty) {
       return 'CVV is required';
     }
-    if (value.length != 3) {
-      return 'CVV must be 3 digits';
+    if (!RegExp(r'^\d{3,4}').hasMatch(value)) {
+      return 'CVV must be 3 or 4 digits';
     }
     return null;
   }
@@ -65,8 +93,8 @@ class _FakeVisaPaymentScreenState extends State<FakeVisaPaymentScreen> {
     if (value == null || value.isEmpty) {
       return 'Name is required';
     }
-    if (value.length < 3) {
-      return 'Name is too short';
+    if (!RegExp(r'^[A-Za-z ]{3,}$').hasMatch(value)) {
+      return 'Name must be at least 3 letters and only contain letters and spaces';
     }
     return null;
   }
@@ -76,12 +104,12 @@ class _FakeVisaPaymentScreenState extends State<FakeVisaPaymentScreen> {
     return ScreenUtilInit(
       designSize: const Size(390, 844),
       builder: (_, __) => Scaffold(
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: ColorsManager.background,
         appBar: AppBar(
           title: const Text("Visa Payment"),
           centerTitle: true,
-          backgroundColor: Colors.deepPurple,
-          foregroundColor: Colors.white,
+          backgroundColor: ColorsManager.primary,
+          foregroundColor: ColorsManager.background,
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(20.w),
@@ -108,14 +136,17 @@ class _FakeVisaPaymentScreenState extends State<FakeVisaPaymentScreen> {
                     validator: _validateCardNumber,
                     maxLength: 19,
                     onChanged: (value) {
-                      if (value.length == 4 ||
-                          value.length == 9 ||
-                          value.length == 14) {
-                        _cardNumberController.text = '$value ';
+                      String digits = value.replaceAll(RegExp(r'[^\d]'), '');
+                      String formatted = '';
+                      for (int i = 0; i < digits.length; i++) {
+                        if (i != 0 && i % 4 == 0) formatted += ' ';
+                        formatted += digits[i];
+                      }
+                      if (formatted != value) {
+                        _cardNumberController.text = formatted;
                         _cardNumberController.selection =
                             TextSelection.fromPosition(
-                          TextPosition(
-                              offset: _cardNumberController.text.length),
+                          TextPosition(offset: formatted.length),
                         );
                       }
                     },
@@ -150,7 +181,7 @@ class _FakeVisaPaymentScreenState extends State<FakeVisaPaymentScreen> {
                           controller: _cvvController,
                           validator: _validateCVV,
                           isPassword: true,
-                          maxLength: 3,
+                          maxLength: 4,
                         ),
                       ),
                     ],
@@ -161,6 +192,7 @@ class _FakeVisaPaymentScreenState extends State<FakeVisaPaymentScreen> {
                     "John Doe",
                     controller: _nameController,
                     validator: _validateName,
+                    keyboardType: TextInputType.name,
                   ),
                   Gap(40.h),
                   FadeIn(
@@ -189,14 +221,15 @@ class _FakeVisaPaymentScreenState extends State<FakeVisaPaymentScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple,
+                          backgroundColor: ColorsManager.primary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                         ),
                         child: const Text(
                           "Pay Now",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 18, color: ColorsManager.background),
                         ),
                       ),
                     ),
@@ -218,40 +251,44 @@ class _FakeVisaPaymentScreenState extends State<FakeVisaPaymentScreen> {
     String? Function(String?)? validator,
     int? maxLength,
     Function(String)? onChanged,
+    TextInputType? keyboardType,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
+          style: TextStyle(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w500,
+              color: ColorsManager.textDark),
         ),
         Gap(8.h),
         TextFormField(
           controller: controller,
           obscureText: isPassword,
-          keyboardType: TextInputType.number,
+          keyboardType: keyboardType ?? TextInputType.number,
           validator: validator,
           maxLength: maxLength,
           onChanged: onChanged,
           decoration: InputDecoration(
             hintText: hint,
             filled: true,
-            fillColor: Colors.white,
+            fillColor: ColorsManager.background,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide.none,
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(color: Colors.red),
+              borderSide: const BorderSide(color: ColorsManager.error),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(color: Colors.red),
+              borderSide: const BorderSide(color: ColorsManager.error),
             ),
             errorStyle: TextStyle(
-              color: Colors.red,
+              color: ColorsManager.error,
               fontSize: 12.sp,
             ),
           ),

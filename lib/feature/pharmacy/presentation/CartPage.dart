@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:convert';
-import '../../../core/utils/color_manger.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../core/helper/shared_pref_helper.dart';
 import '../../../core/routes/page_routes_name.dart';
+import '../../../core/utils/color_manger.dart';
 import '../domain/models/cart_item.dart';
 
 class CartPage extends StatefulWidget {

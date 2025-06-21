@@ -10,7 +10,8 @@ class OnboardingButton extends StatelessWidget {
   final int currentPage;
   final int totalPages;
 
-  const OnboardingButton({super.key,
+  const OnboardingButton({
+    super.key,
     required this.pageController,
     required this.currentPage,
     required this.totalPages,

@@ -5,8 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:medlink/core/extensions/padding.dart';
 
 import '../../../../../../core/widgets/buildHeader.dart';
-import '../../../../doctor/sign_up_doctor/presentation/pages/sign_up_screen.dart';
-import '../manager/controller/sign_up_patient_controller.dart';
+ import '../manager/controller/sign_up_patient_controller.dart';
 import '../manager/cubit/patient_register_cubit.dart';
 import '../widgets/sign_up_form_patient.dart';
 

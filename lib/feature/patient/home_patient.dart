@@ -575,17 +575,17 @@ class _HomePatientContentState extends State<HomePatientContent> {
                             ),
                           ],
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.18),
-                            shape: BoxShape.circle,
-                          ),
-                          child: IconButton(
-                            icon: Icon(Icons.notifications_none_rounded,
-                                color: Colors.white, size: 30.sp),
-                            onPressed: () {},
-                          ),
-                        ),
+                        // Container(
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.white.withOpacity(0.18),
+                        //     shape: BoxShape.circle,
+                        //   ),
+                        //   child: IconButton(
+                        //     icon: Icon(Icons.notifications_none_rounded,
+                        //         color: Colors.white, size: 30.sp),
+                        //     onPressed: () {},
+                        //   ),
+                        // ),
                       ],
                     );
                   },
@@ -988,7 +988,7 @@ class _HomePatientContentState extends State<HomePatientContent> {
                       ),
                     );
                   },
-                  child: Icon(Icons.chat_bubble_outline_rounded,
+                  child: Icon(Icons.smart_toy_rounded,
                       color: Colors.grey, size: 28.sp),
                 ),
                 SizedBox(width: 36.sp), // Placeholder for search icon

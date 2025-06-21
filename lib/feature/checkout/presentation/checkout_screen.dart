@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../core/helper/shared_pref_helper.dart';
 import '../../../core/routes/page_routes_name.dart';
 import 'dart:convert';
-import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 import '../../pharmacy/presentation/FakeVisaPaymentScreen.dart';
 import '../../../core/utils/color_manger.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,16 +20,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   double _total = 0.0;
   bool _isLoading = true;
   bool _isProcessing = false;
+  int _selectedPaymentIndex = 0; // 0: Credit Card, 1: Cash
 
   @override
   void initState() {
     super.initState();
-    _initializeStripe();
     _loadSavedData();
-  }
-
-  Future<void> _initializeStripe() async {
-    await stripe.Stripe.instance.applySettings();
   }
 
   Future<void> _loadSavedData() async {
@@ -272,21 +267,36 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 _buildPaymentMethodItem(
                   'Credit Card Payment',
                   Icons.credit_card,
-                  isSelected: true,
+                  isSelected: _selectedPaymentIndex == 0,
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const FakeVisaPaymentScreen(),
-                      ),
-                    );
+                    setState(() {
+                      _selectedPaymentIndex = 0;
+                    });
                   },
                 ),
                 const Divider(color: ColorsManager.border),
                 _buildPaymentMethodItem(
                   'Cash on Delivery',
                   Icons.money,
-                  onTap: () {},
+                  isSelected: _selectedPaymentIndex == 1,
+                  onTap: () {
+                    if (_selectedPaymentIndex != 1) {
+                      setState(() {
+                        _selectedPaymentIndex = 1;
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              const Text('You have chosen Cash on Delivery'),
+                          backgroundColor: ColorsManager.primary,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),

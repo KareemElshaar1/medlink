@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:medlink/feature/doctor/doctor_dashboard/widgets/my_patient_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:medlink/core/interceptors/auth_interceptor.dart';
 import 'package:medlink/feature/doctor/clinic/presentation/cubit/clinic_cubit.dart';
@@ -43,6 +44,31 @@ class _DoctorHomeState extends State<DoctorHome> {
       DoctorProfileRepositoryImpl(Dio()..interceptors.add(AuthInterceptor()));
   late final DoctorProfileStorage _storage;
 
+  final List<String> _notificationMessages = [
+    'Welcome, Doctor! We are glad to have you on MedLink.',
+    'Tip: Check your schedule regularly to stay updated.',
+    'You have a new appointment request!',
+    'A patient left a review for you.',
+    'Your schedule was updated.',
+    'Clinic hours have changed.',
+    'Don’t forget to check your messages.',
+    'A new patient joined your clinic.',
+    'System maintenance scheduled for tonight.',
+    'You have 3 unread notifications.',
+    'Your profile was viewed 5 times today.',
+    'Keep up the great work, doctor!'
+  ];
+  void _showRandomNotification() {
+    final messages = List<String>.from(_notificationMessages)..shuffle();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NotificationsPage(messages: messages),
+      ),
+    );
+  }
+
+  // NotificationsPag
   final List<DrawerItem> _drawerItems = [
     DrawerItem(
       title: 'Dashboard',
@@ -265,65 +291,65 @@ class _DoctorHomeState extends State<DoctorHome> {
                     ),
                     Row(
                       children: [
-                        Stack(
-                          children: [
-                            Container(
-                              width: 45.w,
-                              height: 45.h,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 10,
-                                    spreadRadius: 1,
-                                  ),
-                                ],
-                              ),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.notifications_rounded,
-                                  color: Colors.white,
-                                  size: 24.sp,
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                            Positioned(
-                              right: 6.w,
-                              top: 6.h,
-                              child: Container(
-                                padding: EdgeInsets.all(4.r),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.red.withOpacity(0.4),
-                                      blurRadius: 4,
-                                      spreadRadius: 1,
-                                    ),
-                                  ],
-                                ),
-                                constraints: BoxConstraints(
-                                  minWidth: 20.w,
-                                  minHeight: 20.h,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '3',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Stack(
+                        //   children: [
+                        //     Container(
+                        //       width: 45.w,
+                        //       height: 45.h,
+                        //       decoration: BoxDecoration(
+                        //         color: Colors.white.withOpacity(0.2),
+                        //         shape: BoxShape.circle,
+                        //         boxShadow: [
+                        //           BoxShadow(
+                        //             color: Colors.black.withOpacity(0.1),
+                        //             blurRadius: 10,
+                        //             spreadRadius: 1,
+                        //           ),
+                        //         ],
+                        //       ),
+                        //       child: IconButton(
+                        //         icon: Icon(
+                        //           Icons.notifications_rounded,
+                        //           color: Colors.white,
+                        //           size: 24.sp,
+                        //         ),
+                        //         onPressed: _showRandomNotification,
+                        //       ),
+                        //     ),
+                        //     Positioned(
+                        //       right: 6.w,
+                        //       top: 6.h,
+                        //       child: Container(
+                        //         padding: EdgeInsets.all(4.r),
+                        //         decoration: BoxDecoration(
+                        //           color: Colors.red,
+                        //           shape: BoxShape.circle,
+                        //           boxShadow: [
+                        //             BoxShadow(
+                        //               color: Colors.red.withOpacity(0.4),
+                        //               blurRadius: 4,
+                        //               spreadRadius: 1,
+                        //             ),
+                        //           ],
+                        //         ),
+                        //         constraints: BoxConstraints(
+                        //           minWidth: 20.w,
+                        //           minHeight: 20.h,
+                        //         ),
+                        //         child: Center(
+                        //           child: Text(
+                        //             '3',
+                        //             style: TextStyle(
+                        //               color: Colors.white,
+                        //               fontSize: 12.sp,
+                        //               fontWeight: FontWeight.bold,
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         SizedBox(width: 8.w),
                         GestureDetector(
                           onTap: () {
@@ -644,10 +670,58 @@ class _DoctorHomeState extends State<DoctorHome> {
                 },
               ),
               SizedBox(height: 24.h),
-              const MyPatientWidget(),
+              BlocBuilder<AppointmentCubit, AppointmentState>(
+                builder: (context, appointmentState) {
+                  if ((appointmentState is AppointmentLoaded &&
+                          appointmentState.appointments.isEmpty) ||
+                      appointmentState is AppointmentError) {
+                    return const Center(
+                      child: Column(
+                        children: [
+                          Icon(Icons.people_outline,
+                              size: 60, color: Colors.grey),
+                          SizedBox(height: 12),
+                          Text(
+                            'No patients yet',
+                            style: TextStyle(fontSize: 18, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return const MyPatientWidget();
+                },
+              ),
               SizedBox(height: 24.h),
               const MyScheduleSectionWidget(),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NotificationsPage extends StatelessWidget {
+  final List<String> messages;
+  const NotificationsPage({Key? key, required this.messages}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Notifications'),
+        backgroundColor: ColorsManager.primary,
+        foregroundColor: Colors.white,
+      ),
+      body: ListView.separated(
+        padding: EdgeInsets.all(16.w),
+        itemCount: messages.length,
+        separatorBuilder: (context, index) => const Divider(),
+        itemBuilder: (context, index) => ListTile(
+          title: Text(
+            messages[index],
+            style: TextStyle(fontSize: 16.sp),
           ),
         ),
       ),

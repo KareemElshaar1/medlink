@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../data/models/doctor_by_specialty_model.dart';
 import '../../../take_appointment/domain/entities/doctor_schedule.dart';
 import '../../../take_appointment/presentation/cubit/doctor_schedule_cubit.dart';
@@ -382,11 +385,23 @@ class _DoctorDetailsView extends StatelessWidget {
                       children: [
                         Icon(Icons.phone, color: Colors.grey[600], size: 18.sp),
                         SizedBox(width: 8.w),
-                        Text(
-                          schedule.phone,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Colors.grey[600],
+                        GestureDetector(
+                          onTap: () async {
+                            await Clipboard.setData(
+                                ClipboardData(text: schedule.phone));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text('Phone number copied to clipboard')),
+                            );
+                          },
+                          child: Text(
+                            schedule.phone,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.green,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
                       ],

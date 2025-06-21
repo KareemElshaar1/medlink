@@ -1,57 +1,28 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
+import 'package:http/http.dart' as http;
 import '../../../../../../../core/routes/page_routes_name.dart';
-import '../../../../../../../core/widgets/app_text_button.dart';
-import '../../../../../../../core/widgets/custom_text_field.dart';
 import '../manager/doctor_registration_cubit.dart';
 
-class ConfirmDoctorCodeScreen extends StatefulWidget {
+class ConfirmCodeScreen extends StatefulWidget {
   final String correctCode;
-  final DoctorRegistrationCubit cubit;
-  final Map<String, dynamic> registrationData;
+  final  DoctorRegistrationCubit cubit;
 
-  const ConfirmDoctorCodeScreen({
+  const ConfirmCodeScreen({
     super.key,
     required this.correctCode,
     required this.cubit,
-    required this.registrationData,
   });
 
   @override
-  State<ConfirmDoctorCodeScreen> createState() =>
-      _ConfirmDoctorCodeScreenState();
+  State<ConfirmCodeScreen> createState() => _ConfirmCodeScreenState();
 }
 
-class _ConfirmDoctorCodeScreenState extends State<ConfirmDoctorCodeScreen>
-    with SingleTickerProviderStateMixin {
+class _ConfirmCodeScreenState extends State<ConfirmCodeScreen> {
   final TextEditingController codeController = TextEditingController();
   bool _isVerifying = false;
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeIn,
-      ),
-    );
-    _animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    codeController.dispose();
-    super.dispose();
-  }
 
   Future<void> _verifyCode() async {
     if (codeController.text == widget.correctCode) {
@@ -60,35 +31,27 @@ class _ConfirmDoctorCodeScreenState extends State<ConfirmDoctorCodeScreen>
       });
 
       try {
-        await widget.cubit.registerDoctor(
-          firstName: widget.registrationData['firstName'],
-          lastName: widget.registrationData['lastName'],
-          email: widget.registrationData['email'],
-          phone: widget.registrationData['phone'],
-          password: widget.registrationData['password'],
-          confirmPassword: widget.registrationData['confirmPassword'],
-          specialityId: widget.registrationData['specialityId'],
-        );
-
+        // Send token after successful verification
         await widget.cubit.sendVerificationToken();
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('✅ Registration Successful! Please sign in.'),
+              content: Text('✅ Code Verified Successfully! Please sign in.'),
               backgroundColor: Colors.green,
             ),
           );
+          // Navigate to the sign in screen
           Navigator.of(context).pushNamedAndRemoveUntil(
             PageRouteNames.sign_in_doctor,
-            (route) => false,
+            (route) => false, // Remove all previous routes
           );
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error during registration: ${e.toString()}'),
+              content: Text('Error sending token: ${e.toString()}'),
               backgroundColor: Colors.red,
             ),
           );
@@ -111,165 +74,109 @@ class _ConfirmDoctorCodeScreenState extends State<ConfirmDoctorCodeScreen>
   }
 
   @override
+  void dispose() {
+    codeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.blue.shade50,
-              Colors.white,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: EdgeInsets.all(24.w),
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Back Button
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color: Colors.blue.shade700,
-                        size: 24.sp,
-                      ),
-                    ),
-                    Gap(20.h),
-
-                    // Header Section
-                    Center(
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.mark_email_read_rounded,
-                            size: 80.sp,
-                            color: Colors.blue.shade700,
-                          ),
-                          Gap(24.h),
-                          Text(
-                            "Verify Your Email",
-                            style: TextStyle(
-                              fontSize: 28.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue.shade900,
-                            ),
-                          ),
-                          Gap(12.h),
-                          Text(
-                            "We've sent a verification code to your email address",
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              color: Colors.grey.shade600,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Gap(40.h),
-
-                    // Verification Code Input
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16.r),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.blue.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      padding: EdgeInsets.all(20.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Enter Verification Code",
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.blue.shade900,
-                            ),
-                          ),
-                          Gap(16.h),
-                          AppTextFormField(
-                            controller: codeController,
-                            keyboardType: TextInputType.number,
-                            hintText: "Enter 6-digit code",
-                            prefixIcon: Icon(
-                              Icons.lock_outline_rounded,
-                              color: Colors.blue.shade700,
-                              size: 20.sp,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter the verification code";
-                              }
-                              if (value.length != 6) {
-                                return "Code must be 6 digits";
-                              }
-                              if (!RegExp(r'^[0-9]{6}$').hasMatch(value)) {
-                                return "Code must contain only numbers";
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    Gap(24.h),
-
-                    // Verify Button
-                    AppTextButton(
-                      buttonText: "Verify Email",
-                      buttonHeight: 56.h,
-                      buttonWidth: double.infinity,
-                      onPressed: _isVerifying ? null : _verifyCode,
-                      backgroundColor: Colors.blue.shade700,
-                      disabledBackgroundColor: Colors.grey.shade300,
-                      isLoading: _isVerifying,
-                      textStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Gap(16.h),
-
-                    // Resend Code Option
-                    Center(
-                      child: TextButton(
-                        onPressed: () {
-                          // TODO: Implement resend code functionality
-                        },
-                        child: Text(
-                          "Didn't receive the code? Resend",
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Colors.blue.shade700,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+      appBar: AppBar(
+        title: const Text("Verify Email"),
+        backgroundColor: const Color(0xFF3B82F6),
+        foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Enter the verification code sent to your email",
+              style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: codeController,
+              keyboardType: TextInputType.number,
+              maxLength: 6,
+              decoration: const InputDecoration(
+                labelText: "Verification Code",
+                border: OutlineInputBorder(),
+                counterText: "",
               ),
             ),
-          ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _isVerifying ? null : _verifyCode,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF3B82F6),
+                foregroundColor: Colors.white,
+                minimumSize: const Size(double.infinity, 50),
+              ),
+              child: _isVerifying
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Text(
+                      "Verify",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+            ),
+          ],
         ),
       ),
     );
+  }
+}
+// lib/core/services/email_service.dart
+
+
+class EmailService {
+  static const String serviceId = 'service_yrju1ai';
+  static const String templateId = 'template_gevr1nq';
+  static const String userId = 'Yz-iMDP9ZtqIodMJ1';
+
+  static String generateVerificationCode() {
+    // Generate a 6-digit code
+    final random = Random();
+    final code = List.generate(6, (_) => random.nextInt(10)).join();
+    return code;
+  }
+
+  static Future<void> sendVerificationCode({
+    required String name,
+    required String email,
+    required String code,
+  }) async {
+    try {
+      final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'origin': 'http://localhost',
+        },
+        body: jsonEncode({
+          'service_id': serviceId,
+          'template_id': templateId,
+          'user_id': userId,
+          'template_params': {
+            'to_email': email,
+            'user_name': name,
+            'user_email': email,
+            'verification_code': code,
+          },
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to send verification code: ${response.body}');
+      }
+    } catch (e) {
+      debugPrint('Error sending verification code: $e');
+      rethrow;
+    }
   }
 }

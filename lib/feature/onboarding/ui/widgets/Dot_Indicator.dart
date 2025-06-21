@@ -5,7 +5,8 @@ class DotIndicator extends StatelessWidget {
   final int currentPage;
   final int totalPages;
 
-  const DotIndicator({super.key, required this.currentPage, required this.totalPages});
+  const DotIndicator(
+      {super.key, required this.currentPage, required this.totalPages});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +20,9 @@ class DotIndicator extends StatelessWidget {
           height: 10.h,
           width: currentPage == index ? 25.w : 10.w,
           decoration: BoxDecoration(
-            color:
-                currentPage == index
-                    ? Colors.white
-                    : Colors.white.withOpacity(0.5),
+            color: currentPage == index
+                ? Colors.white
+                : Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(5.r),
           ),
         ),

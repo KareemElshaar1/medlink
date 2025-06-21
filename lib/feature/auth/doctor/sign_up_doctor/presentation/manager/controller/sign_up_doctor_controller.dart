@@ -3,9 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import '../../../../../../patient/specilaity/domain/entities/speciality_entity.dart';
 import '../../../../../../patient/specilaity/manger/cubit/specialities_cubit.dart';
+import '../../../../../patient/sign_up/presentation/manager/controller/email.dart';
 import '../doctor_registration_cubit.dart';
 import '../../../../../../../core/routes/page_routes_name.dart';
 import '../../../../../../../core/services/email_service.dart';
+import '../../../../../patient/sign_up/presentation/manager/controller/email.dart';
+
+
 
 class SignUpDoctorController {
   final formKey = GlobalKey<FormState>();
@@ -69,23 +73,37 @@ class SignUpDoctorController {
           // Generate verification code
           _verificationCode = EmailService.generateVerificationCode();
 
-          // Send verification code
-          await EmailService.sendVerificationCode(
-            name: '${firstNameController.text} ${lastNameController.text}',
-            email: emailController.text,
-            code: _verificationCode!,
-          );
-
-          // Navigate to verification screen only after successful registration and email sending
-          if (_context != null) {
-            Navigator.of(_context!).pushNamed(
-              PageRouteNames.confirm_doctor_code,
-              arguments: {
-                'code': _verificationCode,
-                'cubit': _context!.read<DoctorRegistrationCubit>(),
-                'registrationData': _registrationData,
-              },
+          try {
+            // Send verification code
+            debugPrint(
+                'Attempting to send verification code to ${emailController.text}');
+            await EmailService.sendVerificationCode(
+              name: '${firstNameController.text} ${lastNameController.text}',
+              email: emailController.text,
+              code: _verificationCode!,
             );
+
+            // Navigate to verification screen only after successful registration and email sending
+            if (_context != null) {
+              Navigator.of(_context!).pushNamed(
+                PageRouteNames.confirm_doctor_code,
+                arguments: {
+                  'code': _verificationCode,
+                  'cubit': _context!.read<DoctorRegistrationCubit>(),
+                  'registrationData': _registrationData,
+                },
+              );
+            }
+          } catch (e) {
+            if (_context != null) {
+              ScaffoldMessenger.of(_context!).showSnackBar(
+                SnackBar(
+                  content:
+                      Text('Failed to send verification code: ${e.toString()}'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
           }
         }
       } catch (e) {
